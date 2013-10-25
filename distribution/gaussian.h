@@ -2,8 +2,8 @@
  * @file gaussian.h
  */
 
-#ifndef GAUSSIAN_H
-#define GAUSSIAN_H
+#ifndef DISTRIBUTION_GAUSSIAN_H
+#define DISTRIBUTION_GAUSSIAN_H
 
 #include "distribution_model.h"
 

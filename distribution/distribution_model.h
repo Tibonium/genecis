@@ -2,12 +2,15 @@
  * @file distribution_model.h
  */
  
-#ifndef DISTRIBUTION_MODEL_H
-#define DISTRIBUTION_MODEL_H
+#ifndef DISTRIBUTION_DISTRIBUTION_MODEL_H
+#define DISTRIBUTION_DISTRIBUTION_MODEL_H
 
 #include <cmath>
+#include <algorithm>
 
 #define TWO_PI (2.0*M_PI)
+
+using namespace std ;
 
 class distribution_model {
 
