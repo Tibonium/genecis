@@ -1,0 +1,18 @@
+#!/bin/bash
+cc_file="$1.cc"
+no_file=$(find $cc_file)
+if [ -e $2 ] ;
+  then
+    rm $2
+    echo " **Found $cc_file, creating exe**"
+fi
+if [ "$no_file" = "" ] ;
+  then
+    echo File not found, please try again
+  else
+    g++ -Wall -Werror $cc_file -o $2
+fi
+if [ -e $2 ]
+  then
+    echo ***$2 executable file created***
+fi
