@@ -20,8 +20,8 @@ class uniform : public distribution_model {
 	public:
 	
 		virtual double integrate(double a, double b) {
-			_a = max(a, _lower) ;
-			_b = min(b, _upper) ;
+			_a = min( _upper, max(a, _lower) ) ;
+			_b = max( _lower, min(b, _upper) ) ;
 			_result = ( _b - _a ) * _norm ;
 			return _result ;
 		}
