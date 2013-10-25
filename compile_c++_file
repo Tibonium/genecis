@@ -1,4 +1,5 @@
 #!/bin/bash
+date
 cc_file="$1.cc"
 no_file=$(find $cc_file)
 if [ -e $1 ] ;
