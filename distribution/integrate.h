@@ -18,7 +18,7 @@ class integrate {
 		 * and returns the probability/integral on that
 		 * interval.
 		 */
-		virtual double integrate(double a, double b) = 0 ;
+		virtual double integral(double a, double b) = 0 ;
 
 		//virtual ~distribution() {}	
 };

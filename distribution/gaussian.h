@@ -18,7 +18,7 @@ class gaussian : public integrate
 		
 	public:
 	
-		virtual double integrate(double a, double b) {
+		virtual double integral(double a, double b) {
 			return TWO_PI ;
 		}
 
