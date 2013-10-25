@@ -1,15 +1,15 @@
 /**
- * @file integrate.h
+ * @file distribution_model.h
  */
  
-#ifndef INTEGRATE_H
-#define INTEGRATE_H
+#ifndef DISTRIBUTION_MODEL_H
+#define DISTRIBUTION_MODEL_H
 
 #include <cmath>
 
 #define TWO_PI (2.0*M_PI)
 
-class integrate {
+class distribution_model {
 
 	public:
 
@@ -18,7 +18,7 @@ class integrate {
 		 * and returns the probability/integral on that
 		 * interval.
 		 */
-		virtual double integral(double a, double b) = 0 ;
+		virtual double integrate(double a, double b) = 0 ;
 
 		//virtual ~distribution() {}	
 };

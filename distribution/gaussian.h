@@ -5,11 +5,11 @@
 #ifndef GAUSSIAN_H
 #define GAUSSIAN_H
 
-#include "integrate.h"
+#include "distribution_model.h"
 
 //namespace distribution {
 
-class gaussian : public integrate
+class gaussian : public distribution_model
 {
 	private:
 	
@@ -18,7 +18,7 @@ class gaussian : public integrate
 		
 	public:
 	
-		virtual double integral(double a, double b) {
+		virtual double integrate(double a, double b) {
 			return TWO_PI ;
 		}
 
