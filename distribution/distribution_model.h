@@ -22,6 +22,8 @@ class distribution_model {
 		 * interval.
 		 */
 		virtual double integrate(double a, double b) = 0 ;
+		
+		virtual double integrate(double a) = 0 ;
 
 		//virtual ~distribution() {}	
 };

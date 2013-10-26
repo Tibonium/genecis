@@ -7,6 +7,7 @@
 
 #include "distribution_model.h"
 #include "gaussian.h"
+#include "poisson.h"
 #include "uniform.h"
 
 #endif

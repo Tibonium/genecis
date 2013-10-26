@@ -38,6 +38,13 @@ class gaussian : public distribution_model
 			return _result ;
 		}
 
+		virtual double integrate(double _a) {
+			double _exponent = -( (_a - _mu)*(_a - _mu) ) /
+							( 2.0 * _sigma * _sigma ) ;
+			double _result = exp(_exponent) / (_sigma * sqrt(TWO_PI)) ;
+			return _result ;
+		}
+		
 		///constructor
 		gaussian(double mu, double sigma, double dx) :
 		_mu(mu), _sigma(sigma), _dx(dx) {}

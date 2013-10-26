@@ -25,6 +25,14 @@ class uniform : public distribution_model {
 			_result = ( _b - _a ) * _norm ;
 			return _result ;
 		}
+
+		virtual double integrate(double a) {
+			if(_a <= a || a < _b) {
+				return a * _norm ;
+			} else {
+				return 0.0 ;
+			} 
+		}
 		
 		///constructor
 		uniform( double lower, double upper ) :
