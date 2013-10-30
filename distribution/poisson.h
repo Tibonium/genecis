@@ -5,19 +5,15 @@
 #ifndef DISTRIBUTION_POISSON_H
 #define DISTRIBUTION_POISSON_H
 
-class poisson : public distribution_model {
+class poisson : public probability_mass_function {
 
 	private :
 	
 		double _lambda  ;
 	
 	public :
-	
-		virtual double integrate(double a, double b) {
-			return 0;
-		}
-	
-		virtual double integrate(double k) {
+
+		virtual double probability(double k) {
 			unsigned k_fact = 1;
 			if (k > 0.0) {
 				for(unsigned i=2; i<k+1; ++i) {

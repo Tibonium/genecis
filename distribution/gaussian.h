@@ -5,11 +5,9 @@
 #ifndef DISTRIBUTION_GAUSSIAN_H
 #define DISTRIBUTION_GAUSSIAN_H
 
-#include "distribution_model.h"
-
 //namespace distribution {
 
-class gaussian : public distribution_model
+class gaussian : public probability_density_function
 {
 	private:
 	
@@ -33,18 +31,11 @@ class gaussian : public distribution_model
 		
 	public:
 	
-		virtual double integrate(double a, double b) {
+		virtual double probability(double a, double b) {
 			double _result = reimann_sum(a,b) ;
 			return _result ;
 		}
 
-		virtual double integrate(double _a) {
-			double _exponent = -( (_a - _mu)*(_a - _mu) ) /
-							( 2.0 * _sigma * _sigma ) ;
-			double _result = exp(_exponent) / (_sigma * sqrt(TWO_PI)) ;
-			return _result ;
-		}
-		
 		///constructor
 		gaussian(double mu, double sigma, double dx) :
 		_mu(mu), _sigma(sigma), _dx(dx) {}

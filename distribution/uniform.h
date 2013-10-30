@@ -4,10 +4,8 @@
  
 #ifndef DISTRIBUTION_UNIFORM_H
 #define DISTRIBUTION_UNIFORM_H
- 
-#include "distribution_model.h"
 
-class uniform : public distribution_model {
+class uniform : public probability_density_function {
 
 	private:
 	
@@ -19,21 +17,13 @@ class uniform : public distribution_model {
 
 	public:
 	
-		virtual double integrate(double a, double b) {
+		virtual double probability(double a, double b) {
 			_a = min( _upper, max(a, _lower) ) ;
 			_b = max( _lower, min(b, _upper) ) ;
 			_result = ( _b - _a ) * _norm ;
 			return _result ;
 		}
 
-		virtual double integrate(double a) {
-			if(_a <= a || a < _b) {
-				return a * _norm ;
-			} else {
-				return 0.0 ;
-			} 
-		}
-		
 		///constructor
 		uniform( double lower, double upper ) :
 		_lower(lower), _upper(upper) {

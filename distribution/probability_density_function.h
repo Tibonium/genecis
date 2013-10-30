@@ -2,8 +2,8 @@
  * @file distribution_model.h
  */
  
-#ifndef DISTRIBUTION_DISTRIBUTION_MODEL_H
-#define DISTRIBUTION_DISTRIBUTION_MODEL_H
+#ifndef DISTRIBUTION_PROBABILITY_DENSITY_FUNCTION_H
+#define DISTRIBUTION_PROBABILITY_DENSITY_FUNCTION_H
 
 #include <cmath>
 #include <algorithm>
@@ -12,7 +12,7 @@
 
 using namespace std ;
 
-class distribution_model {
+class probability_density_function {
 
 	public:
 
@@ -21,9 +21,7 @@ class distribution_model {
 		 * and returns the probability/integral on that
 		 * interval.
 		 */
-		virtual double integrate(double a, double b) = 0 ;
-		
-		virtual double integrate(double a) = 0 ;
+		virtual double probability(double a, double b) = 0 ;
 
 		//virtual ~distribution() {}	
 };
