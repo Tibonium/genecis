@@ -12,16 +12,21 @@
 
 using namespace std ;
 
-class probability_mass_function {
+/**
+ * A probability mass function is a function
+ * that defines the probability of an element,
+ * x, a discrete random variable within the
+ * sample set, S, is equal to X.
+ *   f_X(x) = Pr(X = x) = Pr({s/inS : X(s) = x})
+ * and where f_X: A /rightarrow [0,1]
+ *   /sum_{x/inA} f_X(x) = 1 
+ */
+		 
+template <class SAMPLE_TYPE, class PROB_TYPE> class probability_mass_function {
 
 	public:
 
-		/**
-		 * Function call that takes an interval of [a,b)
-		 * and returns the probability/integral on that
-		 * interval.
-		 */
-		virtual double probability(double a) = 0 ;
+		virtual PROB_TYPE probability(SAMPLE_TYPE a) = 0 ;
 
 		//virtual ~distribution() {}	
 };

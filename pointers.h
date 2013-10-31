@@ -47,15 +47,16 @@ class pointers {
 	public:
 
 		double function_caller(double _num) {
-			(*func_ptr)(_num) ;
+			func_ptr(_num) ;
 			return 0 ;
 		}
 
 		/**
 		 * Constructor
 		 */
-		pointers(double(*_function)(double)) :
-			func_ptr(_function) {}
+		pointers( double(*_function) (double) ) {
+			func_ptr = _function ;
+		}
 
 };
 

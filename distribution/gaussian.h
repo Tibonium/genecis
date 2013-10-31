@@ -5,9 +5,14 @@
 #ifndef DISTRIBUTION_GAUSSIAN_H
 #define DISTRIBUTION_GAUSSIAN_H
 
-//namespace distribution {
+/**
+ * The normal (or Gaussian) distribution is a continuous
+ * probability distribution—a function that tells the
+ * probability of a number in some context falling between
+ * any two real numbers.
+ */
 
-class gaussian : public probability_density_function
+class gaussian : public probability_density_function<double>
 {
 	private:
 	

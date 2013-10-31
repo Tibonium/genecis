@@ -12,7 +12,7 @@
 
 using namespace std ;
 
-class probability_density_function {
+template <class _TYPE> class probability_density_function {
 
 	public:
 
@@ -21,7 +21,7 @@ class probability_density_function {
 		 * and returns the probability/integral on that
 		 * interval.
 		 */
-		virtual double probability(double a, double b) = 0 ;
+		virtual _TYPE probability(double a, double b) = 0 ;
 
 		//virtual ~distribution() {}	
 };

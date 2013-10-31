@@ -5,7 +5,18 @@
 #ifndef DISTRIBUTION_POISSON_H
 #define DISTRIBUTION_POISSON_H
 
-class poisson : public probability_mass_function {
+/**
+ * The Poisson distribution named after French
+ * mathematician Siméon Denis Poisson, is a discrete
+ * probability distribution that expresses the
+ * probability of a given number of events occurring
+ * in a fixed interval of time and/or space if these
+ * events occur with a known average rate and
+ * independently of the time since the last event.
+ */
+
+class poisson : public probability_mass_function<int, double>
+{
 
 	private :
 	
@@ -13,10 +24,10 @@ class poisson : public probability_mass_function {
 	
 	public :
 
-		virtual double probability(double k) {
+		virtual double probability(int k) {
 			unsigned k_fact = 1;
 			if (k > 0.0) {
-				for(unsigned i=2; i<k+1; ++i) {
+				for(int i=2; i<k+1; ++i) {
 					k_fact *= i ;
 				}
 			}

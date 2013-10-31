@@ -5,7 +5,18 @@
 #ifndef DISTRIBUTION_UNIFORM_H
 #define DISTRIBUTION_UNIFORM_H
 
-class uniform : public probability_density_function {
+/**
+ * The continuous uniform distribution or rectangular
+ * distribution is a family of symmetric probability
+ * distributions such that for each member of the family,
+ * all intervals of the same length on the distribution's
+ * support are equally probable. The support is defined by
+ * the two parameters, a and b, which are its minimum and
+ * maximum values.
+ */
+
+class uniform : public probability_density_function<double>
+{
 
 	private:
 	
