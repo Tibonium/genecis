@@ -208,6 +208,9 @@ template <class SAMPLE_TYPE, class PROB_TYPE> class discrete_distribution :
 				printf(" size of probability space(%u).\n",e[1]);
 			}	
 		}
+		
+		/// Destructor
+		//~discrete_distribution() {}
 };
 
 #endif
