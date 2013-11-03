@@ -86,7 +86,8 @@ template <class SAMPLE_TYPE, class PROB_TYPE> class discrete_distribution :
 			_sample.resize(new_sample.size()) ;
 			for(unsigned i=0; i<_prob.size(); ++i) {
 				_sample[i] = new_sample[i] ;
-			}			_prob.resize(new_prob.size()) ;
+			}
+			_prob.resize(new_prob.size()) ;
 			for(unsigned i=0; i<_prob.size(); ++i) {
 				_prob[i] = new_prob[i] ;
 			}
