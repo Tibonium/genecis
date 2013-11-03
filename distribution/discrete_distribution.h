@@ -65,7 +65,8 @@ template <class SAMPLE_TYPE, class PROB_TYPE> class discrete_distribution :
 		 * @param prob			The new probability vector for
 		 *					the new sample space.
 		 */
-		inline void add_element(SAMPLE_TYPE new_sample, vector<PROB_TYPE> new_prob) {
+		inline void add_element( SAMPLE_TYPE new_sample, 
+							vector<PROB_TYPE> new_prob) {
 			++_size ;
 			_sample.push_back(new_sample) ;
 			_prob.resize(new_prob.size()) ;
@@ -80,8 +81,8 @@ template <class SAMPLE_TYPE, class PROB_TYPE> class discrete_distribution :
 		 * @param new_sample	The new sample space
 		 * @param new_prob		The new probability space
 		 */
-		inline void add_element( vector<SAMPLE_TYPE> new_sample,
-						 	vector<PROB_TYPE> new_prob )
+		inline void rename_space( vector<SAMPLE_TYPE> new_sample,
+						 	 vector<PROB_TYPE> new_prob )
 		{
 			_sample.resize(new_sample.size()) ;
 			for(unsigned i=0; i<_prob.size(); ++i) {
