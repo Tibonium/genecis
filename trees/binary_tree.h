@@ -10,8 +10,6 @@
 #include <stdio.h>
 #include "binary_node.h"
 
-//#define TREE_DEBUG
-
 using namespace std ;
 
 template <typename _type> class binary_tree {
@@ -26,8 +24,7 @@ template <typename _type> class binary_tree {
 		 * Making them private prevents the user from starting
 		 * in the binary tree from anywhere other then the
 		 * root node.
-		 */
-		 
+		 */		 
 		 
 		/**
 		 * Our recursive search function that returns the leaf
@@ -36,25 +33,8 @@ template <typename _type> class binary_tree {
 		 *
 		 * @param key		The key we're looking for
 		 * @param leaf		The leaf with this key
-		 *
-		 * This is done recursively, until either it runs into a leaf
-		 * that is NULL which means the key is not in the tree, or finds
-		 * the leaf that corresponds to the key that is being searched
-		 * for. 
-		 *
-		 * Step 1:	Check if the leaf is NULL. If not, step 2, otherwise step 6
-		 * Step 2:	Check if key is equal to this leaf's key_value. If so,
-		 *			return this leaf, otherwise step 3.
-		 * Step 3:	Check to see if the key is less then the current leaf's
-		 *			key_value, if so step 4, otherwise step 5.
-		 * Step 4:	Call search again with arguements of key and current leaf's
-		 *			left node, procede to step 2.
-		 * Step 5:	Call search again with arguements of key and current leaf's
-		 *			right node, procede to step 2. 
-		 * Step 6:	Return NULL because the key you're searching for is not
-		 *			in the current binary_tree.
 		 */
-		node<_type>* search(const _type key, binary_node<_type>* leaf) {
+		binary_node<_type>* search(const _type key, binary_node<_type>* leaf) {
 			if ( leaf != NULL ) {
 				if ( key == leaf->key_value ) {
 					return leaf ;
@@ -76,36 +56,25 @@ template <typename _type> class binary_tree {
 		 *
 		 * @param key		The key we're looking to insert
 		 * @param leaf		The leaf in the tree we are looking at
-		 *
-		 * Insert a key at the appropriate location of the
-		 * binary tree. When it reaches the correct location
-		 * in the tree it then creates a new node and stores
-		 * the key in it.
 		 */
 		void insert(const _type key, binary_node<_type>* leaf) {
 			if ( key < leaf->key_value ) {
-				if( leaf->left != NULL ) {					// check to see if the leaf to my left is NULL
-					insert(key, leaf->left) ;				// if so, call insert on that leaf
+				if( leaf->left != NULL ) {
+					insert(key, leaf->left) ;
 				} else {
-					#ifdef TREE_DEBUG
-						cout << "set leaf->left to: " << key << endl;
-					#endif
-					leaf->left = new binary_node<_type> ;			// otherwise create a new node
-					leaf->left->key_value = key ;			// set it to key
-					leaf->left->left = NULL ;				// then create a new left under this node and set to NULL
-					leaf->left->right = NULL ;				// and create a new right under this node and set to NULL
+					leaf->left = new binary_node<_type> ;
+					leaf->left->key_value = key ;
+					leaf->left->left = NULL ;
+					leaf->left->right = NULL ;
 				}
 			} else {
-				if( leaf->right != NULL ) {					// check to see if the leaf to my left is NULL
-					insert(key, leaf->right) ;				// if so, call insert on that leaf
+				if( leaf->right != NULL ) {
+					insert(key, leaf->right) ;
 				} else {
-					#ifdef TREE_DEBUG
-						cout << "set leaf->right to: " << key << endl;
-					#endif
-					leaf->right = new binary_node<_type> ;			// otherwise create a new node
-					leaf->right->key_value = key ;			// set it to key
-					leaf->right->left = NULL ;				// then create a new left under this node and set to NULL
-					leaf->right->right = NULL ;				// and create a new right under this node and set to NULL
+					leaf->right = new binary_node<_type> ;
+					leaf->right->key_value = key ;
+					leaf->right->left = NULL ;
+					leaf->right->right = NULL ;
 				}
 			}
 		}
@@ -117,21 +86,66 @@ template <typename _type> class binary_tree {
 		 * @param leaf		leaf to delete
 		 */
 		void destroy_tree(binary_node<_type>* leaf) {
-			if ( leaf != NULL ) {							// check to see if this node is empty (NULL). If not...
-				destroy_tree( leaf->left ) ;				// call destroy_tree on the left node under this one
-				destroy_tree( leaf->right ) ;				// call destroy_tree on the right node under this one
-				delete leaf ;								// if my last call to destroy_tree found a leaf == NULL, start deleting leaves
+			if ( leaf != NULL ) {
+				destroy_tree( leaf->left ) ;
+				destroy_tree( leaf->right ) ;
+				delete leaf ;
 			}
 		}
 		
-		void printdata(node<_type>* leaf) const {
-			#ifdef TREE_DEBUG
-				cout << "***entering printdata***" << endl;
-			#endif
+		/**
+		 * Function that prints out the data in our binary tree
+		 *
+		 * @param leaf		leaf that you want to print the data about
+		 */
+		void printdata(binary_node<_type>* leaf) const {
 			if ( leaf != NULL ) {
 				printdata(leaf->left) ;
 				printdata(leaf->right) ;
 				cout << leaf->key_value << " " << endl;
+			}
+		}
+		
+		/**
+		 * The recursive function that finds the number of nodes within
+		 * a given level of the tree.
+		 *
+		 * @param _lvl		The level we want to find the number of
+		 *					nodes on
+		 * @param leaf		The leaf on the current level
+		 * @param counts	Stores the number of nodes on a the level _lvl
+		 */
+		void levelCount(int _lvl, binary_node<_type>* leaf, int& counts) {
+			if(_lvl != 1) {
+				if( leaf->left != NULL ) {
+					levelCount(_lvl-1, leaf->left, counts) ;
+				}
+				if( leaf->right != NULL ) {
+					levelCount(_lvl-1, leaf->right, counts) ;
+				}
+			} else {
+				++counts ;
+			}
+		}
+
+		/**
+		 * The recursive function that finds the number of nodes that
+		 * have no children.
+		 *
+		 * @param leaf		The node that we're checking to see if
+		 *					it has no children
+		 * @param counts	Stores the number of nodes with no children
+		 */
+		void leavesCount(binary_node<_type>* leaf, int& counts) {
+			if( (leaf->left == NULL) && (leaf->right == NULL) ) {
+				++counts ;
+			} else {
+				if( leaf->left != NULL ) {
+					leavesCount(leaf->left, counts) ;
+				}
+				if( leaf->right != NULL ) {
+					leavesCount(leaf->right, counts) ;
+				}
 			}
 		}
 	
@@ -148,19 +162,9 @@ template <typename _type> class binary_tree {
 		}
 		
 		void insert(const _type key) {
-			#ifdef TREE_DEBUG
-				cout << "***Entering binary_tree::insert(key)***" << endl;
-			#endif
 			if ( root != NULL ) {
-				#ifdef TREE_DEBUG
-					cout << "***Root was not NULL***" << endl;
-				#endif
 				insert(key, root) ;
 			} else {
-				#ifdef TREE_DEBUG
-					cout << "***Root was NULL***" << endl;
-					cout << "set root to: " << key << endl;
-				#endif
 				root = new binary_node<_type> ;
 				root->key_value = key ;
 				root->left = NULL ;
@@ -168,16 +172,33 @@ template <typename _type> class binary_tree {
 			}
 		}
 		
-		node<_type>* search(const _type key) {
+		// Search function
+		binary_node<_type>* search(const _type key) {
 			return search(key, root) ;
 		}
 		
+		// Destroy_tree function
 		void destroy_tree() {
 			destroy_tree( root ) ;
 		}
 		
+		// Printdata function
 		void printdata() const {
 			printdata( root ) ;
+		}
+		
+		// levelCount function
+		int levelCount(int _lvl) {
+			int counts = 0 ;
+			levelCount(_lvl,root, counts) ;
+			return counts ;
+		}
+		
+		// leavesCount function
+		int leavesCount() {
+			int counts = 0 ;
+			leavesCount(root,counts) ;
+			return counts ;
 		}
 
 };
