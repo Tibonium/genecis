@@ -5,8 +5,6 @@
 #include <time.h>
 #include "distribution/distribution.h"
 
-using namespace std;
-
 int main( int argc, char* argv[] ) {
 
 	gaussian* dist = new gaussian(2,10,0.00001) ;
@@ -27,14 +25,31 @@ int main( int argc, char* argv[] ) {
 		     << endl;
 	}
 	
-	double prob [] = { 0.1, 0.25, 0.1, 0.2, 0.35 } ;
-	string set [] = {"apple", "orange", "banana", "pineapple", "mango"} ;
-	discrete_distribution<string,double,5> d_dist(set,prob) ;
+	double t_prob [] = { 0.1, 0.25, 0.1, 0.2, 0.35 } ;
+	vector<double> prob ( t_prob, t_prob + sizeof(t_prob)/sizeof(double) ) ;
+	string t_set [] = {"apple", "orange", "banana", "pineapple", "mango"} ;
+	vector<string> set ( t_set, t_set + 5 ) ;
+	discrete_distribution<string,double> d_dist(set,prob) ;
 	
 	double p = (rand()%100) / 100.0 ;
 	cout << "probability: " << p
 		<< "\tsample_elem: "
 		<< d_dist.probability(p) << endl;
+		
+	double new_t_prob [] = { 0.1, 0.25, 0.1, 0.2, 0.15, 0.2 } ;
+	vector<double> new_prob ( new_t_prob, new_t_prob + sizeof(new_t_prob)/sizeof(double) ) ;
+	cout << "New sample/prob space" << endl;
+	d_dist.add_element("apricot",new_prob) ;
+	for(unsigned i=0; i<new_prob.size(); ++i) {
+		cout << "sample_elem: " << d_dist.sample_space(i)
+			<< "\tprobability: " << d_dist.prob_space(i)
+			<< endl ;
+	}
+	p = (rand()%100) / 100.0 ;
+	cout << "probability: " << p
+		<< "\tsample_elem: "
+		<< d_dist.probability(p) << endl;
+	
 	return 0;
 	
 }
