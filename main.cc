@@ -8,6 +8,12 @@
 int main( int argc, char* argv[] ) {
 
 	gaussian* dist = new gaussian(2,10,0.00001) ;
+	gaussian dist2(2,11,0.00001) ;
+	cout << "does dist == dist2: " << (*dist==dist2) << endl;
+	cout << dist2 << endl;
+	dist2 = *dist ;
+	cout << "does dist == dist2: " << (*dist==dist2) << endl;
+	cout << dist2 << endl;
 	cout << "returned a value: " << dist->probability(1,10) << endl;
 	uniform udist(2.0,7.0) ;
 	cout << "uniform dist returns [6,4): " << udist.probability(0.0,3.948) << endl;
@@ -50,6 +56,7 @@ int main( int argc, char* argv[] ) {
 		<< "\tsample_elem: "
 		<< d_dist.probability(p) << endl;
 	
+	delete dist ;
 	return 0;
 	
 }

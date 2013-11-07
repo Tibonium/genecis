@@ -40,12 +40,47 @@ class gaussian : public probability_density_function<double>
 			double _result = reimann_sum(a,b) ;
 			return _result ;
 		}
+		
+		/**
+		 * Overloading of various operators
+		 */
+		bool operator==(const gaussian& rhs) const {
+			if( (this->_mu == rhs._mu) &&
+			    (this->_sigma == rhs._sigma) )
+			{
+				return true ;
+			} else {
+				return false ;
+			}
+		}
+		
+		bool operator!= (const gaussian& rhs) const {
+			return !(*this == rhs) ;
+		}
+		
+		inline gaussian& operator= (const gaussian& rhs) {
+			this->_mu = rhs._mu ;
+			this->_sigma = rhs._sigma ;
+			this->_dx = rhs._dx ;
+			return *this ;
+		}
+		
+		friend std::ostream& operator<< (std::ostream& out, const gaussian& other) ;
 
-		///constructor
+		/// Constructor
 		gaussian(double mu, double sigma, double dx) :
 		_mu(mu), _sigma(sigma), _dx(dx) {}
 	
 };
+
+inline std::ostream& operator<< (std::ostream& os, const gaussian& other) {
+	os << "***Gaussian Distribution***\n"
+	   << "*  Mean: " << other._mu << "\t\t  *\n"
+	   << "*  Standard Dev: " << other._sigma << "\t  *\n"
+	   << "*  Delta x: " << other._dx << "\t  *\n"
+	   << "***************************" ;
+	return os ;
+}
 
 //} ///end of namespace distribution
 
