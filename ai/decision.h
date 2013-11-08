@@ -2,8 +2,8 @@
  * @file decision.h
  */
 
-#ifndef DECISION_H
-#define DECISION_H
+#ifndef AI_DECISION_H
+#define AI_DECISION_H
 
 class decision {
 

@@ -2,8 +2,8 @@
  * @file brain.h
  */
  
-#ifndef BRAIN_H
-#define BRAIN_H
+#ifndef AI_BRAIN_H
+#define AI_BRAIN_H
 
 #include <fstream>
 #include <sstream>

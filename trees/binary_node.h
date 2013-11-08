@@ -3,8 +3,8 @@
  * Simple node structure class for binary trees
  */
  
-#ifndef BINARY_NODE_H
-#define BINARY_NODE_H
+#ifndef TREES_BINARY_NODE_H
+#define TREES_BINARY_NODE_H
 
 template <typename _T> class binary_node {
 

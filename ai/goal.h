@@ -2,8 +2,8 @@
  * @file goal.h
  */
 
-#ifndef GOAL_H
-#define GOAL_H
+#ifndef AI_GOAL_H
+#define AI_GOAL_H
 
 class goal {
 
