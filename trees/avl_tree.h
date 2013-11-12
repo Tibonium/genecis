@@ -258,7 +258,29 @@ template <class _type> class avl_tree {
 		 * @param leaf		Leaf with information we want to output
 		 */
 		void print_tree(avl_node<_type>* leaf) {
-			cout << "Current Leaf info: " << leaf->key << endl;
+			if(leaf != NULL) {
+				cout << "Node: " << leaf->key << " balance: "
+					 << leaf->balance << "\n";
+				if(leaf->left != NULL) {
+					cout << "\t moving left\n";
+					print_tree(leaf->left);
+					cout << "Returning to Node" << leaf->key
+						 << " from its' left subtree\n";
+				} else {
+					cout << "\t left subtree is empty\n";
+				}
+
+				//cout << "Node: " << leaf->key << " balance is " <<
+				//leaf->balance << "\n";
+				if( leaf->right != NULL ) {
+					cout << "\t moving right\n";
+					print_tree(leaf->right);
+					cout << "Returning to Node" << leaf->key 
+						 << " from its' right subtree\n";
+				} else {
+					cout << "\t right subtree is empty\n";
+				}
+			}
 		}
 		
 		/**
@@ -308,6 +330,9 @@ template <class _type> class avl_tree {
 		 * Prints out the avl_tree to the display
 		 */
 		void print_tree() {
+			cout << "Printing AVL_tree..." << endl;
+			cout << "Root Node: " << root->key << " balance: "
+			     << root->balance << "\n\n";
 			print_tree(root) ;
 		}
 		
