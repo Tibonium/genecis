@@ -18,6 +18,9 @@ int main() {
 	}
 	
 	mytree.printdata() ;
-	cout << endl;
+	
+	avl_tree<int> myAVL ;
+	myAVL.insert(10) ;
+	myAVL.print_tree() ;
 	
 }

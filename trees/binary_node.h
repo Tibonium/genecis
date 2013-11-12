@@ -11,8 +11,8 @@ template <typename _T> class binary_node {
 	public:
 	
 		_T key_value ;
-		node<_T>* left ;
-		node<_T>* right ;
+		binary_node<_T>* left ;
+		binary_node<_T>* right ;
 
 };
 
