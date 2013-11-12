@@ -53,6 +53,23 @@ template <class _type> class avl_tree {
 			}
 		}
 		
+		bool search(avl_node<_type>* leaf, const _type& key) const {
+			if ( leaf != NULL ) {
+				if ( leaf->key == key ) {
+					return true ;
+				} else
+				if ( key < leaf->key ) {
+					search(leaf->left,key) ;
+				} else {
+					search(leaf->right,key) ;
+				}
+			} else {
+				cout << "Key: " << key << " is not within the tree."
+					 << endl ;
+				return false ;
+			}
+		}
+		
 		/**
 		 * Primary function that does all of the work to make sure
 		 * that the avl_tree follows the correct schema. This function
@@ -323,7 +340,7 @@ template <class _type> class avl_tree {
 		 * @param key	key to search for in the tree
 		 */
 		bool search(const _type& key) const {
-			return false ;
+			return search(root, key) ;
 		}
 		
 		/**
