@@ -1,4 +1,5 @@
 #include "trees/binary_tree.h"
+#include "trees/avl_tree.h"
 #include <stdlib.h>
 #include <time.h>
 
