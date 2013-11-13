@@ -24,8 +24,8 @@ template <class _type, int _size> class btree {
 				n = new btree_node<_type,_size> ;
 				n->num_keys = 1 ;
 				for(int i=0; i<MAX; ++i) {
-					if( i==0 ) { n->key_list[0] = key ; }
-					else { n->key_list[i] = 0 ; }
+					if( i==0 ) { n->key_ring[0] = key ; }
+					else { n->key_ring[i] = 0 ; }
 					n->child[i] = NULL ;
 				}
 			} else
@@ -33,7 +33,7 @@ template <class _type, int _size> class btree {
 				if ( n->num_keys != MAX-1 ) {
 					put_key(n,key) ;
 				} else {
-					//split(n,key) ;
+					split(n,key) ;
 				}
 			} else {
 				cout << "Key: " << key << " already exists." << endl;
@@ -48,45 +48,48 @@ template <class _type, int _size> class btree {
 		 * @param key	The key we want to put on the ring 
 		 */
 		void put_key(btree_node<_type,_size>* n, _type key) {
-			//--------------------------------------------------------------
+			//------------------------------------------------------
 			// Find the first empty key slot on this ring
-			//--------------------------------------------------------------
+			//------------------------------------------------------
 			int i ;
 			for(i=0; i<MAX-1; ++i) {
 				if( n->child[i] == NULL ) break ;
 			}
 	
-			//--------------------------------------------------------------
-			// Case 1: The key in question is bigger then the last non-empty
-			//		   key on the ring, so put the key there
-			//--------------------------------------------------------------
-			if( key > n->key[i-1] ) {
-				n->key[i] = key ;
+			//------------------------------------------------------
+			// Case 1: The key in question is bigger then the last
+			//		   non-empty key on the ring, so put the key
+			//		   there
+			//------------------------------------------------------
+			if( key > n->key_ring[i-1] ) {
+				n->key_ring[i] = key ;
 			} else	
-			//--------------------------------------------------------------
-			// Case 2: The key in question is smaller then the last non-empty
-			//		   key but larger then some other key on the ring. Move
-			//		   all bigger keys up a slot and put the new key in the
-			//         new empty slot
-			//--------------------------------------------------------------
-			if( (key > n->key[0]) && (key < n->key[i-1]) ) {
+			//------------------------------------------------------
+			// Case 2: The key in question is smaller then the last
+			//		   non-empty key but larger then some other key
+			//		   on the ring. Move all bigger keys up a slot
+			//         and put the new key in the new empty slot
+			//------------------------------------------------------
+			if( (key > n->key_ring[0]) && (key < n->key_ring[i-1]) )
+			{
 				for(int j=i-1; j>1; --j) {
-					n->key[j+1] = n->key[j] ;
-					if ( key > n->key[j-1] ) {
-						n->key[j] = key ; 
+					n->key_ring[j+1] = n->key_ring[j] ;
+					if ( key > n->key_ring[j-1] ) {
+						n->key_ring[j] = key ; 
 					}
 				}
 			}
-			//--------------------------------------------------------------
-			// Case 3: The key in question is smaller then all the keys on
-			//         the current ring, so move all keys up a slot and put
-			//         the new key at the beginning of the ring.
-			//--------------------------------------------------------------
+			//------------------------------------------------------
+			// Case 3: The key in question is smaller then all the
+			//         keys on the current ring, so move all keys up
+			//         a slot and put the new key at the beginning
+			//		   of the ring.
+			//------------------------------------------------------
 			else {
 				for(int j=i-1; j>0; --j) {
-					n->key[j+1] = n->key[j] ; 
+					n->key_ring[j+1] = n->key_ring[j] ; 
 				}
-				n->key[0] = key ;
+				n->key_ring[0] = key ;
 			}
 		}
 
