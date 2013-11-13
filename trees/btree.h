@@ -9,70 +9,104 @@ template <class _type, int _size> class btree {
 
 	private:
 	
+		// Root of our tree
 		btree_node<_type,_size>* root ;
 		
-		void insert(btree_node<_type,_size>* node, const _type& key) {
-			if ( node != NULL ) {
-				for(int i=0; i<_size-2; ++i) {
-					if ( node->key_list[i] != NULL ) {
-						if ( node->key_list[i] < key ) {
-							node->key_list[i+1] = key ;
-							return ;
-						} else {
-							_type temp_key = node->key_list[i] ;
-							node->key_list[i] = key ;
-							node->key_list[i+1] = temp_key ;
-						}
-					}
+		/**
+		 * This function is the primary worker, placing the key on
+		 * a ring that follows the btree schema.
+		 *
+		 * @param n		Ring to check if the key goes on
+		 * @param key	The key we want to add to a ring
+		 */
+		void insert(btree_node<_type,_size>* n, _type key) {
+			if ( n == NULL ) {
+				n = new btree_node<_type,_size> ;
+				n->num_keys = 1 ;
+				for(int i=0; i<MAX; ++i) {
+					if( i==0 ) { n->key_list[0] = key ; }
+					else { n->key_list[i] = 0 ; }
+					n->child[i] = NULL ;
+				}
+			} else
+			if ( !search(root,key) ) {
+				if ( n->num_keys != MAX-1 ) {
+					put_key(n,key) ;
+				} else {
+					//split(n,key) ;
 				}
 			} else {
-				node = new btree_node<_type,_size> ;
-				for(int i=0; i<_size-1; ++i) {
-					if ( i == 0 ) node->key_list[i] = key ;
-					else node->key_list[i] = NULL ;
-				}
-				for(int i=0; i<_size; ++i) {
-					node->child[i] = NULL ;
-				}
+				cout << "Key: " << key << " already exists." << endl;
 			}
 		}
-		
-		void search() {}
-		
-		void split_node() {}
-		
+
 		/**
-		 * Delete the leaves and keys from the bottom of the tree up.
-		 * Recursively calls itself on each child inside of the
-		 * passed leaf.
-		 * 
-		 * @param leaf		leaf and associated keys to delete
+		 * This function puts the key on the ring in the appropriate
+		 * slot.
+		 *
+		 * @param n		The ring we want to put our key on
+		 * @param key	The key we want to put on the ring 
 		 */
-		void destroy_tree(btree_node<_type,_size>* leaf) {
-			for(int i=0; i<_size; ++i) {
-				if ( leaf->child[i] != NULL ) {
-					destroy_tree(leaf->child[i]) ;
+		void put_key(btree_node<_type,_size>* n, _type key) {
+			//--------------------------------------------------------------
+			// Find the first empty key slot on this ring
+			//--------------------------------------------------------------
+			int i ;
+			for(i=0; i<MAX-1; ++i) {
+				if( n->child[i] == NULL ) break ;
+			}
+	
+			//--------------------------------------------------------------
+			// Case 1: The key in question is bigger then the last non-empty
+			//		   key on the ring, so put the key there
+			//--------------------------------------------------------------
+			if( key > n->key[i-1] ) {
+				n->key[i] = key ;
+			} else	
+			//--------------------------------------------------------------
+			// Case 2: The key in question is smaller then the last non-empty
+			//		   key but larger then some other key on the ring. Move
+			//		   all bigger keys up a slot and put the new key in the
+			//         new empty slot
+			//--------------------------------------------------------------
+			if( (key > n->key[0]) && (key < n->key[i-1]) ) {
+				for(int j=i-1; j>1; --j) {
+					n->key[j+1] = n->key[j] ;
+					if ( key > n->key[j-1] ) {
+						n->key[j] = key ; 
+					}
 				}
 			}
-			delete[] leaf->key_list ;
-			delete leaf ;
+			//--------------------------------------------------------------
+			// Case 3: The key in question is smaller then all the keys on
+			//         the current ring, so move all keys up a slot and put
+			//         the new key at the beginning of the ring.
+			//--------------------------------------------------------------
+			else {
+				for(int j=i-1; j>0; --j) {
+					n->key[j+1] = n->key[j] ; 
+				}
+				n->key[0] = key ;
+			}
 		}
+
 	
 	public:
 	
-		void insert(const _type& key) {
+		/**
+		 * Allows the user to insert a key into the btree
+		 *
+		 * @param key		The key we want to add
+		 */
+		void insert(_type key) {
 			insert(root,key) ;
 		}
-	
-		bool search(const _type& key) {
 		
-		}
-	
 		// Constructor
 		btree() {
 			root = NULL ;
 		}
-		
+	
 		// Destructor
 		~btree() {
 			destroy_tree(root) ;

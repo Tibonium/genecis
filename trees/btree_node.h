@@ -9,8 +9,7 @@ template <class _type, int _size> class btree_node {
 
 	private:
 	
-		int record ;
-		bool leaf ;
+		int num_keys ;
 		_type key_list[_size-1] ;
 		btree_node<_type,_size>* child[_size] ;
 	
