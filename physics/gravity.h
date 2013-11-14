@@ -19,10 +19,17 @@ class gravity {
 		/**
 		 * Terms for a simulation of Newton's Law of
 		 * gravity.
+		 *
+		 * @var _mass1		mass of the first body, units = kg
+		 * @var _mass2		mass of the second body, units = kg
+		 * @var _obj1		position of the first body
+		 * @var _obj2		position of the second body
+		 * @var _dt			Time increment for calculations
 		 */
 		double _mass1 ;
 		double _mass2 ;
-		double _r ;
+		p_vector* _obj1 ;
+		p_vector* _obj2 ;
 		double _dt ;
 	
 		step() ;
@@ -60,11 +67,12 @@ class gravity {
 		 * is the half the radial distance between the 
 		 * center of mass1 and mass2.
 		 *
-		 * @param mass1	Mass of the first body
-		 * @param mass2	Mass of the second body
+		 * @param obj		starting positions of the two masses
+		 * @param mass1		Mass of the first body
+		 * @param mass2		Mass of the second body
 		 * @param dt		Increment of time for iterations
 		 */
-		gravity(mass1, mass2, r, dt) ;
+		gravity(p_vector& obj, mass1, mass2, dt) ;
 		
 		/**
 		 * Initialize recording of netCDF motion log.
