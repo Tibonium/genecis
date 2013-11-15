@@ -146,27 +146,16 @@ class svector {
 		 * partical sense this is not a c/c++ vector but a physics
 		 * or mathetmatical meaning of such. To simplify the process
 		 * the user passes in the theta and phi compoments in degrees
-		 * and they are converted to radians and stored.
+		 * and they are converted to radians.
 		 *
-		 * @param d1	The value in the rho or x direction
-		 * @param d2	The value in the theta or y direction
-		 * @param d3	The value in the phi or z direction
-		 * @param cart	A flag that is set to allow the user to pass
-		 *				the values above in as cartesian coordinates
-		 *				as opposed to the default, spherical. AT
-		 *				construction the values are then converted
-		 *				into the respective spherical values.
+		 * @param d1	rho component of the vector
+		 * @param d2	theta component of the vector
+		 * @param d3	phi component of the vector
 		 */
-		svector(double d1, double d2, double d3, bool cart=false) {
-			if( cart ) {
-				_rho = sqrt( d1 * d1 + d2 * d2 + d3 * d3 ) ;
-				_theta = acos( d3 / _rho ) ;
-				_phi = atan( d2 / d1 ) ;
-			} else {
-				_rho = d1 ;
-				_theta = d2 * M_PI / 180.0;
-				_phi = d3 * M_PI / 180.0 ;
-			}
+		svector(double d1, double d2, double d3) {
+			_rho = d1 ;
+			_theta = d2 * M_PI / 180.0 ;
+			_phi = d3 * M_PI / 180.0 ;
 		}
 		
 		// Destructor
