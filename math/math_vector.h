@@ -35,9 +35,9 @@ class math_vector {
 		 *
 		 *  norm(u) = /frac{u} {|u|}
 		 */
-		template <class T>
+		template <typename T>
 		inline T norm() const {
-			double n = dot(*this) ;
+			double n = sqrt(dot(*this)) ;
 			double u1 = _u1 / n ;
 			double u2 = _u2 / n ;
 			double u3 = _u3 / n ;
@@ -54,7 +54,7 @@ class math_vector {
 		 * 
 		 *  (u2*v3-u3*v2) i - (u1*v3-u3*v1) j + (u1*v2-u2*v1) k
 		 */
-		template <class T>
+		template <typename T>
 		inline T cross(const T& other) const {
 			double u1 = _u2 * other.u3() - _u3 * other.u2() ;
 			double u2 = _u1 * other.u3() - _u3 * other.u1() ;
@@ -72,7 +72,7 @@ class math_vector {
 		 */
 		inline double dotnorm(const math_vector& other) const {
 			double result = dot(other) / 
-				( dot(*this) * other.dot(other) ) ;
+				( sqrt(dot(*this)) * sqrt(other.dot(other)) ) ;
 			return result ;
 		}
 		
@@ -80,13 +80,12 @@ class math_vector {
 		 * Returns the distance between two math_vectors
 		 *
 		 *   Distance =
-		 *		|u| + |v| - 2.0 * |u| |v| cos(angle)
+		 *		|u| + |v| - 2.0 * |u dot v|
 		 */
 		inline double distance(const math_vector& other) const {
 			double m1 = dot(*this) * dot(*this) ;
 			double m2 = other.dot(other) * other.dot(other) ;
-			double result = sqrt( m1 + m2 - 
-				2.0 * m1 * m2 * dotnorm(other) ) ;
+			double result = sqrt( m1 + m2 - 2.0 * dot(other) ) ;
 			return result ;
 		}
 		
@@ -95,7 +94,7 @@ class math_vector {
 		 * of the vector.
 		 */
 		inline double magnitude() {
-			return dot(*this) ;
+			return sqrt(dot(*this)) ;
 		}
 		
 		/**
