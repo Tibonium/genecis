@@ -2,8 +2,8 @@
  * @file svector.h
  */
  
-#ifndef PHYSICS_SVECTOR_H
-#define PHYSICS_SVECTOR_H
+#ifndef MATH_SVECTOR_H
+#define MATH_SVECTOR_H
 
 #define _USE_MATH_DEFINES
 
@@ -15,9 +15,7 @@ class svector {
 	private:
 	
 		/**
-		 * Spherical Coordinates for doing mathematics and physics
-		 * There are accessors to pull out information in cartesian
-		 * coordinates if the user desires.
+		 * Mathematical vectors in spherical coordinates
 		 *
 		 * @var _rho	radius, units = "distance from origin"
 		 * @var _theta	polar angle, units = radians, positive = up
