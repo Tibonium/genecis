@@ -6,8 +6,8 @@ using namespace std ;
 int main() {
 
 	cout << "\t\t***svector Test section***" << endl ;
-	svector myvec( 1231.4, 15.0, 3.0 ) ;
-	svector otrvec( 14950.2, 22.1, -20.4 ) ;
+	svector myvec( 1231.4, 15.0, 3.0, true ) ;
+	svector otrvec( 14950.2, 22.1, -20.4, true ) ;
 	cout << myvec << endl ;
 	cout << "The two vectors...." 
 		<< "\nmyvec" << myvec
@@ -25,7 +25,7 @@ int main() {
 	(myvec < otrvec) ? cout << "true." << endl :
 		cout << "false." << endl ;
 	
-	cout << "norm of myvec " << myvec.norm() << endl ;
+//	cout << "norm of myvec " << myvec.norm() << endl ;
 	
 	cout << "\t\t***bvector Test section***" << endl ;
 	bvector i( 1.0, 0.0, 0.0 ) ;
