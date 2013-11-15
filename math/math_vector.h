@@ -181,6 +181,28 @@ class math_vector {
 			_u3 = other.u3() ;
 		}
 
+		/** Various operators for scalar arithmetics */
+		template<typename T>
+		void operator+ (const T& val) {
+			_u1 += val ;
+			_u2 += val ;
+			_u3 += val ;
+		}
+
+		template<typename T>
+		void operator- (const T& val) {
+			_u1 -= val ;
+			_u2 -= val ;
+			_u3 -= val ;
+		}
+		
+		template<typename T>
+		void operator* (const T& val) {
+			_u1 *= val ;
+			_u2 *= val ;
+			_u3 *= val ;
+		}
+		
 		template<typename T>
 		void operator/ (const T& val) {
 			_u1 /= val ;
