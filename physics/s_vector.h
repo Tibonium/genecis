@@ -1,13 +1,12 @@
 /**
- * @file p_vector.h
+ * @file s_vector.h
  */
  
-#ifndef PHYSICS_P_VECTOR_H
-#define PHYSICS_P_VECTOR_H
+#ifndef PHYSICS_S_VECTOR_H
+#define PHYSICS_S_VECTOR_H
 
 #define _USE_MATH_DEFINES
 
-#include <vector>
 #include <iostream>
 #include <cmath>
 
@@ -32,13 +31,13 @@ class p_vector {
 	public:
 	
 		/**
-		 * Returns the inner product of two p_vectors
+		 * Returns the inner product of two s_vectors
 		 *
 		 *  dot product =
 		 *		rho1*rho2 ( cos(theta1)cos(theta2) +
 		 *		sin(theta1)sin(theta2)cos(phi1-phi2) )
 		 */
-		inline double dot(const p_vector& other) const {
+		inline double dot(const s_vector& other) const {
 			double result = ( _rho * other.rho() * ( 
 				cos(_theta) * cos(other.theta()) +
 				sin(_theta) * sin(other.theta()) *
@@ -47,14 +46,14 @@ class p_vector {
 		}
 		
 		/**
-		 * Returns the normalized inner product of two p_vectors
+		 * Returns the normalized inner product of two s_vectors
 		 * which is the cosine of the angle between the two
-		 * p_vectors.
+		 * s_vectors.
 		 *
 		 *	cos(angle) = ( cose(theta1)cos(theta2) - 
 		 *				sin(theaa1)sin(theta2)cos(phi1-phi2) )
 		 */
-		inline double dotnorm(const p_vector& other) const {
+		inline double dotnorm(const s_vector& other) const {
 			double result = ( cos(_theta) * cos(other.theta()) +
 				sin(_theta) * sin(other.theta()) * 
 				cos(_phi - other.phi()) ) ;
@@ -62,23 +61,23 @@ class p_vector {
 		}
 		
 		/**
-		 * Returns the distance between two p_vectors
+		 * Returns the distance between two s_vectors
 		 */
-		inline double distance(const p_vector& other) const {
+		inline double distance(const s_vector& other) const {
 			double result = sqrt( _rho * _rho +
 				other.rho() * other.rho() - 2.0 * dot(other) ) ;
 			return result ;
 		}
 		
 		/**
-		 * Returns the cross product of two p_vectors
+		 * Returns the cross product of two s_vectors
 		 *
 		 *  Cross product =
 		 *			(theta1*phi2 - phi1*theta2) /hat{rho} +
 		 *			(phi1*rho2 - rho1*phi2) /hat{theta} +
 		 *			(rho1*theta2 - theta1*rho2) /hat{phi}
 		 */
-		inline p_vector* cross(const p_vector& other) const {
+		inline s_vector* cross(const s_vector& other) const {
 			double rho = _theta * other.phi() - 
 						 _phi * other.theta() ;
 			double theta = _rho * other.phi() -
@@ -86,7 +85,7 @@ class p_vector {
 			theta *= -1.0 ;
 			double phi = _rho * other.theta() -
 						 _theta * other.rho() ;
-			p_vector* result = new p_vector(rho,theta,phi) ;
+			s_vector* result = new s_vector(rho,theta,phi) ;
 			return result ;
 		}
 		
@@ -157,7 +156,7 @@ class p_vector {
 		 *				construction the values are then converted
 		 *				into the respective spherical values.
 		 */
-		p_vector(double d1, double d2, double d3, bool cart=false) {
+		s_vector(double d1, double d2, double d3, bool cart=false) {
 			if( cart ) {
 				_rho = sqrt( d1 * d1 + d2 * d2 + d3 * d3 ) ;
 				_theta = acos( d3 / _rho ) ;
@@ -170,15 +169,15 @@ class p_vector {
 		}
 		
 		// Destructor
-		~p_vector() {}
+		~s_vector() {}
 		
-		friend std::ostream& operator<< (std::ostream& os, const p_vector& other) ;
+		friend std::ostream& operator<< (std::ostream& os, const s_vector& other) ;
 
 };
 
-// std::output override for p_vector
-inline std::ostream& operator<< (std::ostream& os, const p_vector& other) {
-	os << "p_vector(rho,theta,phi): ("
+// std::output override for s_vector
+inline std::ostream& operator<< (std::ostream& os, const s_vector& other) {
+	os << "(rho,theta,phi): ("
 	   << other.rho() << ", "
 	   << other.theta() << ", "
 	   << other.phi() << ")" ;

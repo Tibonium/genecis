@@ -5,6 +5,8 @@
 #ifndef PHYSICS_GRAVITY_H
 #define PHYSICS_GRAVITY_H
 
+#include "s_vector.h"
+
 class gravity {
 
 	private:
