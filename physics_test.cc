@@ -26,7 +26,9 @@ int main() {
 		cout << "false." << endl ;
 	
 	cout << "maginutde of myvec: " << myvec.magnitude() << endl ;
-	cout << "norm of myvec " << myvec.norm() << endl ;
+	svector n_vec = myvec.norm<svector>() ;
+	cout << "norm of myvec " << n_vec << endl ;
+	cout << "magnitude of the norm of myvec: " << (myvec.norm<svector>()).magnitude() << endl ;
 	
 	cout << "\t\t***bvector Test section***" << endl ;
 	bvector i( 1.0, 0.0, 0.0 ) ;
