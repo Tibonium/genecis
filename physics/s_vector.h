@@ -10,7 +10,7 @@
 #include <iostream>
 #include <cmath>
 
-class p_vector {
+class s_vector {
 
 	private:
 	
@@ -61,6 +61,22 @@ class p_vector {
 		}
 		
 		/**
+		 * Returns the magnitude square or the length
+		 * of the vector.
+		 */
+		inline double magnitude() {
+			return dot(*this) ;
+		}
+		
+		/**
+		 * Returns the normalized vector
+		 */
+		inline s_vector norm() const {
+			double n = dot(*this) ;
+			return s_vector(_rho/n, _theta/n, _phi/n) ;
+		}
+		
+		/**
 		 * Returns the distance between two s_vectors
 		 */
 		inline double distance(const s_vector& other) const {
@@ -77,7 +93,7 @@ class p_vector {
 		 *			(phi1*rho2 - rho1*phi2) /hat{theta} +
 		 *			(rho1*theta2 - theta1*rho2) /hat{phi}
 		 */
-		inline s_vector* cross(const s_vector& other) const {
+		inline s_vector cross(const s_vector& other) const {
 			double rho = _theta * other.phi() - 
 						 _phi * other.theta() ;
 			double theta = _rho * other.phi() -
@@ -85,7 +101,7 @@ class p_vector {
 			theta *= -1.0 ;
 			double phi = _rho * other.theta() -
 						 _theta * other.rho() ;
-			s_vector* result = new s_vector(rho,theta,phi) ;
+			s_vector result(rho,theta,phi) ;
 			return result ;
 		}
 		
@@ -171,6 +187,62 @@ class p_vector {
 		// Destructor
 		~s_vector() {}
 		
+		/**
+		 * Various overload operators required for different
+		 * mathematical operations and comparisons.
+		 */
+		bool operator== (const s_vector& other) {
+			bool result = ( ( _rho == other.rho() ) &&
+					      ( _theta == other.theta() ) &&
+					      ( _phi == other.phi() ) ) ;
+			return result ;
+		}
+
+		bool operator!= (const s_vector& other) {
+			return !( *this == other ) ;
+		}
+		
+		bool operator> (const s_vector& other) {
+			return ( dot(*this) > dot(other) ) ;
+		}
+		
+		bool operator>= (const s_vector& other) {
+			return !(*this < other) ;
+		}
+		
+		bool operator< (const s_vector& other) {
+			return ( dot(other) > dot(*this) ) ;
+		}
+		
+		bool operator<= (const s_vector& other) {
+			return !(*this > other) ;
+		}
+		
+		void operator- (const s_vector& other) {
+			_rho -= other.rho() ;
+			_theta -= other.theta() ;
+			_phi -= other.phi() ;
+		}
+		
+		void operator+ (const s_vector& other) {
+			_rho += other.rho() ;
+			_theta += other.theta() ;
+			_phi += other.phi() ;
+		}
+
+		void operator= (const s_vector& other) {
+			_rho = other.rho() ;
+			_theta = other.theta() ;
+			_phi = other.phi() ;
+		}
+
+		template<typename T>
+		void operator/ (const T& val) {
+			_rho /= val ;
+			_theta /= val ;
+			_phi /= val ;
+		}
+				
 		friend std::ostream& operator<< (std::ostream& os, const s_vector& other) ;
 
 };
