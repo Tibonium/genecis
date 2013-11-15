@@ -1,16 +1,16 @@
 /**
- * @file s_vector.h
+ * @file svector.h
  */
  
-#ifndef PHYSICS_S_VECTOR_H
-#define PHYSICS_S_VECTOR_H
+#ifndef PHYSICS_SVECTOR_H
+#define PHYSICS_SVECTOR_H
 
 #define _USE_MATH_DEFINES
 
 #include <iostream>
 #include <cmath>
 
-class s_vector {
+class svector {
 
 	private:
 	
@@ -19,7 +19,7 @@ class s_vector {
 		 * There are accessors to pull out information in cartesian
 		 * coordinates if the user desires.
 		 *
-		 * @var	_rho	radius, units = meters
+		 * @var _rho	radius, units = "distance from origin"
 		 * @var _theta	polar angle, units = radians, positive = up
 		 * @var _phi	azimuthal angle, units = radians,
 		 *				positive = clockwise
@@ -31,13 +31,13 @@ class s_vector {
 	public:
 	
 		/**
-		 * Returns the inner product of two s_vectors
+		 * Returns the inner product of two svectors
 		 *
 		 *  dot product =
 		 *		rho1*rho2 ( cos(theta1)cos(theta2) +
 		 *		sin(theta1)sin(theta2)cos(phi1-phi2) )
 		 */
-		inline double dot(const s_vector& other) const {
+		inline double dot(const svector& other) const {
 			double result = ( _rho * other.rho() * ( 
 				cos(_theta) * cos(other.theta()) +
 				sin(_theta) * sin(other.theta()) *
@@ -46,14 +46,14 @@ class s_vector {
 		}
 		
 		/**
-		 * Returns the normalized inner product of two s_vectors
+		 * Returns the normalized inner product of two svectors
 		 * which is the cosine of the angle between the two
-		 * s_vectors.
+		 * svectors.
 		 *
 		 *	cos(angle) = ( cose(theta1)cos(theta2) - 
 		 *				sin(theaa1)sin(theta2)cos(phi1-phi2) )
 		 */
-		inline double dotnorm(const s_vector& other) const {
+		inline double dotnorm(const svector& other) const {
 			double result = ( cos(_theta) * cos(other.theta()) +
 				sin(_theta) * sin(other.theta()) * 
 				cos(_phi - other.phi()) ) ;
@@ -71,29 +71,29 @@ class s_vector {
 		/**
 		 * Returns the normalized vector
 		 */
-		inline s_vector norm() const {
+		inline svector norm() const {
 			double n = dot(*this) ;
-			return s_vector(_rho/n, _theta/n, _phi/n) ;
+			return svector(_rho/n, _theta/n, _phi/n) ;
 		}
 		
 		/**
-		 * Returns the distance between two s_vectors
+		 * Returns the distance between two svectors
 		 */
-		inline double distance(const s_vector& other) const {
+		inline double distance(const svector& other) const {
 			double result = sqrt( _rho * _rho +
 				other.rho() * other.rho() - 2.0 * dot(other) ) ;
 			return result ;
 		}
 		
 		/**
-		 * Returns the cross product of two s_vectors
+		 * Returns the cross product of two svectors
 		 *
 		 *  Cross product =
 		 *			(theta1*phi2 - phi1*theta2) /hat{rho} +
 		 *			(phi1*rho2 - rho1*phi2) /hat{theta} +
 		 *			(rho1*theta2 - theta1*rho2) /hat{phi}
 		 */
-		inline s_vector cross(const s_vector& other) const {
+		inline svector cross(const svector& other) const {
 			double rho = _theta * other.phi() - 
 						 _phi * other.theta() ;
 			double theta = _rho * other.phi() -
@@ -101,7 +101,7 @@ class s_vector {
 			theta *= -1.0 ;
 			double phi = _rho * other.theta() -
 						 _theta * other.rho() ;
-			s_vector result(rho,theta,phi) ;
+			svector result(rho,theta,phi) ;
 			return result ;
 		}
 		
@@ -138,21 +138,6 @@ class s_vector {
 		inline void phi(double _p) {
 			_phi = _p ;
 		}
-		
-		/**
-		 * Convert the vector values in cartesian coordinates
-		 */
-		inline double x() const {
-			return ( _rho * sin(_theta) * cos(_phi) ) ;
-		}
-
-		inline double y() const {
-			return ( _rho * sin(_theta) * sin(_phi) ) ;
-		}
-
-		inline double z() const {
-			return ( _rho * cos(_theta) ) ;
-		}
 			
 		/**
 		 * Constructor
@@ -172,7 +157,7 @@ class s_vector {
 		 *				construction the values are then converted
 		 *				into the respective spherical values.
 		 */
-		s_vector(double d1, double d2, double d3, bool cart=false) {
+		svector(double d1, double d2, double d3, bool cart=false) {
 			if( cart ) {
 				_rho = sqrt( d1 * d1 + d2 * d2 + d3 * d3 ) ;
 				_theta = acos( d3 / _rho ) ;
@@ -185,52 +170,52 @@ class s_vector {
 		}
 		
 		// Destructor
-		~s_vector() {}
+		~svector() {}
 		
 		/**
 		 * Various overload operators required for different
 		 * mathematical operations and comparisons.
 		 */
-		bool operator== (const s_vector& other) {
+		bool operator== (const svector& other) {
 			bool result = ( ( _rho == other.rho() ) &&
 					      ( _theta == other.theta() ) &&
 					      ( _phi == other.phi() ) ) ;
 			return result ;
 		}
 
-		bool operator!= (const s_vector& other) {
+		bool operator!= (const svector& other) {
 			return !( *this == other ) ;
 		}
 		
-		bool operator> (const s_vector& other) {
+		bool operator> (const svector& other) {
 			return ( dot(*this) > dot(other) ) ;
 		}
 		
-		bool operator>= (const s_vector& other) {
+		bool operator>= (const svector& other) {
 			return !(*this < other) ;
 		}
 		
-		bool operator< (const s_vector& other) {
+		bool operator< (const svector& other) {
 			return ( dot(other) > dot(*this) ) ;
 		}
 		
-		bool operator<= (const s_vector& other) {
+		bool operator<= (const svector& other) {
 			return !(*this > other) ;
 		}
 		
-		void operator- (const s_vector& other) {
+		void operator- (const svector& other) {
 			_rho -= other.rho() ;
 			_theta -= other.theta() ;
 			_phi -= other.phi() ;
 		}
 		
-		void operator+ (const s_vector& other) {
+		void operator+ (const svector& other) {
 			_rho += other.rho() ;
 			_theta += other.theta() ;
 			_phi += other.phi() ;
 		}
 
-		void operator= (const s_vector& other) {
+		void operator= (const svector& other) {
 			_rho = other.rho() ;
 			_theta = other.theta() ;
 			_phi = other.phi() ;
@@ -243,12 +228,12 @@ class s_vector {
 			_phi /= val ;
 		}
 				
-		friend std::ostream& operator<< (std::ostream& os, const s_vector& other) ;
+		friend std::ostream& operator<< (std::ostream& os, const svector& other) ;
 
 };
 
-// std::output override for s_vector
-inline std::ostream& operator<< (std::ostream& os, const s_vector& other) {
+// std::output override for svector
+inline std::ostream& operator<< (std::ostream& os, const svector& other) {
 	os << "(rho,theta,phi): ("
 	   << other.rho() << ", "
 	   << other.theta() << ", "

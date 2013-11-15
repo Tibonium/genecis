@@ -1,12 +1,12 @@
 #include <iostream>
-#include "physics/s_vector.h"
+#include "physics/svector.h"
 
 using namespace std ;
 
 int main() {
 
-	s_vector myvec( 1231.4, 15.0, 3.0 ) ;
-	s_vector otrvec( 14950.2, 22.1, -20.4 ) ;
+	svector myvec( 1231.4, 15.0, 3.0 ) ;
+	svector otrvec( 14950.2, 22.1, -20.4 ) ;
 	cout << myvec << endl ;
 	cout << "The two vectors...." 
 		<< "\nmyvec" << myvec
