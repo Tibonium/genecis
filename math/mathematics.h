@@ -8,5 +8,6 @@
 
 #include "svector.h"
 #include "bvector.h"
+#include "cvector.h"
 
 #endif

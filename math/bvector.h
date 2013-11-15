@@ -70,7 +70,7 @@ class bvector {
 		 * Returns the distance between two bvectors
 		 *
 		 *   Distance =
-		 *		|u| + |v| - 2.0 * cos(angle)
+		 *		|u| + |v| - 2.0 * |u| |v| cos(angle)
 		 */
 		inline double distance(const bvector& other) const {
 			double result = sqrt( dot(*this) * dot(*this) +

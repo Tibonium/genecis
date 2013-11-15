@@ -48,7 +48,7 @@ class svector {
 		 * which is the cosine of the angle between the two
 		 * svectors.
 		 *
-		 *	cos(angle) = ( cose(theta1)cos(theta2) - 
+		 *	cos(angle) = ( cos(theta1)cos(theta2) - 
 		 *				sin(theaa1)sin(theta2)cos(phi1-phi2) )
 		 */
 		inline double dotnorm(const svector& other) const {

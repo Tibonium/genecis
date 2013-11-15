@@ -5,7 +5,7 @@ using namespace std ;
 
 int main() {
 
-	cout << "***svector Test section***" << endl ;
+	cout << "\t\t***svector Test section***" << endl ;
 	svector myvec( 1231.4, 15.0, 3.0 ) ;
 	svector otrvec( 14950.2, 22.1, -20.4 ) ;
 	cout << myvec << endl ;
@@ -27,7 +27,7 @@ int main() {
 	
 	cout << "norm of myvec " << myvec.norm() << endl ;
 	
-	cout << "***bvector Test section***" << endl ;
+	cout << "\t\t***bvector Test section***" << endl ;
 	bvector i( 1.0, 0.0, 0.0 ) ;
 	bvector j( 0.0, 1.0, 0.0 ) ;
 	bvector k( 0.0, 0.0, 1.0 ) ;
