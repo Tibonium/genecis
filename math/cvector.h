@@ -7,7 +7,7 @@
 
 #include "math_vector.h"
 
-class cvector : public math_vector {
+class cvector : public math_vector<double> {
 
 	public:
 	
