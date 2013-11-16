@@ -53,6 +53,9 @@ int main() {
 	cout << "k cross i: " << k.cross(i) << endl ;
 	cout << "k cross j: " << k.cross(j) << endl ;
 	cout << "k cross k: " << k.cross(k) << endl ;
+	
+	ovector<int> omni(1,4,7) ;
+	cout << "omni" << omni << endl ;
 
 	return 0 ;
 }

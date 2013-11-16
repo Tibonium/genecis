@@ -18,9 +18,9 @@ class bvector : public math_vector<double> {
 		 *		x*x + y*y + z*z
 		 */
 		virtual inline double dot(const math_vector& other) const {
-			double result = _u1 * other.u1() + 
-							_u2 * other.u2() +
-							_u3 * other.u3() ;
+			double result = ( _u1 * other.u1() + 
+						   _u2 * other.u2() +
+						   _u3 * other.u3() ) ;
 			return result ;
 		}
 						
