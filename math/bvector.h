@@ -31,7 +31,7 @@ class bvector : public math_vector<double> {
 		 * @param y 	y component
 		 * @param z 	z component
 		 */
-		bvector(double x, double y, double z) {
+		bvector(double x=0.0, double y=0.0, double z=0.0) {
 			_u1 = x ;
 			_u2 = y ;
 			_u3 = z ;

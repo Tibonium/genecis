@@ -35,7 +35,8 @@ class cvector : public math_vector<double> {
 		 * @param z		z component
 		 * @param rad	defaults to not needing conversion done
 		 */
-		cvector(double rho, double phi, double z, bool rad=false) {
+		cvector(double rho=0.0, double phi=0.0,
+			   double z=0.0, bool rad=false) {
 			if(rad) {
 				_u1 = rho ;
 				_u2 = phi * M_PI / 180.0 ;

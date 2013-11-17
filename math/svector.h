@@ -30,11 +30,12 @@ class svector : public math_vector<double> {
 		 * Constructors a vector in spherical coordinates.
 		 *
 		 * @param rho		rho component
-		 * @param theta		theta component
+		 * @param theta	theta component
 		 * @param phi		phi component
 		 * @param rad		defaults to not needing conversion
 		 */
-		svector(double rho, double theta, double phi, bool rad=false) {
+		svector(double rho=0.0, double theta=0.0,
+			   double phi=0.0, bool rad=false) {
 			if(rad) {
 				_u1 = rho ;
 				_u2 = theta * M_PI / 180.0 ;

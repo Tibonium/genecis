@@ -5,7 +5,7 @@
 #ifndef PHYSICS_GRAVITY_H
 #define PHYSICS_GRAVITY_H
 
-#include "s_vector.h"
+#include "math/mathematics.h"
 
 class gravity {
 
@@ -26,14 +26,21 @@ class gravity {
 		 * @var _mass2		mass of the second body, units = kg
 		 * @var _obj1		position of the first body
 		 * @var _obj2		position of the second body
-		 * @var _dt			Time increment for calculations
+		 * @var _dt		Time increment for calculations
 		 */
 		double _mass1 ;
 		double _mass2 ;
-		p_vector* _obj1 ;
-		p_vector* _obj2 ;
+		math_vector* _obj1 ;
+		math_vector* _obj2 ;
 		double _dt ;
-	
+		
+		/**
+		 * Marching function for the simulation of gravitational
+		 * interactions between two bodies. All mathematical
+		 * calculations go on during this function call and 
+		 * moves the bodies in accordance to Newton's laws of
+		 * gravity.
+		 */
 		step() ;
 		
 		/**
@@ -70,11 +77,11 @@ class gravity {
 		 * center of mass1 and mass2.
 		 *
 		 * @param obj		starting positions of the two masses
-		 * @param mass1		Mass of the first body
-		 * @param mass2		Mass of the second body
+		 * @param mass1	Mass of the first body
+		 * @param mass2	Mass of the second body
 		 * @param dt		Increment of time for iterations
 		 */
-		gravity(p_vector& obj, mass1, mass2, dt) ;
+		gravity(math_vector& obj, mass1, mass2, dt) ;
 		
 		/**
 		 * Initialize recording of netCDF motion log.
