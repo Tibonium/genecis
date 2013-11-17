@@ -30,8 +30,8 @@ class gravity {
 		 */
 		double _mass1 ;
 		double _mass2 ;
-		math_vector* _obj1 ;
-		math_vector* _obj2 ;
+		svector* _obj1 ;
+		svector* _obj2 ;
 		double _dt ;
 		
 		/**
@@ -41,7 +41,7 @@ class gravity {
 		 * moves the bodies in accordance to Newton's laws of
 		 * gravity.
 		 */
-		step() ;
+		void step() ;
 		
 		/**
 		 * The netCDF file uses to record the motion
@@ -50,12 +50,8 @@ class gravity {
 		NcFile* _nc_file ;
 		
 		/** netCDF variables to record the data */
-		NcVar *_nc_rho1, *_nc_theta1, *_nc_phi1,
-			 *_nc_rho2, *_nc_theta2, *_nc_phi2,
-			 *_nc_v_rho1, *_nc_v_theta1, *_nc_v_phi1,
-			 *_nc_v_rho2, *_nc_v_theta2, *_nc_v_phi2,
-			 *_nc_f_rho, *_nc_f_theta, *_nc_f_phi,
-			 *_nc_time, *_nc_dt, *_nc_mass1, *_nc_mass2 ;
+		NcVar *_nc_pos1, *_nc_pos2, *_nc_v1, *_nc_v2,
+			 *_nc_time ;
 			 
 		
 		/** Current record number in the netCDF file. */
@@ -81,7 +77,7 @@ class gravity {
 		 * @param mass2	Mass of the second body
 		 * @param dt		Increment of time for iterations
 		 */
-		gravity(math_vector& obj, mass1, mass2, dt) ;
+		gravity(svector* obj, double mass1, double mass2, double dt) ;
 		
 		/**
 		 * Initialize recording of netCDF motion log.
@@ -93,35 +89,24 @@ class gravity {
 		 *	dimensions:
 		 *		travel_time = UNLIMITED ;	// currently
 		 *	variables:
-		 *		double rho1(travel_time) ;
-		 *			rho1::units = "meters" ;
-		 *		double theta1(travel_time) ;
-		 *			theta1::units = "radians" ;
-		 *			theta1::positive = "up" ;
-		 *		double phi1(travel_time) ;
-		 *			phi1::units = "radians" ;
-		 *			phi1::positive = "clockwise" ;
-		 *		double rho2(travel_time) ;
-		 *			rho2::units = "meters" ;
-		 *		double theta2(travel_time) ;
-		 *			theta2::units = "radians" ;
-		 *			theta2::positive = "up" ;
-		 *		double phi2(travel_time) ;
-		 *			phi2::units = "radians" ;
-		 *			phi2::positive = "clockwise" ;
+		 *		double pos1(travel_time, travel_time, travel_time) ;
+		 *			rho::units = "meters" ;
+		 *			theta::units = "radians" ;
+		 *			theta::positive = "up" ;
+		 *			phi::units = "radians" ;
+		 *			phi::positive = "clockwise" ;
+		 *		double pos1(travel_time, travel_time, travel_time) ;
+		 *			rho::units = "meters" ;
+		 *			theta::units = "radians" ;
+		 *			theta::positive = "up" ;
+		 *			phi::units = "radians" ;
+		 *			phi::positive = "clockwise" ;
 		 *		double travel_time(travel_time) ;
 		 *			travel_time::units = "seconds" ;
 		 *
-		 *	// global attributes:
-		 *			:Convetions = "COARDS" ;
-		 *
 		 *	data:
-		 *		rho1 = 1, 1, 1, ...
-		 *		theta1 = 0, 0, 0, ...
-		 *		phi1 = 0, 0, 0, ...
-		 *		rho2 = 0, 0, 0, ...
-		 *		theta2 = 0, 0, 0, ...
-		 *		phi2 = 0, 0, 0, ...
+		 *		pos1 = (1,0,0), (1,0,0), (1,0,0), ...
+		 *		pos2 = (1,0,0), (1,0,0), (1,0,0), ...
 		 *		travel_time = 0.1, 0.2, 0.3, ...
 		 *   }
 		 * <pre>
