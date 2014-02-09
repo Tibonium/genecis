@@ -5,7 +5,7 @@
 #ifndef PHYSICS_GRAVITY_H
 #define PHYSICS_GRAVITY_H
 
-#include "math/mathematics.h"
+#include "../math/mathematics.h"
 
 class gravity {
 
@@ -72,12 +72,14 @@ class gravity {
 		 * is the half the radial distance between the 
 		 * center of mass1 and mass2.
 		 *
-		 * @param obj		starting positions of the two masses
+		 * @param obj1		starting position of the first object
+		 * @param obj2		starting position of the second object
 		 * @param mass1	Mass of the first body
 		 * @param mass2	Mass of the second body
 		 * @param dt		Increment of time for iterations
 		 */
-		gravity(svector* obj, double mass1, double mass2, double dt) ;
+		gravity(svector* obj1, svector* obj2,
+			   double mass1, double mass2, double dt) ;
 		
 		/**
 		 * Initialize recording of netCDF motion log.
