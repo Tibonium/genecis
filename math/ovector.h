@@ -5,6 +5,8 @@
 #ifndef MATH_OVECTER_H
 #define MATH_OVECTER_H
 
+#include "math_vector.h"
+#include "bvector.h"
 /// THIS CLASS, OMNIVECTORS, DOES NOT WORK. DO NOT INSTANTIATE IT!
 
 template <typename _T>
@@ -32,12 +34,12 @@ class ovector : public math_vector<_T>  {
 		 *		   2*u1*v2 (b1 dot b2) + 2*u1*v3 (b1 dot b3) + 2*u2*v3 (b2 dot b3)
 		 */
 		virtual inline _T dot(const math_vector<_T>& other) const {
-			_T result = ( this->_u1 * other.u1() * _b1.dot(_b1) +
-					    this->_u2 * other.u2() * _b2.dot(_b2) +
-					    this->_u3 * other.u3() * _b3.dot(_b3) +
-					    2.0 * ( this->_u1 * other.u2() * _b1.dot(_b2) ) +
-					    2.0 * ( this->_u1 * other.u3() * _b1.dot(_b3) ) +
-					    2.0 * ( this->_u2 * other.u3() * _b2.dot(_b3) ) ) ;
+			_T result = ( this->_u1 * other.u1() * this->_b1.dot(this->_b1) +
+					    this->_u2 * other.u2() * this->_b2.dot(this->_b2) +
+					    this->_u3 * other.u3() * this->_b3.dot(this->_b3) +
+					    2.0 * ( this->_u1 * other.u2() * this->_b1.dot(this->_b2) ) +
+					    2.0 * ( this->_u1 * other.u3() * this->_b1.dot(this->_b3) ) +
+					    2.0 * ( this->_u2 * other.u3() * this->_b2.dot(this->_b3) ) ) ;
 			return result ;
 		}
 	
@@ -53,13 +55,13 @@ class ovector : public math_vector<_T>  {
 		 *			need not be linearly independent or
 		 *			unitary.
 		 */
-		ovector(_T u1, _T u2, _T u3, bvector base[]) {
+		ovector(_T u1, _T u2, _T u3, bvector b1, bvector b2, bvector b3) {
 			this->_u1 = u1 ;
 			this->_u2 = u2 ;
 			this->_u3 = u3 ;
-			_b1 = base[0] ;
-			_b2 = base[1] ;
-			_b3 = base[2] ;
+			this->_b1 = b1 ;
+			this->_b2 = b2 ;
+			this->_b3 = b3 ;
 		}
 		
 		// Destructor
