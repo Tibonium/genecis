@@ -6,18 +6,27 @@
 #define DISTRIBUTION_DISCRETE_DISTRIBUTION_H
 
 #include <string.h>
+#include <stdio.h>
+#include <vector>
 
-template <class SAMPLE_TYPE, class PROB_TYPE, unsigned _SIZE> class discrete_distribution :
+using namespace std ;
+
+template <class SAMPLE_TYPE, class PROB_TYPE> class discrete_distribution :
 	public probability_mass_function<SAMPLE_TYPE, PROB_TYPE>
 {
 
 	private:
 	
-		SAMPLE_TYPE *_sample ;
-		PROB_TYPE *_prob ;
+		vector<SAMPLE_TYPE> _sample ;
+		vector<PROB_TYPE> _prob ;
+		unsigned _size ;
 		
+	public:
+			
 		/**
-		 * Defines a new probability for the index of the prob_space
+		 * Defines a new sample in the sample space. May not increase
+		 * the size of the sample space. Use add_element to increase
+		 * the size of the probability/sample space
 		 *
 		 * @param index	Index within the prob_space to replace
 		 * @param sample	Sample data to insert at this index
@@ -27,29 +36,84 @@ template <class SAMPLE_TYPE, class PROB_TYPE, unsigned _SIZE> class discrete_dis
 		}
 		
 		/**
-		 * Defines a new probability for the index of the prob_space
+		 * Defines a new probability space
 		 *
-		 * @param index	Index within the prob_space to replace
-		 * @param prob		Probability to insert at this index
+		 * @param prob		The new probability space
 		 */
-		inline void prob_space(unsigned index, PROB_TYPE prob) {
+		inline void prob_space(vector<PROB_TYPE> prob) {
 			try {
-				_prob[index] = prob ;
 				PROB_TYPE one = 0.0 ;
-				for(unsigned i=0; i<_SIZE; ++i) {
-					one += _prob[i] ;
+				for(unsigned i=0; i<prob.size(); ++i) {
+					one += prob[i] ;
 				}
 				if ( !(abs(one-1) <= 1e-14) ) {
 					throw one ;
 				}
+				_prob = prob ;
 			 } catch (PROB_TYPE e) {
 			 	cout << "Total probability must equal 1.0, " 
 			 		<< "probability is: " << setprecision(18)
 			 		<< e << endl;
 			 }
 		}
-	
-	public:
+		
+		/**
+		 * Adds a new element to the sample space.
+		 *
+		 * @param new_sample	The element to be added to the
+		 *					sample space.
+		 * @param prob			The new probability vector for
+		 *					the new sample space.
+		 */
+		inline void add_element( SAMPLE_TYPE new_sample, 
+							vector<PROB_TYPE> new_prob) {
+			++_size ;
+			_sample.push_back(new_sample) ;
+			_prob.resize(new_prob.size()) ;
+			for(unsigned i=0; i<_prob.size(); ++i) {
+				_prob[i] = new_prob[i] ;
+			}
+		}
+
+		/**
+		 * Redefine the sample space and probability space.
+		 *
+		 * @param new_sample	The new sample space
+		 * @param new_prob		The new probability space
+		 */
+		inline void rename_space( vector<SAMPLE_TYPE> new_sample,
+						 	 vector<PROB_TYPE> new_prob )
+		{
+			_sample.resize(new_sample.size()) ;
+			for(unsigned i=0; i<_prob.size(); ++i) {
+				_sample[i] = new_sample[i] ;
+			}
+			_prob.resize(new_prob.size()) ;
+			for(unsigned i=0; i<_prob.size(); ++i) {
+				_prob[i] = new_prob[i] ;
+			}
+			_size = _sample.size() ;
+		}
+				
+		/**
+		 * Returns the element of the sample space
+		 * at the requested index.
+		 *
+		 * @param i	index value to look at
+		 */
+		inline SAMPLE_TYPE sample_space(unsigned i) {
+			return _sample[i] ;
+		}
+		
+		/**
+		 * Returns the element of the probability
+		 * space at the requested index.
+		 *
+		 * @param i	index value to look at
+		 */
+		inline PROB_TYPE prob_space(unsigned i) {
+			return _prob[i] ;
+		}
 	
 		/**
 		 * A function call that returns the element of the
@@ -61,11 +125,11 @@ template <class SAMPLE_TYPE, class PROB_TYPE, unsigned _SIZE> class discrete_dis
 		 */
 		virtual SAMPLE_TYPE probability(PROB_TYPE p) {
 			PROB_TYPE one = 0.0 ;
-			for(unsigned i=0; i<_SIZE; ++i) {
+			for(unsigned i=0; i<_prob.size(); ++i) {
 				one += _prob[i] ;
 				if(p <= one) {return _sample[i] ;}
 			}
-			return _sample[_SIZE] ;
+			return _sample[_size-1] ;
 		}
 
 		/**
@@ -76,8 +140,10 @@ template <class SAMPLE_TYPE, class PROB_TYPE, unsigned _SIZE> class discrete_dis
 		 * @param x	An element of the sample space.
 		 */
 		virtual PROB_TYPE probability(SAMPLE_TYPE x) {
-			PROB_TYPE result = 0 ;
-			return result ;
+			for(unsigned i=0; i<_sample.size(); ++i) {
+				if( _sample[i] == x ) {return _prob[i] ;}
+			}
+			return 0 ;
 		}
 
 		/**
@@ -89,16 +155,17 @@ template <class SAMPLE_TYPE, class PROB_TYPE, unsigned _SIZE> class discrete_dis
 		 * @param prob		Array of probabilities used to
 		 *				create a discrete probability set.
 		 */
-		discrete_distribution(PROB_TYPE* prob) : _prob(prob) {
+		discrete_distribution(vector<PROB_TYPE> prob) : _prob(prob) {
 			try {
 				PROB_TYPE one = 0.0 ;
-				for(unsigned i=0; i<_SIZE; ++i) {
+				for(unsigned i=0; i<_prob.size(); ++i) {
 					one += _prob[i] ;
 				}
 				if ( !(abs(one-1) <= 1e-14) ) {
 					throw one ;
 				}
-				_sample = new SAMPLE_TYPE[_SIZE] ;
+				_size = _prob.size() ;
+				//_sample = new SAMPLE_TYPE[_size] ;
 			 } catch (PROB_TYPE e) {
 			 	cout << "Total probability must equal 1.0, " 
 			 		<< "probability is: " << setprecision(18)
@@ -115,22 +182,35 @@ template <class SAMPLE_TYPE, class PROB_TYPE, unsigned _SIZE> class discrete_dis
 		 * @param prob		The associated probabilities of
 		 *				the elements of the sample space.
 		 */
-		discrete_distribution(SAMPLE_TYPE* sample, PROB_TYPE* prob) :
-		_sample(sample), _prob(prob) {
+		discrete_distribution(vector<SAMPLE_TYPE> sample,
+			vector<PROB_TYPE> prob) : _sample(sample), _prob(prob) {
 			try {
-				PROB_TYPE one = 0.0 ;
-				for(unsigned i=0; i<_SIZE; ++i) {
-					one += _prob[i] ;
+				if( _sample.size() != _prob.size() ) {
+				    	int nums[] = { _sample.size(), _prob.size() } ;
+					throw nums ;
 				}
-				if ( !(abs(one-1) <= 1e-14) ) {
-					throw one ;
-				}
-			 } catch (PROB_TYPE e) {
-			 	cout << "Total probability must equal 1.0, " 
-			 		<< "probability is: " << setprecision(18)
-			 		<< e << endl;
-			 }
+				_size = _sample.size() ;
+				try {
+					PROB_TYPE one = 0.0 ;
+					for(unsigned i=0; i<_prob.size(); ++i) {
+						one += _prob[i] ;
+					}
+					if ( !(abs(one-1) <= 1e-14) ) {
+						throw one ;
+					}
+				 } catch (PROB_TYPE e) {
+				 	cout << "Total probability must equal 1.0, " 
+				 		<< "probability is: " << setprecision(18)
+				 		<< e << endl;
+				 }
+			} catch (int* e) {
+				printf("Size of sample space(%u) must be equal to", e[0]) ;
+				printf(" size of probability space(%u).\n",e[1]);
+			}	
 		}
+		
+		/// Destructor
+		//~discrete_distribution() {}
 };
 
 #endif
