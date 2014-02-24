@@ -4,11 +4,11 @@
  
 #include "gravity.h"
 
-gravity::gravity( svector* obj, double mass1,
-	double mass2, double dt )
+gravity::gravity( svector* obj1, svector* obj2, 
+	double mass1, double mass2, double dt )
 {
-	_obj1 = obj[0] ;
-	_obj2 = obj[1] ;
+	_obj1 = obj1 ;
+	_obj2 = obj2 ;
 	_mass1 = mass1 ;
 	_mass2 = mass2 ;
 	_dt = dt ;
