@@ -6,6 +6,7 @@
 #define MATRIX_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 using namespace std ;
@@ -135,6 +136,33 @@ template<class _type> class matrix {
 			}
 		}
 		
+		/* Matrix Operators */
+		inline matrix<_type>* operator* (matrix<_type>& other) {
+			try {
+				if( _ncol != other.nrow() ) {
+					throw 1;
+				} else {
+					matrix<_type>* temp = new matrix<_type>(_nrow,other.ncol()) ;
+					_type value = 0 ;
+					for(unsigned n=0; n<temp->nrow(); ++n) {
+						for(unsigned m=0; m<temp->ncol(); ++m) {
+							for(unsigned i=0; i<_ncol; ++i) {
+								value += (*this)(n,i) * other(i,m) ;
+							}
+							(*temp)(n,m) = value ;
+							value = 0 ;
+						}
+					}
+					return temp ;
+				}
+			} catch (int e) {
+				cout << "Matrices cannot be multiplied.  "
+				     << "A ncol(" << _ncol << ") must equal B nrow("
+					<< other.nrow() << ")." << endl ;
+				exit(e) ;
+			}
+		}
+		
 		/* Comparison Operators */
 		inline bool operator== (matrix<_type>& other) {
 			int n = memcmp( _data, other.data(), 
@@ -167,14 +195,15 @@ template<class _type> class matrix {
 		/**
 		 * Copy Constructor
 		 */
-		matrix(const matrix& other) :
-			_nrow(other.nrow), _ncol(other.ncol)
+		matrix(matrix<_type>& other) :
+			_nrow(other.nrow()), _ncol(other.ncol())
 		{
 			size_t N = _nrow * _ncol ;			
 			_data = new _type[N] ;
-			memcpy(_data, other.data, N * sizeof(_type)) ;
+			memcpy(_data, other.data(), N * sizeof(_type)) ;
 		}
 
+		/** IO Stream overloads **/
 		friend std::ostream& operator<< <> (std::ostream& os, matrix& output) ;
 
 };
