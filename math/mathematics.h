@@ -12,4 +12,6 @@
 #include "cvector.h"
 #include "ovector.h"
 
+#include "matrix.h"
+
 #endif
