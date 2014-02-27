@@ -5,8 +5,8 @@
 #ifndef DISTRIBUTION_DISCRETE_DISTRIBUTION_H
 #define DISTRIBUTION_DISCRETE_DISTRIBUTION_H
 
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 #include <vector>
 
 using namespace std ;

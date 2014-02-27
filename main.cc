@@ -1,8 +1,8 @@
 #include <iostream>
 #include <iomanip>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 #include "distribution/distribution.h"
 
 int main( int argc, char* argv[] ) {
