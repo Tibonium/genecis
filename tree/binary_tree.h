@@ -2,12 +2,12 @@
  * @file binary_tree.h
  */
  
-#ifndef TREES_BINARY_TREE_H
-#define TREES_BINARY_TREE_H 
+#ifndef TREE_BINARY_TREE_H
+#define TREE_BINARY_TREE_H 
 
 #include <iostream>
-#include <string>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 #include "binary_node.h"
 
 using namespace std ;

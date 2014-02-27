@@ -2,8 +2,8 @@
  * @file avl_node.h
  */
  
-#ifndef TREES_AVL_NODE_H
-#define TREES_AVL_NODE_H
+#ifndef TREE_AVL_NODE_H
+#define TREE_AVL_NODE_H
 
 template <class _type> class avl_node {
 

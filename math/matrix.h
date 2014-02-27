@@ -2,12 +2,13 @@
  * @file new matrix class
  */
 
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef MATH_MATRIX_H
+#define MATH_MATRIX_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <cstring>
 #include <typeinfo>
 
 using namespace std ;
@@ -207,8 +208,8 @@ template<class _type> class matrix {
 					return *temp ;
 				}
 			} catch (int e) {
-				cout << "matrix::operator+: Matrices must have the same "
-					 << "number of rows and columns to add them." << endl ;
+				cout << "matrix::operator+: Only defined for matrices with "
+					 << "the same number of rows and columns." << endl ;
 				cout << *this << endl ;
 				cout << other << endl ;
 				exit(e) ;
@@ -225,8 +226,8 @@ template<class _type> class matrix {
 					_verify = true ;
 				}
 			} catch (int e) {
-				cout << "matrix::operator+=: Matrices must have the same "
-					 << "number of rows and columns to add them." << endl ;
+				cout << "matrix::operator+=: Only defined for matrices with "
+					 << "the same number of rows and columns." << endl ;
 				cout << *this << endl ;
 				cout << other << endl ;
 				exit(e) ;
@@ -235,13 +236,13 @@ template<class _type> class matrix {
 		
 		inline void operator/ (matrix<_type>& other) {
 			cout << "matrix::operator/: Matrix division is ill-defined "
-				 << "and not implemented within this library." << endl ;
+				 << "and not implemented at this time." << endl ;
 			exit(1) ;
 		}
 
 		inline void operator/= (matrix<_type>& other) {
 			cout << "matrix::operator=/: Matrix division is ill-defined "
-				 << "and not implemented within this library." << endl ;
+				 << "and not implemented at this time." << endl ;
 			exit(1) ;
 		}
 

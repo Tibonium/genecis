@@ -2,8 +2,8 @@
  * @file btree.h
  */
  
-#ifndef TREES_BTREE_H
-#define TREES_BTREE_H
+#ifndef TREE_BTREE_H
+#define TREE_BTREE_H
 
 template <class _type, int _size> class btree {
 

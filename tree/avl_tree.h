@@ -2,11 +2,11 @@
  * @file avl_tree.h
  */
 
-#ifndef TREES_AVL_TREE_H
-#define TREES_AVL_TREE_H
+#ifndef TREE_AVL_TREE_H
+#define TREE_AVL_TREE_H
 
 #include "avl_node.h"
-#include <stdio.h>
+#include <cstdio>
 
 template <class _type> class avl_tree {
 

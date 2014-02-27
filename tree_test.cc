@@ -1,6 +1,4 @@
-#include "trees/binary_tree.h"
-#include "trees/avl_tree.h"
-#include <stdlib.h>
+#include "tree/trees.h"
 #include <time.h>
 
 int main() {
@@ -23,4 +21,23 @@ int main() {
 	myAVL.insert(10) ;
 	myAVL.print_tree() ;
 	
+	ud_tree<int> myUD ;
+	string k = "some" ;
+	string k1 = "other" ;
+	myUD.insert(k,10) ;
+	cout << "key=" << k << " "
+		 << ((myUD.find_key(k)) ? "is " : "is not ")
+		 << "within the tree" << endl ;
+	cout << "data for some is: " << myUD.find_data(k) << endl ;
+	
+	myUD.insert(k1,20) ;
+	cout << "key=" << k1 << " "
+		 << ((myUD.find_key(k1)) ? "is " : "is not ")
+		 << "within the tree" << endl ;
+	cout << "data for other is: " << myUD.find_data(k1) << endl ;	
+	
+	cout << "my tree has " << myUD.nodecount()
+		 << (( myUD.nodecount() > 1 ) ? " nodes." : "node") << endl ;
+		 
+	cout << myUD << endl ;
 }
