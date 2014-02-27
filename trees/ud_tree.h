@@ -11,25 +11,16 @@ using namespace std ;
 
 template<class _T> class ud_tree {
 
-	private:
-		/**
-		 * Main tree structure
-		 */
-		ud_node<_T>* first ;
-		ud_node<_T>* last ;
-		
-		/**
-		 * Inserts a new node at the end of the tree
-		 */
-		void insert(string _key, _T _data) ;
-	
 	public:
 		/**
-		 *
+		 * Insert a new node within the tree.  If the first
+		 * is empty then set first and last to the new node
+		 * otherwise put it at the end of the list and make
+		 * it the new last.
 		 */
-		 void insert(string _key, _T _data) {
+		 void insert(string _key, const _T& _data) {
 		 	ud_node<_T>* temp = 
-		 		new ud_node<_T>(_key, _data) ;
+		 		new ud_node<_T>(_key, &_data) ;
 		 	if ( first == NULL ) {
 		 		first = temp ;
 		 		last = temp ;
@@ -41,14 +32,23 @@ template<class _T> class ud_tree {
 		 	temp->parent = NULL ;
 		 	temp->child = NULL ;
 		 	delete temp ;
+		 	++count ;
 		 }
-	
+		 
+		/**
+		 * Return the number of nodes in the list
+		 */
+		inline int nodecount() {
+			return count ;
+		}
+		
 		/**
 		 *  Constructor
 		 */
 		ud_tree() {
 			first = NULL ;
 			last = NULL ;
+			count = 0 ;
 		}
 		
 		/**
@@ -57,6 +57,14 @@ template<class _T> class ud_tree {
 		~ud_tree() {
 			destroy_tree() ;
 		}
+
+	private:
+		/**
+		 * Main tree structure
+		 */
+		ud_node<_T>* first ;
+		ud_node<_T>* last ;
+		int count ;
 
 };
 
