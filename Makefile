@@ -9,6 +9,8 @@ IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test math_test tree_test
 
+all: matrix_test math_test tree_test
+
 matrix_test: matrix_test.cc
 	@$(CC) -o matrix_test matrix_test.cc $(CFLAGS)
 	@echo "matrix_test ** built successfully **"
@@ -28,6 +30,4 @@ clean:
 		echo "   deleted" $$test ; \
 	done
 	@echo "****Test routines removed****"
-	
-all: matrix_test math_test tree_test
 
