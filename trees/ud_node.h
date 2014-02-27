@@ -36,6 +36,7 @@ template<class _T> class ud_node {
 			child = other->child ;
 			key = other->key ;
 			data = other->data ;
+			return *this ;
 		}
 		
 		/**
