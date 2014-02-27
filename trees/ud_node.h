@@ -31,6 +31,13 @@ template<class _T> class ud_node {
 			data = _data ;
 		}
 		
+		inline ud_node(_T)& operator= (ud_node<_T>& other) {
+			parent = other->parent ;
+			child = other->child ;
+			key = other->key ;
+			data = other->data ;
+		}
+		
 		/**
 		 * Destructor
 		 */
