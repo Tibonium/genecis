@@ -38,6 +38,8 @@ template<class _T> class ud_tree {
 			 	old_last->child = temp ;
 			 	last = temp ;
 		 	}
+		 	temp->parent = NULL ;
+		 	temp->child = NULL ;
 		 	delete temp ;
 		 }
 	
