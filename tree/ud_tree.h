@@ -41,7 +41,24 @@ template<class _T> class ud_tree {
 		 	}
 		 	++_count ;
 		 }
-		 
+
+		 inline void delete_node(string key) {
+		 	ud_node<_T>* temp = find_node(_first,key) ;
+		 	if( temp == _first ) {
+		 		temp->child->parent = NULL ;
+		 		_first = temp->child ;
+		 	} else if( temp == _last ) {
+		 		_last = temp->parent ;
+		 		_last->child = NULL ;
+		 	} else {
+		 		ud_node<_T>* temp_p = temp->parent ;
+		 		ud_node<_T>* temp_c = temp->child ;
+		 		temp_p->child = temp_c ;
+		 		temp_c->parent = temp_p ;
+		 	}
+		 	--_count ;
+		 }
+		 		 
 		 /**
 		  * Search the tree for a node with the key.  Returns true
 		  * if a node has the key we are looking for, otherwise
@@ -113,7 +130,7 @@ template<class _T> class ud_tree {
 				} else if( curr == _last ) {
 					throw -1 ;
 				} else {
-					search(curr->child, key) ;
+					curr = find_node(curr->child, key) ;
 				}
 			} catch (int e) {
 				cout << "ud_tree::find_node<" << typeid(_T).name()
@@ -145,10 +162,14 @@ inline std::ostream& operator<< (std::ostream& os, const ud_tree<_T>& tree) {
 		os << typeid(_T).name() << endl ;
 	}
 	os << "|----------Tree Begin----------|" << endl ;
-	os << "   " << *temp << endl ;
+	os << "    " << *temp << " (first)" << endl ;
 	while(temp->child != NULL) {
 		temp = temp->child ;
-		os << "   " << *temp << endl ;
+		if( temp == tree._last ) {
+			os << "    " << *temp << " (last)" << endl ;
+		} else {
+			os << "    " << *temp << endl ;
+		}
 	}
 	os << "|-----------Tree End-----------|" << endl ;
 	return os ;

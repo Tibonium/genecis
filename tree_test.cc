@@ -24,20 +24,26 @@ int main() {
 	ud_tree<int> myUD ;
 	string k = "some" ;
 	string k1 = "other" ;
+	string k2 = "here" ;
+	string k3 = "there" ;
+	
 	myUD.insert(k,10) ;
-	cout << "key=" << k << " "
-		 << ((myUD.find_key(k)) ? "is " : "is not ")
-		 << "within the tree" << endl ;
-	cout << "data for some is: " << myUD.find_data(k) << endl ;
+//	cout << "key=" << k << " "
+//		 << ((myUD.find_key(k)) ? "is " : "is not ")
+//		 << "within the tree" << endl ;
+//	cout << "data for some is: " << myUD.find_data(k) << endl ;
 	
 	myUD.insert(k1,20) ;
-	cout << "key=" << k1 << " "
-		 << ((myUD.find_key(k1)) ? "is " : "is not ")
-		 << "within the tree" << endl ;
-	cout << "data for other is: " << myUD.find_data(k1) << endl ;	
+//	cout << "key=" << k1 << " "
+//		 << ((myUD.find_key(k1)) ? "is " : "is not ")
+//		 << "within the tree" << endl ;
+//	cout << "data for other is: " << myUD.find_data(k1) << endl ;	
+	myUD.insert(k2,30) ;
+	myUD.insert(k3,40) ;
 	
-	cout << "my tree has " << myUD.nodecount()
-		 << (( myUD.nodecount() > 1 ) ? " nodes." : "node") << endl ;
-		 
+	cout << myUD.find_data(k2) << endl ;
+	
+	cout << myUD << endl ;
+	myUD.delete_node(k1) ;
 	cout << myUD << endl ;
 }
