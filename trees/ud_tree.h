@@ -18,9 +18,9 @@ template<class _T> class ud_tree {
 		 * otherwise put it at the end of the list and make
 		 * it the new last.
 		 */
-		 void insert(string _key, const _T& _data) {
+		 void insert(string _key, _T& _data) {
 		 	ud_node<_T>* temp = 
-		 		new ud_node<_T>(_key, &_data) ;
+		 		new ud_node<_T>(_key, _data) ;
 		 	if ( first == NULL ) {
 		 		first = temp ;
 		 		last = temp ;
