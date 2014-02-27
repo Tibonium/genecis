@@ -21,27 +21,23 @@ int main() {
 	myAVL.insert(10) ;
 	myAVL.print_tree() ;
 	
-	ud_tree<int> myUD ;
-	string k = "some" ;
-	string k1 = "other" ;
-	string k2 = "here" ;
-	string k3 = "there" ;
-	
+	ud_tree<double,int> myUD ;
+//	string k = "some" ;
+//	string k1 = "other" ;
+//	string k2 = "here" ;
+//	string k3 = "there" ;
+//	int k = 1 ;
+//	int k1 = 2 ;
+//	int k2 = 3 ;
+//	int k3 = 4 ;
+	double k = 1.01 ;
+	double k1 = 3.24 ;
+	double k2 = 1049 ;
+	double k3 = 2.345 ;
 	myUD.insert(k,10) ;
-//	cout << "key=" << k << " "
-//		 << ((myUD.find_key(k)) ? "is " : "is not ")
-//		 << "within the tree" << endl ;
-//	cout << "data for some is: " << myUD.find_data(k) << endl ;
-	
 	myUD.insert(k1,20) ;
-//	cout << "key=" << k1 << " "
-//		 << ((myUD.find_key(k1)) ? "is " : "is not ")
-//		 << "within the tree" << endl ;
-//	cout << "data for other is: " << myUD.find_data(k1) << endl ;	
 	myUD.insert(k2,30) ;
 	myUD.insert(k3,40) ;
-	
-	cout << myUD.find_data(k2) << endl ;
 	
 	cout << myUD << endl ;
 	myUD.delete_node(k1) ;

@@ -23,7 +23,6 @@ template<class _type> class matrix {
 		typedef matrix<_type> self_type ;
 
 	public:
-		/** Member Functions **/
 		inline unsigned nrow() {
 			return _nrow ;
 		}
@@ -47,7 +46,7 @@ template<class _type> class matrix {
 			return _data ;
 		}
 
-		/****************** ===Operators=== ***********************/
+/************************* Operators ******************************/
 		/* Accessor and Assigner */
 		inline _type& operator() (unsigned i, unsigned j) {
 			_index = i * _ncol + j ;
@@ -59,7 +58,7 @@ template<class _type> class matrix {
 			_data[_index] = value ;
 		}
 
-		/* Scalar Operators */
+	/*================= Matrix Scalar Operators ================*/
 		inline matrix<_type>& operator* (_type value) {
 			for(unsigned i=0; i<_nrow; ++i) {
 				for(unsigned j=0; j<_ncol; ++j) {
@@ -145,7 +144,7 @@ template<class _type> class matrix {
 			}
 		}
 
-		/* Matrix Operators */
+	/*================ Matrix Matrix Operators =================*/
 		inline matrix<_type>& operator* (matrix<_type>& other) {
 			try {
 				if( _ncol != other.nrow() ) {
@@ -170,9 +169,9 @@ template<class _type> class matrix {
 					return *temp ;
 				}
 			} catch (int e) {
-				cout << "Matrices cannot be multiplied.  "
-				     << "A ncol(" << _ncol << ") must equal B nrow("
-					<< other.nrow() << ")." << endl ;
+				cout << "matrix::operator*: A ncol(" << _ncol
+					 << ") must equal B nrow(" << other.nrow()
+					 << ")." << endl ;
 				exit(e) ;
 			}
 		}
@@ -187,9 +186,9 @@ template<class _type> class matrix {
 					if( other.singular() ) { _singular = true ; }
 				}
 			} catch (int e) {
-				cout << "Matrices cannot be multiplied.  "
-				     << "A ncol(" << _ncol << ") must equal B nrow("
-					<< other.nrow() << ")." << endl ;
+				cout << "matrix::operator*=: A ncol(" << _ncol
+					 << ") must equal B nrow(" << other.nrow()
+					 << ")." << endl ;
 				exit(e) ;
 			}
 		}
@@ -246,6 +245,9 @@ template<class _type> class matrix {
 			exit(1) ;
 		}
 
+		/**
+		 * Mutates the matrix into its transpose.
+		 */
 		inline void transpose() {
 			matrix<_type>* temp = new matrix<_type>(_ncol,_nrow) ;
 			for(unsigned i=0; i<_nrow; ++i) {
@@ -258,12 +260,36 @@ template<class _type> class matrix {
 			delete temp ;
 		}
 		
+		/**
+		 * Mutates the passed in matrix into the transpose of the
+		 * matrix that called this function. The calling matrix
+		 * remains unaltered.
+		 */
+		inline void transpose(matrix<_type>& m_trans) {
+			m_trans.resize(_ncol, _nrow) ;
+			for(unsigned i=0; i<_nrow; ++i) {
+				for(unsigned j=0; j<_ncol; ++j) {
+					m_trans(j,i) = (*this)(i,j) ;
+				}
+			}
+		}
+		
+		/**
+		 * Calculates the determinant of the matrix. If the determinant
+		 * is returned as zero, _singular flag is set to true. 
+		 * Otherwise it is set to true. In both cases the _verify
+		 * flag is then set to false.
+		 */
 		inline _type determinant() {
 			_type result = 0 ;
 			_det = result ;
 			return result ;
 		}
 		
+		/**
+		 * Mutates the calling matrix into its inverse, if it exists.
+		 * Otherwise an exit status is passed and the program ends.
+		 */
 		inline matrix<_type>& inverse() {
 			try {
 				singularity() ;
@@ -276,7 +302,7 @@ template<class _type> class matrix {
 				}
 			} catch (int e) {
 				cout << "matrix::inverse(): inverse not defined for"
-					 << " singular matrices." << endl ;
+					 << " singular matrices at this time." << endl ;
 				cout << "Non-singular matrices must be square and"
 					 << " have a non-zero determinant." << endl ;
 				cout << *this << endl ;
@@ -284,6 +310,19 @@ template<class _type> class matrix {
 			}
 		}
 
+		/**
+		 * Exponent operator. When called on a matrix it will mutate
+		 * the matrix it operates on into a new matrix equal to the
+		 * original matrix times itself n times, where n is the
+		 * exponent.
+		 * For an exponent of zero, the matrix will take on the form
+		 * of the identity matrix.
+		 * For an exponent of -1, the matrix will become the original
+		 * matrix's inverse.
+		 *
+		 * NOTE: At present only integer values for the exponent are
+		 * accepted.
+		 */
 		inline void operator^ (int exp) {
 			try {
 				if( _ncol != _nrow ) {
@@ -291,7 +330,7 @@ template<class _type> class matrix {
 				} else {
 					if( exp < 0 ) {
 						if( exp == -1 ) {
-							cout << "take inverse of function" << endl ;
+							inverse() ;
 						} else {
 							cout << "do some other negative power > 1" << endl ;
 						}
@@ -314,7 +353,51 @@ template<class _type> class matrix {
 			}
 		}
 
-		/* Comparison Operators */
+		inline void ul_decomp(matrix<_type>& upper, matrix<_type>& lower) {
+			upper.resize(_nrow, _ncol) ;
+			lower.resize(_nrow, _ncol) ;
+			cout << "matrix::ul_decomp:: Decompose the matrix into "
+				 << "an upper and lower triangular matrix."
+				 << endl ;
+		}
+
+		/**
+		 * Resizes matrix to have r rows and c columns. Data
+		 * is then deleted and reallocated to the new size.
+		 * Data is not preserved at resizing a matrix!!
+		 */
+		inline void resize(const unsigned& r, const unsigned& c) {
+			this->_nrow = r ;
+			this->_ncol = c ;
+			delete this->_data ;
+			this->_data = new _type[r*c] ;
+		}
+		
+		/**
+		 * Swaps row a with row b.
+		 */
+		inline void swap_row(const unsigned& a, const unsigned& b) {
+			_type temp ;
+			for(unsigned i=0; i<_ncol; ++i) {
+				temp = (*this)(a,i) ;
+				(*this)(a,i) = (*this)(b,i) ;
+				(*this)(b,i) = temp ;
+			}
+		}
+		
+		/**
+		 * Swaps column a with column b
+		 */
+		inline void swap_col(const unsigned& a, const unsigned& b) {
+			_type temp ;
+			for(unsigned i=0; i<_nrow; ++i) {
+				temp = (*this)(i,a) ;
+				(*this)(i,a) = (*this)(i,b) ;
+				(*this)(i,b) = temp ;
+			}
+		}
+		
+	/*================== Comparison Operators ==================*/
 		inline bool operator== (matrix<_type>& other) {
 			int n = memcmp( _data, other.data(), 
 						    sizeof(_type)*sizeof(_data) ) ;
@@ -331,7 +414,7 @@ template<class _type> class matrix {
 			return !(*this==other) ;
 		}
 
-		/************* ===Constructor/Destructors=== **************/
+/******************** Constructor/Destructors *********************/
 		/**
 		 * Main  Constructor
 		 * Creates an NxM matrix from a basic array
@@ -388,7 +471,7 @@ template<class _type> class matrix {
 			}
 		}
 
-		/** IO Stream overloads **/
+/********************** IO Stream overloads ***********************/
 		friend std::ostream& operator<< <> (std::ostream& os, matrix& output) ;
 
 	private:

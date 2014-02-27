@@ -1,5 +1,5 @@
 #include <iostream>
-#include "math/matrix.h"
+#include "math/mathematics.h"
 
 using namespace std ;
 
@@ -57,9 +57,19 @@ int main() {
 		}
 	}
 	cout << "dmtx: " << dmtx << endl ;
+	dmtx.swap_row(0,1) ;
+	cout << "dmtx after swap_row: " << dmtx << endl ;
+	dmtx.swap_col(0,1) ;
+	cout << "dmtx after swap_col: " << dmtx << endl ;
 	
 	omatx = omatx + omatx ;
 	cout << "+omatx: " << omatx << endl ;
-	dmtx.inverse() ;
+//	dmtx.inverse() ;
+//	dmtx.ul_decomp(dmtx,dmtx) ;
+
+	matrix<int> omatx2 ;
+	omatx.transpose(omatx2) ;
+	cout << "omatx2: " << omatx2 << endl ;
+	cout << "omatx: " << omatx << endl ;
 
 }

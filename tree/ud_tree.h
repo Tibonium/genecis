@@ -10,12 +10,13 @@
 
 using namespace std ;
 
-template<class _T> class ud_tree ;
+template<class KEY_TYPE, class DATA_TYPE> class ud_tree ;
 
-template<class _T>
-std::ostream& operator<< (std::ostream& os, const ud_tree<_T>& tree) ;
+template<class KEY_TYPE, class DATA_TYPE>
+std::ostream& operator<< (std::ostream& os,
+	const ud_tree<KEY_TYPE, DATA_TYPE>& tree) ;
 
-template<class _T> class ud_tree {
+template<class KEY_TYPE, class DATA_TYPE> class ud_tree {
 
 	public:
 		/**
@@ -25,15 +26,15 @@ template<class _T> class ud_tree {
 		 * already exist in our tree. If the key is unique, then we
 		 * put the new node at the end of the tree.
 		 */
-		 inline void insert(string key, const _T& data) {
-		 	ud_node<_T>* temp = 
-		 		new ud_node<_T>(key, data) ;
+		 inline void insert(KEY_TYPE key, const DATA_TYPE& data) {
+		 	ud_node<KEY_TYPE, DATA_TYPE>* temp = 
+		 		new ud_node<KEY_TYPE, DATA_TYPE>(key, data) ;
 		 	if ( _first == NULL ) {
 		 		_first = temp ;
 		 		_last = temp ;
 		 	} else {
 		 		if( !search(_first,key) ) {
-				 	ud_node<_T>* old_last = _last ;
+				 	ud_node<KEY_TYPE, DATA_TYPE>* old_last = _last ;
 				 	old_last->child = temp ;
 				 	temp->parent = old_last ;
 				 	_last = temp ;
@@ -42,8 +43,8 @@ template<class _T> class ud_tree {
 		 	++_count ;
 		 }
 
-		 inline void delete_node(string key) {
-		 	ud_node<_T>* temp = find_node(_first,key) ;
+		 inline void delete_node(KEY_TYPE key) {
+		 	ud_node<KEY_TYPE, DATA_TYPE>* temp = find_node(_first,key) ;
 		 	if( temp == _first ) {
 		 		temp->child->parent = NULL ;
 		 		_first = temp->child ;
@@ -51,8 +52,8 @@ template<class _T> class ud_tree {
 		 		_last = temp->parent ;
 		 		_last->child = NULL ;
 		 	} else {
-		 		ud_node<_T>* temp_p = temp->parent ;
-		 		ud_node<_T>* temp_c = temp->child ;
+		 		ud_node<KEY_TYPE, DATA_TYPE>* temp_p = temp->parent ;
+		 		ud_node<KEY_TYPE, DATA_TYPE>* temp_c = temp->child ;
 		 		temp_p->child = temp_c ;
 		 		temp_c->parent = temp_p ;
 		 	}
@@ -64,12 +65,12 @@ template<class _T> class ud_tree {
 		  * if a node has the key we are looking for, otherwise
 		  * false.
 		  */
-		 inline bool find_key(string key) {
+		 inline bool find_key(KEY_TYPE key) {
 		 	return search(_first,key) ;
 		 }
 		 
-		 inline _T find_data(string key) {
-		 	ud_node<_T>* temp = find_node(_first,key) ;
+		 inline DATA_TYPE find_data(KEY_TYPE key) {
+		 	ud_node<KEY_TYPE, DATA_TYPE>* temp = find_node(_first,key) ;
 		 	return temp->data ;
 		 }
 		 
@@ -100,16 +101,16 @@ template<class _T> class ud_tree {
 		/**
 		 * Main tree structure
 		 */
-		ud_node<_T>* _first ;
-		ud_node<_T>* _last ;
+		ud_node<KEY_TYPE, DATA_TYPE>* _first ;
+		ud_node<KEY_TYPE, DATA_TYPE>* _last ;
 		int _count ;
 		
 		/**
 		 * Recursive search to find a node with key as its key.
 		 */
-		inline bool search(ud_node<_T>* curr, string key) {
+		inline bool search(ud_node<KEY_TYPE, DATA_TYPE>* curr, KEY_TYPE key) {
 			bool result = false ;
-			if( (curr->key).compare(key) == 0 ) {
+			if( curr->key == key ) {
 				result = true ;
 			} else if( curr == _last ) {
 				return result ;
@@ -123,9 +124,11 @@ template<class _T> class ud_tree {
 		 * Recursive search to find a node with key as its key and
 		 * returns this node.
 		 */
-		inline ud_node<_T>* find_node(ud_node<_T>* curr, string key) {
+		inline ud_node<KEY_TYPE, DATA_TYPE>* find_node(
+			ud_node<KEY_TYPE, DATA_TYPE>* curr, KEY_TYPE key)
+		{
 			try {
-				if( (curr->key).compare(key) == 0 ) {
+				if( curr->key == key ) {
 					return curr ;
 				} else if( curr == _last ) {
 					throw -1 ;
@@ -133,7 +136,7 @@ template<class _T> class ud_tree {
 					curr = find_node(curr->child, key) ;
 				}
 			} catch (int e) {
-				cout << "ud_tree::find_node<" << typeid(_T).name()
+				cout << "ud_tree::find_node<" << typeid(DATA_TYPE).name()
 					 << ">: key(" << key << ") does not exist in"
 					 << " this tree. **exit status(" << e << ")**"
 					 << endl ;
@@ -142,24 +145,27 @@ template<class _T> class ud_tree {
 			return curr ;
 		}
 		
-		friend std::ostream& operator<< <> (std::ostream& os, const ud_tree<_T>& tree) ;
+		friend std::ostream& operator<< <> (std::ostream& os,
+			const ud_tree<KEY_TYPE, DATA_TYPE>& tree) ;
 
 };
 
-template <class _T>
-inline std::ostream& operator<< (std::ostream& os, const ud_tree<_T>& tree) {
-	ud_node<_T>* temp = tree._first ;
+template <class KEY_TYPE, class DATA_TYPE>
+inline std::ostream& operator<< (std::ostream& os,
+		const ud_tree<KEY_TYPE, DATA_TYPE>& tree)
+{
+	ud_node<KEY_TYPE, DATA_TYPE>* temp = tree._first ;
 	os << "\n*******Doubly linked list*******" << endl ;
 	os << "      number of node(s): " << tree._count << endl ;
 	os << "       data is type: " ;
-	if( typeid(_T) == typeid(int) ) {
+	if( typeid(DATA_TYPE) == typeid(int) ) {
 		os << "int" << endl ;
-	} else if( typeid(_T) == typeid(double) ) {
+	} else if( typeid(DATA_TYPE) == typeid(double) ) {
 		os << "double" << endl ;
-	} else if( typeid(_T) == typeid(float) ) {
+	} else if( typeid(DATA_TYPE) == typeid(float) ) {
 		os << "float" << endl ;
 	} else {
-		os << typeid(_T).name() << endl ;
+		os << typeid(DATA_TYPE).name() << endl ;
 	}
 	os << "|----------Tree Begin----------|" << endl ;
 	os << "    " << *temp << " (first)" << endl ;
