@@ -384,10 +384,12 @@ template<class _type> class matrix {
 		 * Data is not preserved at resizing a matrix!!
 		 */
 		inline void resize(const unsigned& r, const unsigned& c) {
+			size_t N = r * c ;
 			this->_nrow = r ;
 			this->_ncol = c ;
 			delete this->_data ;
-			this->_data = new _type[r*c] ;
+			this->_data = new _type[N] ;
+			memset(this->_data, 0, N*sizeof(_type)) ;
 		}
 		
 		/**

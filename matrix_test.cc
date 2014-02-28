@@ -77,7 +77,13 @@ int main() {
 	omatx = omatx + omatx ;
 	cout << "+omatx: " << omatx << endl ;
 //	dmtx.inverse() ;
-//	dmtx.ul_decomp(dmtx,dmtx) ;
+	dmtx.lu_decomp(mtx,mymatx) ;
+	cout << "dmtx decomp: upper" << endl ;
+	cout << mtx << endl ;
+	cout << "lower" << endl ;
+	cout << mymatx << endl ;
+	cout << "LU" << endl ;
+	cout << mymatx*mtx << endl ;
 
 	matrix<double> omatx2 ;
 	omatx.transpose(omatx2) ;
