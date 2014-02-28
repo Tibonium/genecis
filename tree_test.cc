@@ -42,4 +42,6 @@ int main() {
 	cout << myUD << endl ;
 	myUD.delete_node(k1) ;
 	cout << myUD << endl ;
+	
+	cout << "myUD type is: " << typeid(myUD).name() << endl ;
 }

@@ -18,6 +18,8 @@ std::ostream& operator<< (std::ostream& os,
 
 template<class KEY_TYPE, class DATA_TYPE> class ud_tree {
 
+	typedef ud_tree self_type ;
+
 	public:
 		/**
 		 * Insert a new node within the tree. If the first is empty

@@ -20,6 +20,8 @@ std::ostream& operator<< (std::ostream& os,
 
 template<class KEY_TYPE, class DATA_TYPE> class ud_node {
 
+	typedef ud_node self_type ;
+
 	public:
 		/**
 		 * Main accessors
