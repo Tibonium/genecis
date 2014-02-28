@@ -1,17 +1,29 @@
 #include <iostream>
+#include <ctime>
 #include "math/mathematics.h"
 
 using namespace std ;
 
 int main() {
 
-	matrix<int> mymatx(5,5) ;
+	matrix<int> m(3,3) ;
+	m(0,0) = 1 ; m(0,1) = 4 ; m(0,2) = 7 ;
+	m(1,0) = 0 ; m(1,1) = 1 ; m(1,2) = 0 ;
+	m(2,0) = 0 ; m(2,1) = 0 ; m(2,2) = 1 ;
+	cout << "m: " << m << endl ;
+
+	srand(time(NULL)) ;
+	matrix<double> mymatx(5,5) ;
 	for(unsigned i=0; i<mymatx.nrow(); ++i) {
 		for(unsigned j=0; j<mymatx.ncol(); ++j) {
-			mymatx(i,j) = 5*i+j ;
+			mymatx(i,j) = rand() % 15 ;
+//			mymatx(i,j) = (16+i*8 - j*2) % 7 ;
 		}
 	}
-	matrix<int> omatx(5,1) ;
+//	for(unsigned i=0; i<mymatx.nrow(); ++i) {
+//		mymatx(i,i) = 1 ;
+//	}
+	matrix<double> omatx(5,1) ;
 	for(unsigned i=0; i<omatx.nrow(); ++i) {
 		for(unsigned j=0; j<omatx.ncol(); ++j) {
 			omatx(i,j) = i+j ;
@@ -31,7 +43,7 @@ int main() {
 //	omatx = mymatx ;
 //	cout << "reassign: " << omatx << endl ;
 
-	matrix<int> mtx = mymatx * omatx ;
+	matrix<double> mtx = mymatx * omatx ;
 	mtx.transpose() ;
 	cout << "mtx: " << mtx << endl ;
 	mtx *= omatx ;
@@ -67,7 +79,7 @@ int main() {
 //	dmtx.inverse() ;
 //	dmtx.ul_decomp(dmtx,dmtx) ;
 
-	matrix<int> omatx2 ;
+	matrix<double> omatx2 ;
 	omatx.transpose(omatx2) ;
 	cout << "omatx2: " << omatx2 << endl ;
 	cout << "omatx: " << omatx << endl ;
