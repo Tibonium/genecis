@@ -353,25 +353,27 @@ template<class _type> class matrix {
 							}
 							if( (j >= i) && (i != 0) ) {
 								_type temp = 0 ;
-								for(unsigned k=0; k<i-1; ++k) {
+								for(unsigned k=0; k<=i-1; ++k) {
 									temp += lower(i,k) * upper(k,j) ;
 								}
 								upper(i,j) = (*this)(i,j) - temp ;
 							}
 							if( (j < i) && (j != 0) ) {
 								_type temp = 0 ;
-								for(unsigned k=0; k<j-1; ++k) {
+								for(unsigned k=0; k<=j-1; ++k) {
 									temp += lower(i,k) * upper(k,j) ;
 								}
 								lower(i,j) = ((*this)(i,j) - temp) / upper(j,j) ;
 							}
 						}
 					}
-					cout << "matrix::lu_decomp: Decompose the matrix into "
-						 << "an upper and lower triangular matrix."
-						 << endl ;
 				}
 			} catch (int e) {
+				cout << "matrix::lu_decomp: Only square, non-singular "
+					 << "matrices may be decompesed into upper/lower "
+					 << "triangular matrices. Setting determinant to "
+					 << "zero and singularness to true."
+					 << endl ;
 				_det = 0 ;
 				_singular = true ;
 				_verify = false ;
@@ -387,6 +389,8 @@ template<class _type> class matrix {
 			size_t N = r * c ;
 			this->_nrow = r ;
 			this->_ncol = c ;
+			this->_verify = true ;
+			this->_singular = false ;
 			delete this->_data ;
 			this->_data = new _type[N] ;
 			memset(this->_data, 0, N*sizeof(_type)) ;
@@ -402,6 +406,8 @@ template<class _type> class matrix {
 				(*this)(r1,i) = (*this)(r2,i) ;
 				(*this)(r2,i) = temp ;
 			}
+			_verify = true ;
+			_singular = false ;
 		}
 		
 		/**
@@ -414,6 +420,8 @@ template<class _type> class matrix {
 				(*this)(i,c1) = (*this)(i,c2) ;
 				(*this)(i,c2) = temp ;
 			}
+			_verify = true ;
+			_singular = false ;
 		}
 		
 		/**
@@ -484,14 +492,9 @@ template<class _type> class matrix {
 		{
 			size_t N = _nrow * _ncol ;
 			_data = new _type[N] ;
+			_verify = true ;
+			_singular = false ;
 			memset(_data, 0, N * sizeof(_type)) ;
-//			if( _nrow != _ncol ) {
-//				_singular = true ;
-//				_det = 0 ;
-//				_verify = false ;
-//			} else {
-//				_verify = true ;
-//			}
 		}
 
 		/**
@@ -693,7 +696,11 @@ inline std::ostream& operator<< (std::ostream& os, matrix<_type>& output) {
         		}
             } else {
             	if( (abs(data) >= 1e10) || (abs(data) <= 1e-4) ) {
-            		sprintf(buf, "%10.3e ", (double)data) ;
+            		if( abs(data) <= 1e-40 ) {
+            			sprintf(buf, "%10.0f ", (double)data) ;
+            		} else {
+            			sprintf(buf, "%10.3e ", (double)data) ;
+            		}
             	} else {
         			sprintf(buf, "%10.3f ", (double)data) ;
         		}

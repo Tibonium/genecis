@@ -5,6 +5,9 @@
 #ifndef DISTRIBUTION_DISTRIBUTION_H
 #define DISTRIBUTION_DISTRIBUTION_H
 
+#include <iostream>
+#include <iomanip>
+
 #include "probability_density_function.h"
 #include "probability_mass_function.h"
 #include "cumulative_distribution_function.h"

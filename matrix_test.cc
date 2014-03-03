@@ -83,11 +83,28 @@ int main() {
 	cout << "lower" << endl ;
 	cout << mymatx << endl ;
 	cout << "LU" << endl ;
-	cout << mymatx*mtx << endl ;
+	matrix<double> LU = mymatx*mtx ;
+	cout << LU << endl ;
 
 	matrix<double> omatx2 ;
 	omatx.transpose(omatx2) ;
 	cout << "omatx2: " << omatx2 << endl ;
 	cout << "omatx: " << omatx << endl ;
+	
+	unsigned N = 4 ;
+	matrix<double> m2(N,N) ;
+	for(unsigned i=0; i<N; ++i) {
+		for(unsigned j=0; j<N; ++j) {
+			m2(i,j) = rand() % 10 + 1 ;
+		}
+	}
+//	m2(0,0) = 8  ; m2(0,1) = 10 ; m2(0,2) = 2  ;
+//	m2(1,0) = 10 ; m2(1,1) = 2  ; m2(1,2) = 9  ;
+//	m2(2,0) = 1  ; m2(2,1) = 2  ; m2(2,2) = 10 ;
+	cout << "m2: " << m2 << endl ;
+	m2.lu_decomp(omatx,mtx) ;
+	cout << "upper: " << omatx << endl ;
+	cout << "lower: " << mtx << endl ;
+	cout << "LU: " << mtx*omatx << endl ;
 
 }
