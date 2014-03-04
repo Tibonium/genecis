@@ -516,7 +516,7 @@ template<class _T> class matrix {
 		/**
 		 * Destructor
 		 */
-		~matrix<_T>() {
+		~matrix() {
 			if( _data != NULL ) {
 				delete _data ;
 			}
