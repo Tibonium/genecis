@@ -13,21 +13,21 @@
 
 using namespace std ;
 
-template<class _type> class matrix ;
+template<class _T> class matrix ;
 
-template<class _type>
-std::ostream& operator<< (std::ostream& os, matrix<_type>& output) ;
+template<class _T>
+std::ostream& operator<< (std::ostream& os, matrix<_T>& output) ;
 
-template<class _type> class matrix {
+template<class _T> class matrix {
 
-		typedef matrix<_type> self_type ;
+		typedef matrix<_T> self_type ;
 
 	public:
-		inline unsigned nrow() {
+		inline size_t nrow() {
 			return _nrow ;
 		}
 
-		inline unsigned ncol() {
+		inline size_t ncol() {
 			return _ncol ;
 		}
 
@@ -35,130 +35,120 @@ template<class _type> class matrix {
 			return _singular ;
 		}
 		
-		inline _type det() {
+		inline _T det() {
 			if ( _verify ) {
 				singularity() ;
 			}
 			return _det ;
 		}
 		
-		inline _type* data() {
+		inline _T* data() {
 			return _data ;
 		}
 
 /************************* Operators ******************************/
 		/* Accessor and Assigner */
-		inline _type& operator() (unsigned i, unsigned j) {
+		inline _T& operator() (size_t i, size_t j) {
 			_index = i * _ncol + j ;
 			return _data[_index] ;
 		}
 
-		inline void operator= (_type value) {
+		inline void operator= (_T c) {
 			_verify = true ;
-			_data[_index] = value ;
+			_data[_index] = c ;
 		}
 
 	/*================= Matrix Scalar Operators ================*/
-		inline matrix<_type>& operator* (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] *= value ;
-				}
+		inline matrix& operator* (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] *= c ;
 			}
+			determinant() ;
 			return *this ;
 		}
 
-		inline void operator*= (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] *= value ;
-				}
+		inline void operator*= (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] *= c ;
 			}
+			determinant() ;
 		}
 
-		inline matrix<_type>& operator/ (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] /= value ;
-				}
+		inline matrix& operator/ (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] /= c ;
 			}
+			determinant() ;
 			return *this ;
 		}
 
-		inline void operator/= (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] /= value ;
-				}
+		inline void operator/= (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] /= c ;
 			}
+			determinant() ;
 		}
 
-		inline matrix<_type>& operator+ (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] += value ;
-				}
+		inline matrix& operator+ (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] += c ;
 			}
+			determinant() ;
 			return *this ;
 		}
 
-		inline void operator+= (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] += value ;
-				}
+		inline void operator+= (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] += c ;
 			}
+			determinant() ;
 		}
 
-		inline matrix<_type>& operator- (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] -= value ;
-				}
+		inline matrix& operator- (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] -= c ;
 			}
+			determinant() ;
 			return *this ;
 		}
 
-		inline void operator-= (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] -= value ;
-				}
+		inline void operator-= (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] -= c ;
 			}
+			determinant() ;
 		}
 
-		inline matrix<_type>& operator% (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] %= value ;
-				}
+		inline matrix& operator% (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] %= c ;
 			}
+			determinant() ;
 			return *this ;
 		}
 
-		inline void operator%= (_type value) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					_data[i*_ncol+j] %= value ;
-				}
+		inline void operator%= (_T c) {
+			for(size_t i=0; i<(_nrow*_ncol); ++i) {
+				_data[i] %= c ;
 			}
+			determinant() ;
 		}
 
 	/*================ Matrix Matrix Operators =================*/
-		inline matrix<_type>& operator* (matrix<_type>& other) {
+		inline matrix& operator* (matrix& other) {
 			try {
 				if( _ncol != other.nrow() ) {
 					throw 1;
 				} else {
-					matrix<_type>* temp = new matrix<_type>(_nrow,other.ncol()) ;
-					_type value = 0 ;
-					for(unsigned n=0; n<temp->nrow(); ++n) {
-						for(unsigned m=0; m<temp->ncol(); ++m) {
-							for(unsigned i=0; i<_ncol; ++i) {
-								value += (*this)(n,i) * other(i,m) ;
+					matrix<_T>* temp = new matrix<_T>(_nrow,other.ncol()) ;
+					_T c = 0 ;
+					for(size_t n=0; n<temp->nrow(); ++n) {
+						for(size_t m=0; m<temp->ncol(); ++m) {
+							for(size_t i=0; i<_ncol; ++i) {
+								c += _data[n*_nrow+i] * other._data[i*_ncol+m] ;
 							}
-							(*temp)(n,m) = value ;
-							value = 0 ;
+							temp->_data[n*_nrow+m] = c ;
+							c = 0 ;
 						}
 					}
 					return *temp ;
@@ -171,33 +161,34 @@ template<class _type> class matrix {
 			}
 		}
 
-		inline void operator*= (matrix<_type>& other) {
+		inline void operator*= (matrix& other) {
 			try {
-				if( _ncol != other.nrow() ) {
+				if( _ncol != other._nrow ) {
 					throw 1;
 				} else {
-					matrix<_type> temp = *this ;
+					matrix<_T> temp = *this ;
 					*this = temp * other ;
 					this->_verify = true ;
-					this->singularity() ;
+					this->_singular = false ;
 				}
 			} catch (int e) {
 				cout << "matrix::operator*=: A ncol(" << _ncol
-					 << ") must equal B nrow(" << other.nrow()
+					 << ") must equal B nrow(" << other._nrow
 					 << ")." << endl ;
 				exit(e) ;
 			}
 		}
 		
-		inline matrix<_type>& operator+ (matrix<_type>& other) {
+		inline matrix& operator+ (matrix& other) {
 			try {
-				if( _nrow != other.nrow() || _ncol != other.ncol() ) {
+				if( _nrow != other._nrow || _ncol != other._ncol ) {
 					throw 1 ;
 				} else {
-					matrix<_type>* temp = new matrix<_type>(_nrow,other.ncol()) ;
-					for(unsigned i=0; i<_nrow; ++i) {
-						for(unsigned j=0; j<_ncol; ++j) {
-							(*temp)(i,j) = (*this)(i,j) + other(i,j) ;
+					matrix<_T>* temp = new matrix<_T>(_nrow,other._ncol) ;
+					for(size_t i=0; i<_nrow; ++i) {
+						for(size_t j=0; j<_ncol; ++j) {
+							temp->_data[i*_nrow+j] = 
+								_data[i*_nrow+j] + other._data[i*_nrow+j] ;
 						}
 					}
 					return *temp ;
@@ -211,14 +202,15 @@ template<class _type> class matrix {
 			}
 		}
 		
-		inline void operator+= (matrix<_type>& other) {
+		inline void operator+= (matrix& other) {
 			try {
-				if( _nrow != other.nrow() || _ncol != other.ncol() ) {
+				if( _nrow != other._nrow || _ncol != other._ncol ) {
 					throw 1 ;
 				} else {
-					matrix<_type> temp = *this ;
+					matrix<_T> temp = *this ;
 					*this = temp + other ;
 					_verify = true ;
+					_singular = false ;
 				}
 			} catch (int e) {
 				cout << "matrix::operator+=: Only defined for matrices with "
@@ -229,13 +221,13 @@ template<class _type> class matrix {
 			}
 		}
 		
-		inline void operator/ (matrix<_type>& other) {
+		inline void operator/ (matrix& other) {
 			cout << "matrix::operator/: Matrix division is ill-defined "
 				 << "and not implemented at this time." << endl ;
 			exit(1) ;
 		}
 
-		inline void operator/= (matrix<_type>& other) {
+		inline void operator/= (matrix& other) {
 			cout << "matrix::operator=/: Matrix division is ill-defined "
 				 << "and not implemented at this time." << endl ;
 			exit(1) ;
@@ -245,10 +237,10 @@ template<class _type> class matrix {
 		 * Mutates the matrix into its transpose.
 		 */
 		inline void transpose() {
-			matrix<_type>* temp = new matrix<_type>(_ncol,_nrow) ;
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					(*temp)(j,i) = (*this)(i,j) ;
+			matrix<_T>* temp = new matrix<_T>(_ncol,_nrow) ;
+			for(size_t i=0; i<_nrow; ++i) {
+				for(size_t j=0; j<_ncol; ++j) {
+					temp->_data[j*_nrow+i] = _data[i*_nrow+j] ;
 				}
 			}
 			*this = *temp ;
@@ -261,11 +253,11 @@ template<class _type> class matrix {
 		 * matrix that called this function. The calling matrix
 		 * remains unaltered.
 		 */
-		inline void transpose(matrix<_type>& m_trans) {
+		inline void transpose(matrix& m_trans) {
 			m_trans.resize(_ncol, _nrow) ;
-			for(unsigned i=0; i<_nrow; ++i) {
-				for(unsigned j=0; j<_ncol; ++j) {
-					m_trans(j,i) = (*this)(i,j) ;
+			for(size_t i=0; i<_nrow; ++i) {
+				for(size_t j=0; j<_ncol; ++j) {
+					m_trans->_data[j*_nrow+i] = _data[i*_nrow+j] ;
 				}
 			}
 		}
@@ -274,13 +266,13 @@ template<class _type> class matrix {
 		 * Mutates the calling matrix into its inverse, if it exists.
 		 * Otherwise an exit status is passed and the program ends.
 		 */
-		inline matrix<_type>& inverse() {
+		inline matrix& inverse() {
 			try {
 				singularity() ;
 				if( _singular || _det == 0 ) {
 					throw 1 ;
 				} else {
-					matrix<_type>* inv_mtx = this ;
+					matrix<_T>* inv_mtx = this ;
 					cout << "something" << endl ;
 					return *inv_mtx ;
 				}
@@ -322,7 +314,7 @@ template<class _type> class matrix {
 						cout << "return identity matrix" << endl ;
 					} else {
 						int i = 1 ;
-						matrix<_type> temp = *this ;
+						matrix<_T> temp = *this ;
 						while(i < exp) {
 							*this *= temp ;
 							++i ;
@@ -330,40 +322,43 @@ template<class _type> class matrix {
 					}
 				}
 			} catch(int e) {
-				cout << "matrix<_type>::operator^ "
+				cout << "matrix<_T>::operator^ "
 					<< "only valid for square matrices." << endl ;
 				cout << *this << endl ;
 				exit(e) ;
 			}
 		}
 
-		inline void lu_decomp(matrix<_type>& upper, matrix<_type>& lower) {
+		inline void lu_decomp(matrix& upper, matrix& lower) {
 			try {
 				if( _nrow != _ncol ) {
 					throw -1 ;
 				} else {
 					upper.resize(_nrow, _ncol) ;
 					lower.resize(_nrow, _ncol) ;
-					for(unsigned i=0; i<_nrow; ++i) {
-						for(unsigned j=0; j<_ncol; ++j) {
-							if( i == 0 ) upper(i,j) = (*this)(i,j) ;
-							if( i == j ) lower(i,j) = 1 ;
+					for(size_t i=0; i<_nrow; ++i) {
+						for(size_t j=0; j<_ncol; ++j) {
+							if( i == 0 ) upper._data[i*_nrow+j] = _data[i*_nrow+j] ;
+							if( i == j ) lower._data[i*_nrow+j]= 1 ;
 							if( (i != 0) && (j == 0) ) {
-								lower(i,j) = (*this)(i,0) / upper(0,0) ;
+								lower._data[i*_nrow+j] = _data[i*_nrow] / upper._data[0] ;
 							}
 							if( (j >= i) && (i != 0) ) {
-								_type temp = 0 ;
-								for(unsigned k=0; k<=i-1; ++k) {
-									temp += lower(i,k) * upper(k,j) ;
+								_T temp = 0 ;
+								for(size_t k=0; k<=i-1; ++k) {
+									temp +=
+										lower._data[i*_nrow+k] * upper._data[k*_nrow+j] ;
 								}
-								upper(i,j) = (*this)(i,j) - temp ;
+								upper._data[i*_nrow+j] = _data[i*_nrow+j] - temp ;
 							}
 							if( (j < i) && (j != 0) ) {
-								_type temp = 0 ;
-								for(unsigned k=0; k<=j-1; ++k) {
-									temp += lower(i,k) * upper(k,j) ;
+								_T temp = 0 ;
+								for(size_t k=0; k<=j-1; ++k) {
+									temp +=
+										lower._data[i*_nrow+k] * upper._data[k*_nrow+j] ;
 								}
-								lower(i,j) = ((*this)(i,j) - temp) / upper(j,j) ;
+								lower._data[i*_nrow+j] =
+									(_data[i*_nrow+j] - temp) / upper._data[j*_nrow+j] ;
 							}
 						}
 					}
@@ -385,26 +380,26 @@ template<class _type> class matrix {
 		 * is then deleted and reallocated to the new size.
 		 * Data is not preserved at resizing a matrix!!
 		 */
-		inline void resize(const unsigned& r, const unsigned& c) {
+		inline void resize(const size_t& r, const size_t& c) {
 			size_t N = r * c ;
-			this->_nrow = r ;
-			this->_ncol = c ;
-			this->_verify = true ;
-			this->_singular = false ;
-			delete this->_data ;
-			this->_data = new _type[N] ;
-			memset(this->_data, 0, N*sizeof(_type)) ;
+			_nrow = r ;
+			_ncol = c ;
+			_verify = true ;
+			_singular = false ;
+			delete _data ;
+			_data = new _T[N] ;
+			memset(_data, 0, N*sizeof(_T)) ;
 		}
 		
 		/**
 		 * Swaps row a with row b.
 		 */
-		inline void swap_row(const unsigned& r1, const unsigned& r2) {
-			_type temp ;
-			for(unsigned i=0; i<_ncol; ++i) {
-				temp = (*this)(r1,i) ;
-				(*this)(r1,i) = (*this)(r2,i) ;
-				(*this)(r2,i) = temp ;
+		inline void swap_row(const size_t& r1, const size_t& r2) {
+			_T temp ;
+			for(size_t i=0; i<_ncol; ++i) {
+				temp = _data[r1*_nrow+i];
+				_data[r1*_nrow+i] = _data[r2*_nrow+i] ;
+				_data[r2*_nrow+i] = temp ;
 			}
 			_verify = true ;
 			_singular = false ;
@@ -413,12 +408,12 @@ template<class _type> class matrix {
 		/**
 		 * Swaps column a with column b
 		 */
-		inline void swap_col(const unsigned& c1, const unsigned& c2) {
-			_type temp ;
-			for(unsigned i=0; i<_nrow; ++i) {
-				temp = (*this)(i,c1) ;
-				(*this)(i,c1) = (*this)(i,c2) ;
-				(*this)(i,c2) = temp ;
+		inline void swap_col(const size_t& c1, const size_t& c2) {
+			_T temp ;
+			for(size_t i=0; i<_nrow; ++i) {
+				temp = _data[i*_nrow+c1] ;
+				_data[i*_nrow+c1] = _data[i*_nrow+c2] ;
+				_data[i*_nrow+c2] = temp ;
 			}
 			_verify = true ;
 			_singular = false ;
@@ -427,57 +422,52 @@ template<class _type> class matrix {
 		/**
 		 * Adds row r1 * x to row r2
 		 */
-		inline void add_row(const unsigned& r1, 
-							const unsigned& r2, _type x=1 )
+		inline void add_row(const size_t& r1, 
+							const size_t& r2, _T x=1 )
 		{
-			for(unsigned i=0; i<_ncol; ++i) {
-				(*this)(r2,i) += (*this)(r1,i) * x ;
+			for(size_t i=0; i<_ncol; ++i) {
+				_data[r2*_nrow+i] += _data[r1*_nrow+i] * x ;
 			}
 		}
 		
 		/**
 		 * Adds column c1 * x to column c2
 		 */
-		inline void add_col(const unsigned& c1, 
-							const unsigned& c2, _type x=1 )
+		inline void add_col(const size_t& c1, 
+							const size_t& c2, _T x=1 )
 		{
-			for(unsigned i=0; i<_nrow; ++i) {
-				(*this)(i,c2) += (*this)(i,c1) * x ;
+			for(size_t i=0; i<_nrow; ++i) {
+				_data[i*_nrow+c2] += _data[i*_nrow+c1] * x ;
 			}
 		}
 		
 		/**
 		 * Multiply a row by x
 		 */
-		inline void x_row(const unsigned& r, _type x) {
-			for(unsigned i=0; i<_ncol; ++i) {
-				(*this)(r,i) *= x ;
+		inline void x_row(const size_t& r, _T x) {
+			for(size_t i=0; i<_ncol; ++i) {
+				_data[r*_nrow+i] *= x ;
 			}
 		}
 
 		/**
 		 * Multiply a column by x
 		 */
-		inline void x_col(const unsigned& c, _type x) {
-			for(unsigned i=0; i<_nrow; ++i) {
-				(*this)(i,c) *= x ;
+		inline void x_col(const size_t& c, _T x) {
+			for(size_t i=0; i<_nrow; ++i) {
+				_data[i*_nrow+c] *= x ;
 			}
 		}
 				
 	/*================== Comparison Operators ==================*/
-		inline bool operator== (matrix<_type>& other) {
-			int n = memcmp( _data, other.data(), 
-						    sizeof(_type)*sizeof(_data) ) ;
-			if ( _nrow == other.nrow() &&
-				 _ncol == other.ncol() && n == 0 )
-			{
-				return true ;
-		 	} else {
-		 		return false ;
-		 	}
+		inline bool operator== (matrix& other) {
+			int n = memcmp( _data, other._data, 
+						    sizeof(_T)*sizeof(_data) ) ;
+			return ( _nrow == other._nrow &&
+				 	 _ncol == other._ncol && n == 0 ) ;
 		}
 
-		inline bool operator!= (matrix<_type>& other) {
+		inline bool operator!= (matrix& other) {
 			return !(*this==other) ;
 		}
 
@@ -487,46 +477,46 @@ template<class _type> class matrix {
 		 * Creates an NxM matrix from a basic array
 		 * Defaults to a 1x1 matrix
 		 */
-		matrix(unsigned nrow=1, unsigned ncol=1) : 
-			_nrow(nrow), _ncol(ncol)
+		matrix(size_t nrow=1, size_t ncol=1) : 
+			_nrow(nrow), _ncol(ncol),
+			_singular(false), _verify(true)
 		{
 			size_t N = _nrow * _ncol ;
-			_data = new _type[N] ;
-			_verify = true ;
-			_singular = false ;
-			memset(_data, 0, N * sizeof(_type)) ;
+			_data = new _T[N] ;
+			memset(_data, 0, N * sizeof(_T)) ;
 		}
 
 		/**
 		 * Copy Constructor
 		 */
-		matrix(matrix<_type>& other) :
-			_nrow(other.nrow()), _ncol(other.ncol()),
-			_singular(other.singular()), _det(other.det())
+		matrix(matrix& other) :
+			_nrow(other._nrow), _ncol(other._ncol),
+			_singular(other._singular), _verify(false),
+			_det(other._det)
 		{
 			size_t N = _nrow * _ncol ;			
-			_data = new _type[N] ;
-			_verify = false ;
-			memcpy(_data, other.data(), N * sizeof(_type)) ;
+			_data = new _T[N] ;
+			memcpy(_data, other._data, N * sizeof(_T)) ;
 		}
 
 		/**
 		 * Assign Constructor
 		 */
-		inline matrix<_type>& operator= (matrix<_type>& other) {
-			_nrow = other.nrow() ;
-			_ncol = other.ncol() ;
-			_verify = true ;
-			_singular = false ;
+		inline matrix& operator= (matrix& other) {
+			_nrow = other._nrow ;
+			_ncol = other._ncol ;
+			_verify = other._verify ;
+			_singular = other._singular ;
+			_det = other._det ;
 			delete _data ;
-			_data = other.data() ;
+			_data = other._data ;
 			return *this ;
 		}
 		
 		/**
 		 * Destructor
 		 */
-		~matrix<_type>() {
+		~matrix<_T>() {
 			if( _data != NULL ) {
 				delete _data ;
 			}
@@ -536,13 +526,13 @@ template<class _type> class matrix {
 		friend std::ostream& operator<< <> (std::ostream& os, matrix& output) ;
 
 	private:
-		unsigned _nrow ;
-		unsigned _ncol ;
-		unsigned _index ;
+		_T* _data ;
+		size_t _nrow ;
+		size_t _ncol ;
+		size_t _index ;
 		bool _singular ;
 		bool _verify ;
-		_type _det ;
-		_type* _data ;
+		_T _det ;
 
 
 		/**
@@ -553,9 +543,6 @@ template<class _type> class matrix {
 		 * true and _det is set to zero.
 		 * If a zero row/column is not found, the determinant of the
 		 * matrix is then calculated and checked to be non-zero.
-		 *
-		 * This function only checks for singular-ness when either
-		 * a data value is altered, such as populating a matrix
 		 */		
 		inline void singularity() {
 			if( _verify ) {
@@ -567,11 +554,11 @@ template<class _type> class matrix {
 
 				// check for a zero row
 				if( !_singular ) {
-					for(unsigned i=0; i<_nrow; ++i) {
+					for(size_t i=0; i<_nrow; ++i) {
 						bool _zero = false ;
-						if( (*this)(i,0) == 0 ) {
-							for(unsigned j=1; j<_ncol; ++j) {
-								if( (*this)(i,j) != 0 ) {
+						if( _data[i*_nrow+0] == 0 ) {
+							for(size_t j=1; j<_ncol; ++j) {
+								if( _data[i*_nrow+j] != 0 ) {
 									_zero = false ;
 									break ;
 								} else {
@@ -589,11 +576,11 @@ template<class _type> class matrix {
 
 				// check for a zero column
 				if( !_singular ) {
-					for(unsigned i=0; i<_ncol; ++i) {
+					for(size_t i=0; i<_ncol; ++i) {
 						bool _zero = false ;
-						if( (*this)(0,i) == 0 ) {
-							for(unsigned j=1; j<_nrow; ++j) {
-								if( (*this)(j,i) == 0 ) {
+						if( _data[i] == 0 ) {
+							for(size_t j=1; j<_nrow; ++j) {
+								if( _data[j*_nrow+i] == 0 ) {
 									_zero = true ;
 								} else {
 									_zero = false ;
@@ -614,11 +601,11 @@ template<class _type> class matrix {
 				// matrix is singular
 				if( !_singular ) {
 					determinant() ;
-					_type zero = _det ;
+					_T zero = _det ;
 					if( zero == 0 ) {
 						_singular = true ;
 					} else {
-						if( typeid(_type) == typeid(int) ) {
+						if( typeid(_T) == typeid(int) ) {
 							if( zero == 1 || zero == -1 ) {
 								_singular = false ;
 							} else {
@@ -644,9 +631,9 @@ template<class _type> class matrix {
 			_det = determinant(_data, _ncol) ;
 		}
 		
-		inline _type determinant(const _type* data, const unsigned& n) {
-			_type result = 0 ;
-			_type* temp = new _type[n*n] ;
+		inline _T determinant(const _T* data, const size_t& n) {
+			_T result = 0 ;
+			_T* temp = new _T[n*n] ;
 			if( n == 1 ) {
 				delete temp ;
 				return data[0] ;
@@ -654,11 +641,11 @@ template<class _type> class matrix {
 				delete temp ;
 				return (data[0]*data[3]-data[1]*data[2]) ;
 			} else {
-				for(unsigned p=0; p<n; ++p) {
-					unsigned h = 0 ;
-					unsigned k = 0 ;
-					for(unsigned i=1; i<n; ++i) {
-						for(unsigned j=0; j<n; ++j) {
+				for(size_t p=0; p<n; ++p) {
+					size_t h = 0 ;
+					size_t k = 0 ;
+					for(size_t i=1; i<n; ++i) {
+						for(size_t j=0; j<n; ++j) {
 							if( j == p ) continue ;
 							temp[h*n+k] = data[i*n+j] ;
 							++k ;
@@ -674,21 +661,21 @@ template<class _type> class matrix {
 
 };
 
-template <class _type>
-inline std::ostream& operator<< (std::ostream& os, matrix<_type>& output) {
-	os << "\nrows: " << output.nrow() << "   det:   " << output.det() 
-	   << "\ncols: " << output.ncol() ;
+template <class _T>
+inline std::ostream& operator<< (std::ostream& os, matrix<_T>& output) {
+	os << "\nrows: " << output._nrow << "   det:   " << output.det() 
+	   << "\ncols: " << output._ncol ;
 	if( output._singular ) {
 		os << "   singular" << endl ;
 	} else {
 		os << "   non-singular" << endl ;
 	}
-	for(unsigned i=0; i<output.nrow(); ++i) {
+	for(size_t i=0; i<output._nrow; ++i) {
 		os << "| " ;
-		for(unsigned j=0; j<output.ncol(); ++j) {
+		for(size_t j=0; j<output._ncol; ++j) {
 			char buf[32];
-            _type data = output(i,j);
-            if( typeid(_type) == typeid(int) ) {
+            _T data = output._data[i*output._nrow+j];
+            if( typeid(_T) == typeid(int) ) {
             	if( data >= 1e5 ) {
             		sprintf(buf, "%1.1e ", (double)data) ;
             	} else {
