@@ -3,6 +3,7 @@
 msg
 main
 log
+*.o
 tree_test
 physics_test
 matrix_test
