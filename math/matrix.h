@@ -23,15 +23,15 @@ template<class _T> class matrix {
 		typedef matrix<_T> self_type ;
 
 	public:
-		inline size_t nrow() {
+		inline size_t nrow() const {
 			return _nrow ;
 		}
 
-		inline size_t ncol() {
+		inline size_t ncol() const {
 			return _ncol ;
 		}
 
-		inline bool singular() {
+		inline bool singular() const {
 			return _singular ;
 		}
 		
@@ -42,7 +42,7 @@ template<class _T> class matrix {
 			return _det ;
 		}
 		
-		inline _T* data() {
+		inline _T* data() const {
 			return _data ;
 		}
 
@@ -135,15 +135,15 @@ template<class _T> class matrix {
 		}
 
 	/*================ Matrix Matrix Operators =================*/
-		inline matrix& operator* (matrix& other) {
+		inline matrix& operator* (const matrix& other) {
 			try {
-				if( _ncol != other.nrow() ) {
+				if( _ncol != other._nrow ) {
 					throw 1;
 				} else {
-					matrix<_T>* temp = new matrix<_T>(_nrow,other.ncol()) ;
+					matrix<_T>* temp = new matrix<_T>(_nrow,other._ncol) ;
 					_T c = 0 ;
-					for(size_t n=0; n<temp->nrow(); ++n) {
-						for(size_t m=0; m<temp->ncol(); ++m) {
+					for(size_t n=0; n<temp->_nrow; ++n) {
+						for(size_t m=0; m<temp->_ncol; ++m) {
 							for(size_t i=0; i<_ncol; ++i) {
 								c += _data[n*_nrow+i] * other._data[i*_ncol+m] ;
 							}
@@ -155,7 +155,7 @@ template<class _T> class matrix {
 				}
 			} catch (int e) {
 				cout << "matrix::operator*: A ncol(" << _ncol
-					 << ") must equal B nrow(" << other.nrow()
+					 << ") must equal B nrow(" << other._nrow
 					 << ")." << endl ;
 				exit(e) ;
 			}
