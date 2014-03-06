@@ -135,17 +135,17 @@ template<class _T> class matrix {
 		}
 
 	/*================ Matrix Matrix Operators =================*/
-		inline matrix& operator* (const matrix& other) {
+		inline matrix& operator* (const matrix& rhs) {
 			try {
-				if( _ncol != other._nrow ) {
+				if( _ncol != rhs._nrow ) {
 					throw 1;
 				} else {
-					matrix<_T>* temp = new matrix<_T>(_nrow,other._ncol) ;
+					matrix<_T>* temp = new matrix<_T>(_nrow,rhs._ncol) ;
 					_T c = 0 ;
 					for(size_t n=0; n<temp->_nrow; ++n) {
 						for(size_t m=0; m<temp->_ncol; ++m) {
 							for(size_t i=0; i<_ncol; ++i) {
-								c += _data[n*_nrow+i] * other._data[i*_ncol+m] ;
+								c += _data[n*_nrow+i] * rhs._data[i*_ncol+m] ;
 							}
 							temp->_data[n*_nrow+m] = c ;
 							c = 0 ;
@@ -155,40 +155,40 @@ template<class _T> class matrix {
 				}
 			} catch (int e) {
 				cout << "matrix::operator*: A ncol(" << _ncol
-					 << ") must equal B nrow(" << other._nrow
+					 << ") must equal B nrow(" << rhs._nrow
 					 << ")." << endl ;
 				exit(e) ;
 			}
 		}
 
-		inline void operator*= (matrix& other) {
+		inline void operator*= (matrix& rhs) {
 			try {
-				if( _ncol != other._nrow ) {
+				if( _ncol != rhs._nrow ) {
 					throw 1;
 				} else {
 					matrix<_T> temp = *this ;
-					*this = temp * other ;
+					*this = temp * rhs ;
 					this->_verify = true ;
 					this->_singular = false ;
 				}
 			} catch (int e) {
 				cout << "matrix::operator*=: A ncol(" << _ncol
-					 << ") must equal B nrow(" << other._nrow
+					 << ") must equal B nrow(" << rhs._nrow
 					 << ")." << endl ;
 				exit(e) ;
 			}
 		}
 		
-		inline matrix& operator+ (matrix& other) {
+		inline matrix& operator+ (matrix& rhs) {
 			try {
-				if( _nrow != other._nrow || _ncol != other._ncol ) {
+				if( _nrow != rhs._nrow || _ncol != rhs._ncol ) {
 					throw 1 ;
 				} else {
-					matrix<_T>* temp = new matrix<_T>(_nrow,other._ncol) ;
+					matrix<_T>* temp = new matrix<_T>(_nrow,rhs._ncol) ;
 					for(size_t i=0; i<_nrow; ++i) {
 						for(size_t j=0; j<_ncol; ++j) {
 							temp->_data[i*_nrow+j] = 
-								_data[i*_nrow+j] + other._data[i*_nrow+j] ;
+								_data[i*_nrow+j] + rhs._data[i*_nrow+j] ;
 						}
 					}
 					return *temp ;
@@ -197,18 +197,18 @@ template<class _T> class matrix {
 				cout << "matrix::operator+: Only defined for matrices with "
 					 << "the same number of rows and columns." << endl ;
 				cout << *this << endl ;
-				cout << other << endl ;
+				cout << rhs << endl ;
 				exit(e) ;
 			}
 		}
 		
-		inline void operator+= (matrix& other) {
+		inline void operator+= (matrix& rhs) {
 			try {
-				if( _nrow != other._nrow || _ncol != other._ncol ) {
+				if( _nrow != rhs._nrow || _ncol != rhs._ncol ) {
 					throw 1 ;
 				} else {
 					matrix<_T> temp = *this ;
-					*this = temp + other ;
+					*this = temp + rhs ;
 					_verify = true ;
 					_singular = false ;
 				}
@@ -216,18 +216,18 @@ template<class _T> class matrix {
 				cout << "matrix::operator+=: Only defined for matrices with "
 					 << "the same number of rows and columns." << endl ;
 				cout << *this << endl ;
-				cout << other << endl ;
+				cout << rhs << endl ;
 				exit(e) ;
 			}
 		}
 		
-		inline void operator/ (matrix& other) {
+		inline void operator/ (matrix& rhs) {
 			cout << "matrix::operator/: Matrix division is ill-defined "
 				 << "and not implemented at this time." << endl ;
 			exit(1) ;
 		}
 
-		inline void operator/= (matrix& other) {
+		inline void operator/= (matrix& rhs) {
 			cout << "matrix::operator=/: Matrix division is ill-defined "
 				 << "and not implemented at this time." << endl ;
 			exit(1) ;
@@ -460,15 +460,15 @@ template<class _T> class matrix {
 		}
 				
 	/*================== Comparison Operators ==================*/
-		inline bool operator== (matrix& other) {
-			int n = memcmp( _data, other._data, 
+		inline bool operator== (matrix& rhs) {
+			int n = memcmp( _data, rhs._data, 
 						    sizeof(_T)*sizeof(_data) ) ;
-			return ( _nrow == other._nrow &&
-				 	 _ncol == other._ncol && n == 0 ) ;
+			return ( _nrow == rhs._nrow &&
+				 	 _ncol == rhs._ncol && n == 0 ) ;
 		}
 
-		inline bool operator!= (matrix& other) {
-			return !(*this==other) ;
+		inline bool operator!= (matrix& rhs) {
+			return !(*this==rhs) ;
 		}
 
 /******************** Constructor/Destructors *********************/
@@ -489,27 +489,27 @@ template<class _T> class matrix {
 		/**
 		 * Copy Constructor
 		 */
-		matrix(matrix& other) :
-			_nrow(other._nrow), _ncol(other._ncol),
-			_singular(other._singular), _verify(false),
-			_det(other._det)
+		matrix(matrix& rhs) :
+			_nrow(rhs._nrow), _ncol(rhs._ncol),
+			_singular(rhs._singular), _verify(false),
+			_det(rhs._det)
 		{
 			size_t N = _nrow * _ncol ;			
 			_data = new _T[N] ;
-			memcpy(_data, other._data, N * sizeof(_T)) ;
+			memcpy(_data, rhs._data, N * sizeof(_T)) ;
 		}
 
 		/**
 		 * Assign Constructor
 		 */
-		inline matrix& operator= (matrix& other) {
-			_nrow = other._nrow ;
-			_ncol = other._ncol ;
-			_verify = other._verify ;
-			_singular = other._singular ;
-			_det = other._det ;
+		inline matrix& operator= (matrix& rhs) {
+			_nrow = rhs._nrow ;
+			_ncol = rhs._ncol ;
+			_verify = rhs._verify ;
+			_singular = rhs._singular ;
+			_det = rhs._det ;
 			delete _data ;
-			_data = other._data ;
+			_data = rhs._data ;
 			return *this ;
 		}
 		
