@@ -135,7 +135,7 @@ template<class _T> class matrix {
 		}
 
 	/*================ Matrix Matrix Operators =================*/
-		inline matrix& operator* (const matrix& rhs) {
+		inline matrix& operator* (matrix& rhs) {
 			try {
 				if( _ncol != rhs._nrow ) {
 					throw 1;
@@ -214,6 +214,48 @@ template<class _T> class matrix {
 				}
 			} catch (int e) {
 				cout << "matrix::operator+=: Only defined for matrices with "
+					 << "the same number of rows and columns." << endl ;
+				cout << *this << endl ;
+				cout << rhs << endl ;
+				exit(e) ;
+			}
+		}
+		
+		inline matrix& operator- (matrix& rhs) {
+			try {
+				if( _nrow != rhs._nrow || _ncol != rhs._ncol ) {
+					throw 1 ;
+				} else {
+					matrix<_T>* temp = new matrix<_T>(_nrow,rhs._ncol) ;
+					for(size_t i=0; i<_nrow; ++i) {
+						for(size_t j=0; j<_ncol; ++j) {
+							temp->_data[i*_nrow+j] = 
+								_data[i*_nrow+j] - rhs._data[i*_nrow+j] ;
+						}
+					}
+					return *temp ;
+				}
+			} catch (int e) {
+				cout << "matrix::operator-: Only defined for matrices with "
+					 << "the same number of rows and columns." << endl ;
+				cout << *this << endl ;
+				cout << rhs << endl ;
+				exit(e) ;
+			}
+		}
+		
+		inline void operator-= (matrix& rhs) {
+			try {
+				if( _nrow != rhs._nrow || _ncol != rhs._ncol ) {
+					throw 1 ;
+				} else {
+					matrix<_T> temp = *this ;
+					*this = temp - rhs ;
+					_verify = true ;
+					_singular = false ;
+				}
+			} catch (int e) {
+				cout << "matrix::operator-=: Only defined for matrices with "
 					 << "the same number of rows and columns." << endl ;
 				cout << *this << endl ;
 				cout << rhs << endl ;
