@@ -19,6 +19,6 @@ else
   if [ -e $1 ];
   then
     echo Executable $1 was created!
-	date
+    date
   fi
 fi
