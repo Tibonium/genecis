@@ -1,19 +1,24 @@
 #!/bin/bash
-date
+if [ -e $1 ];
+then
+  rm $1
+fi
 cc_file="$1.cc"
 no_file=$(find $cc_file)
-if [ -e $1 ] ;
+if [ "$no_file" = "" ];
+then
+  echo ***Error: $cc_file does not exist***
+else
+  echo File $cc_file found, creating exe file
+  if [ "$2" = "" ];
   then
-    rm $1
-fi
-if [ "$no_file" = "" ] ;
-  then
-    echo File not found, please try again
+     g++ -Wall -Werror $cc_file -o $1
   else
-    echo "**Found $cc_file, creating exe**"
-    g++ -Wall -Werror $cc_file -o $1
-fi
-if [ -e $1 ]
+     g++ -Wall -Werror $cc_file -o $1 -l$2
+  fi
+  if [ -e $1 ];
   then
-    echo ***$1 executable file created***
+    echo Executable $1 was created!
+	date
+  fi
 fi
