@@ -109,7 +109,13 @@ int main() {
 	
 	cout << "m: " << m << endl ;
 	cout << "m2: " << m2 << endl ;
-	cout << "m-m2: " << (m-m2) << endl ;
+	if (true) {
+	matrix<double>* mn = m-m2 ;
+	cout << "m-m2: " << (*mn) << endl ;
+	delete mn ;
+	}
+	cout << "m: " << m << endl ;
+	cout << "m2: " << m2 << endl ;
 //	cout << "m2: " << m2 << endl ;
 //	(*temp) = m2*2.0 ;
 //	cout << "m2*2.0: " << (*temp) << endl ;

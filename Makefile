@@ -4,7 +4,7 @@
 #
 #*******************************************************************
 
-CC = g++ -Wall -Werror
+CC = g++ -Wall -Werror -g
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test math_test tree_test
@@ -15,6 +15,7 @@ PHYS_PCKG = ${wildcard physics/.h}
 
 all: $(TESTS)
 	@echo "Build successful"
+	@date
 	
 matrix_test: matrix_test.cc $(MATH_PCKG)
 	@echo "Building matrix_test..."

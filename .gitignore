@@ -8,5 +8,6 @@ tree_test
 physics_test
 matrix_test
 math_test
+buffer_test
 template_meta_test
 *~

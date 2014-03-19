@@ -28,24 +28,26 @@ template<class KEY_TYPE, class DATA_TYPE> class ud_tree {
 		 * already exist in our tree. If the key is unique, then we
 		 * put the new node at the end of the tree.
 		 */
-		 inline void insert(KEY_TYPE key, const DATA_TYPE& data) {
+		 inline void insert(const KEY_TYPE& key, const DATA_TYPE& data) {
 		 	ud_node<KEY_TYPE, DATA_TYPE>* temp = 
 		 		new ud_node<KEY_TYPE, DATA_TYPE>(key, data) ;
 		 	if ( _first == NULL ) {
 		 		_first = temp ;
 		 		_last = temp ;
+			 	++_count ;
 		 	} else {
 		 		if( !search(_first,key) ) {
 				 	ud_node<KEY_TYPE, DATA_TYPE>* old_last = _last ;
 				 	old_last->child = temp ;
 				 	temp->parent = old_last ;
 				 	_last = temp ;
+	 			 	++_count ;
 			 	}
 		 	}
-		 	++_count ;
+//		 	delete temp ;
 		 }
 
-		 inline void delete_node(KEY_TYPE key) {
+		 inline void delete_node(const KEY_TYPE& key) {
 		 	ud_node<KEY_TYPE, DATA_TYPE>* temp = find_node(_first,key) ;
 		 	if( temp == _first ) {
 		 		temp->child->parent = NULL ;
@@ -67,11 +69,11 @@ template<class KEY_TYPE, class DATA_TYPE> class ud_tree {
 		  * if a node has the key we are looking for, otherwise
 		  * false.
 		  */
-		 inline bool find_key(KEY_TYPE key) {
+		 inline bool find_key(const KEY_TYPE& key) {
 		 	return search(_first,key) ;
 		 }
 		 
-		 inline DATA_TYPE find_data(KEY_TYPE key) {
+		 inline DATA_TYPE find_data(const KEY_TYPE& key) {
 		 	ud_node<KEY_TYPE, DATA_TYPE>* temp = find_node(_first,key) ;
 		 	return temp->data ;
 		 }
@@ -96,7 +98,7 @@ template<class KEY_TYPE, class DATA_TYPE> class ud_tree {
 		 *  Destructor
 		 */
 		~ud_tree() {
-//			destroy_tree() ;
+			destroy_tree(_first) ;
 		}
 
 	private:
@@ -110,9 +112,17 @@ template<class KEY_TYPE, class DATA_TYPE> class ud_tree {
 		/**
 		 * Recursive search to find a node with key as its key.
 		 */
-		inline bool search(ud_node<KEY_TYPE, DATA_TYPE>* curr, KEY_TYPE key) {
+		inline bool search(ud_node<KEY_TYPE, DATA_TYPE>* curr, const KEY_TYPE& key) {
 			bool result = false ;
-			if( curr->key == key ) {
+			stringstream ss1 ;
+			stringstream ss2 ;
+			ss1 << key ;
+			ss2 << curr->key ;
+			string s1 = ss1.str() ;
+			string s2 = ss2.str() ;
+			int m = max( s1.size(), s2.size() ) ;
+			int n = memcmp(s1.c_str(), s2.c_str(), m ) ;
+			if( n == 0 ) {
 				result = true ;
 			} else if( curr == _last ) {
 				return result ;
@@ -127,10 +137,18 @@ template<class KEY_TYPE, class DATA_TYPE> class ud_tree {
 		 * returns this node.
 		 */
 		inline ud_node<KEY_TYPE, DATA_TYPE>* find_node(
-			ud_node<KEY_TYPE, DATA_TYPE>* curr, KEY_TYPE key)
+			ud_node<KEY_TYPE, DATA_TYPE>* curr, const KEY_TYPE& key)
 		{
 			try {
-				if( curr->key == key ) {
+				stringstream ss1 ;
+				stringstream ss2 ;
+				ss1 << key ;
+				ss2 << (curr->key) ;
+				string s1 = ss1.str() ;
+				string s2 = ss2.str() ;
+				int m = max( s1.size(), s2.size() ) ;
+				int n = memcmp(s1.c_str(), s2.c_str(), m ) ;
+				if( n == 0 ) {
 					return curr ;
 				} else if( curr == _last ) {
 					throw -1 ;
@@ -145,6 +163,13 @@ template<class KEY_TYPE, class DATA_TYPE> class ud_tree {
 				exit(e) ;
 			}
 			return curr ;
+		}
+		
+		void destroy_tree(ud_node<KEY_TYPE, DATA_TYPE>* curr) {
+			if( curr != NULL ) {
+				destroy_tree(curr->child) ;
+				delete curr ;
+			}
 		}
 		
 		friend std::ostream& operator<< <> (std::ostream& os,

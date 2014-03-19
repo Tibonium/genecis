@@ -41,14 +41,14 @@ template<class KEY_TYPE, class DATA_TYPE> class ud_node {
 			data = _data ;
 		}
 		
-		inline ud_node<KEY_TYPE, DATA_TYPE>& operator=
+		inline ud_node<KEY_TYPE, DATA_TYPE>* operator=
 			(ud_node<KEY_TYPE, DATA_TYPE>& rhs)
 		{
 			parent = rhs.parent ;
 			child = rhs.child ;
 			key = rhs.key ;
 			data = rhs.data ;
-			return *this ;
+			return this ;
 		}
 		
 		inline bool operator== (ud_node<KEY_TYPE, DATA_TYPE>& rhs) {
@@ -57,18 +57,6 @@ template<class KEY_TYPE, class DATA_TYPE> class ud_node {
 				return true ;
 			} else {
 				return false ;
-			}
-		}
-		
-		/**
-		 * Destructor
-		 */
-		~ud_node<KEY_TYPE, DATA_TYPE>() {
-			if( parent != NULL ) {
-				delete parent ;
-			}
-			if( child != NULL ) {
-				delete child ;
 			}
 		}
 		
@@ -85,14 +73,15 @@ std::ostream& operator<< (std::ostream& os,
 	std::stringstream ss ;
 	ss << curr.key ;
 	string s = ss.str() ;
-	char* _key = new char[sizeof(curr.key)/sizeof(KEY_TYPE)+1] ;
-	memcpy(_key,s.c_str(),sizeof(curr.key)+sizeof(KEY_TYPE)) ;
+	char* _key = new char[s.size()+1] ;
+	memcpy(_key,s.c_str(),s.size()) ;
 	if( typeid(DATA_TYPE) == typeid(int) ) {
 		sprintf(buff,"key:%8s  data:%8.0d", _key, (int)curr.data) ;
 	} else {
 		sprintf(buff,"key:%8s  data:%6.2f", _key, (double)curr.data) ;
 	}
 	os << buff ;
+	delete[] _key ;
 	return os ;
 }
 

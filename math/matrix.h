@@ -135,7 +135,7 @@ template<class _T> class matrix {
 		}
 
 	/*================ Matrix Matrix Operators =================*/
-		inline matrix& operator* (matrix& rhs) {
+		inline matrix* operator* (matrix& rhs) {
 			try {
 				if( _ncol != rhs._nrow ) {
 					throw 1;
@@ -151,7 +151,7 @@ template<class _T> class matrix {
 							c = 0 ;
 						}
 					}
-					return *temp ;
+					return temp ;
 				}
 			} catch (int e) {
 				cout << "matrix::operator*: A ncol(" << _ncol
@@ -179,7 +179,7 @@ template<class _T> class matrix {
 			}
 		}
 		
-		inline matrix& operator+ (matrix& rhs) {
+		inline matrix* operator+ (matrix& rhs) {
 			try {
 				if( _nrow != rhs._nrow || _ncol != rhs._ncol ) {
 					throw 1 ;
@@ -191,7 +191,7 @@ template<class _T> class matrix {
 								_data[i*_nrow+j] + rhs._data[i*_nrow+j] ;
 						}
 					}
-					return *temp ;
+					return temp ;
 				}
 			} catch (int e) {
 				cout << "matrix::operator+: Only defined for matrices with "
@@ -221,7 +221,7 @@ template<class _T> class matrix {
 			}
 		}
 		
-		inline matrix& operator- (matrix& rhs) {
+		inline matrix* operator- (matrix& rhs) {
 			try {
 				if( _nrow != rhs._nrow || _ncol != rhs._ncol ) {
 					throw 1 ;
@@ -233,7 +233,7 @@ template<class _T> class matrix {
 								_data[i*_nrow+j] - rhs._data[i*_nrow+j] ;
 						}
 					}
-					return *temp ;
+					return temp ;
 				}
 			} catch (int e) {
 				cout << "matrix::operator-: Only defined for matrices with "
@@ -286,7 +286,6 @@ template<class _T> class matrix {
 				}
 			}
 			*this = *temp ;
-			temp->_data = NULL ;
 			delete temp ;
 		}
 		
@@ -308,7 +307,7 @@ template<class _T> class matrix {
 		 * Mutates the calling matrix into its inverse, if it exists.
 		 * Otherwise an exit status is passed and the program ends.
 		 */
-		inline matrix& inverse() {
+		inline matrix* inverse() {
 			try {
 				singularity() ;
 				if( _singular || _det == 0 ) {
@@ -316,7 +315,7 @@ template<class _T> class matrix {
 				} else {
 					matrix<_T>* inv_mtx = this ;
 					cout << "something" << endl ;
-					return *inv_mtx ;
+					return inv_mtx ;
 				}
 			} catch (int e) {
 				cout << "matrix::inverse(): inverse not defined for"
@@ -428,7 +427,7 @@ template<class _T> class matrix {
 			_ncol = c ;
 			_verify = true ;
 			_singular = false ;
-			delete _data ;
+			delete[] _data ;
 			_data = new _T[N] ;
 			memset(_data, 0, N*sizeof(_T)) ;
 		}
@@ -544,7 +543,7 @@ template<class _T> class matrix {
 		/**
 		 * Assign Constructor
 		 */
-		inline matrix& operator= (matrix& rhs) {
+		inline matrix* operator= (matrix& rhs) {
 			_nrow = rhs._nrow ;
 			_ncol = rhs._ncol ;
 			_verify = rhs._verify ;
@@ -552,16 +551,14 @@ template<class _T> class matrix {
 			_det = rhs._det ;
 			delete _data ;
 			_data = rhs._data ;
-			return *this ;
+			return this ;
 		}
 		
 		/**
 		 * Destructor
 		 */
 		~matrix() {
-			if( _data != NULL ) {
-				delete _data ;
-			}
+			delete[] _data ;
 		}
 
 /********************** IO Stream overloads ***********************/
@@ -677,10 +674,10 @@ template<class _T> class matrix {
 			_T result = 0 ;
 			_T* temp = new _T[n*n] ;
 			if( n == 1 ) {
-				delete temp ;
+				delete[] temp ;
 				return data[0] ;
 			} else if( n == 2 ) {
-				delete temp ;
+				delete[] temp ;
 				return (data[0]*data[3]-data[1]*data[2]) ;
 			} else {
 				for(size_t p=0; p<n; ++p) {
@@ -696,7 +693,7 @@ template<class _T> class matrix {
 					}
 					result += data[0+p]*pow(-1,p)*determinant(temp, n-1) ;
 				}
-				delete temp ;
+				delete[] temp ;
 				return result ;
 			}
 		}

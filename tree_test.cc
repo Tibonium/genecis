@@ -21,6 +21,7 @@ int main() {
 	myAVL.insert(10) ;
 	myAVL.print_tree() ;
 	
+	if(true){
 	ud_tree<double,int> myUD ;
 //	string k = "some" ;
 //	string k1 = "other" ;
@@ -34,14 +35,32 @@ int main() {
 	double k1 = 3.24 ;
 	double k2 = 1049 ;
 	double k3 = 2.345 ;
+//	double k4 = 1.01 ;
 	myUD.insert(k,10) ;
 	myUD.insert(k1,20) ;
 	myUD.insert(k2,30) ;
 	myUD.insert(k3,40) ;
+//	myUD.insert(k4,50) ;
 	
 	cout << myUD << endl ;
 	myUD.delete_node(k1) ;
 	cout << myUD << endl ;
 	
 	cout << "myUD type is: " << typeid(myUD).name() << endl ;
+	}
+	priority_queue<string> myq(5) ;
+	cout << "myq: \n" << myq << endl ;
+	myq.push_back("hello", 100) ;
+	myq.push_back("hi",7) ;
+	myq.push_back("bye",31) ;
+	myq.push_back("ok", 1) ;
+	myq.push_back("nice", 10) ;
+	cout << "myq(1): " << myq.data(1) << endl ;
+	cout << "myq: \n" << myq << endl ;
+//	cout << myq.pop_front() << endl ;
+//	cout << myq.pop_front() << endl ;
+//	cout << myq.pop_front() << endl ;
+//	cout << myq.pop_front() << endl ;
+	cout << myq.pop_top_rank() << endl ;
+	cout << "myq: \n" << myq << endl ;
 }
