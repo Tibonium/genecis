@@ -46,3 +46,11 @@ clean:
 	done
 	@echo "****Test routines removed****"
 
+net/isocket.o: net/isocket.cc
+	@echo "Creating obj file isocket.o..."
+	@$(CC) -c net/isocket.cc -o net/isocket.o
+	
+socket_test: socket_test.cc net/isocket.o
+	@echo "Building socket_test..."
+	@$(CC) -o socket_test socket_test.cc net/isocket.o $(CFLAGS)
+

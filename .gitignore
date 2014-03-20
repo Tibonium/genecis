@@ -10,5 +10,6 @@ matrix_test
 math_test
 buffer_test
 difq_test
+socket_test
 template_meta_test
 *~
