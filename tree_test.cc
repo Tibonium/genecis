@@ -22,19 +22,19 @@ int main() {
 	myAVL.print_tree() ;
 	
 	if(true){
-	ud_tree<double,int> myUD ;
-//	string k = "some" ;
-//	string k1 = "other" ;
-//	string k2 = "here" ;
-//	string k3 = "there" ;
+	ud_tree<string,int> myUD ;
+	string k = "some" ;
+	string k1 = "other" ;
+	string k2 = "here" ;
+	string k3 = "there" ;
 //	int k = 1 ;
 //	int k1 = 2 ;
 //	int k2 = 3 ;
 //	int k3 = 4 ;
-	double k = 1.01 ;
-	double k1 = 3.24 ;
-	double k2 = 1049 ;
-	double k3 = 2.345 ;
+//	double k = 1.01 ;
+//	double k1 = 3.24 ;
+//	double k2 = 1049 ;
+//	double k3 = 2.345 ;
 //	double k4 = 1.01 ;
 	myUD.insert(k,10) ;
 	myUD.insert(k1,20) ;

@@ -44,7 +44,7 @@ template<class KEY_TYPE, class DATA_TYPE> class ud_tree {
 	 			 	++_count ;
 			 	}
 		 	}
-//		 	delete temp ;
+		 	delete temp ;
 		 }
 
 		 inline void delete_node(const KEY_TYPE& key) {

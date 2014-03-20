@@ -6,6 +6,7 @@
 #define PHYSICS_GRAVITY_H
 
 #include "../math/mathematics.h"
+#include <netcdfcpp.h>
 
 class gravity {
 
