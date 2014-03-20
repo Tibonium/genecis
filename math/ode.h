@@ -9,7 +9,10 @@ class ode {
 
 	public:
 	
+		static void first_linear( double y0, double a, double x, double& y ) ;
 		
+		static void second_linear( double a, double b, double c, 
+			double x0, double x0_p, double& y ) ;
 
 };
 
