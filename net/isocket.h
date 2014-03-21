@@ -21,35 +21,39 @@ const int MAXBUFF = 500 ;
 class isocket {
 
 	public:
-	
-		bool create() ;
 		
-		bool bind( const int ) ;
-				
-		bool listen() const ;
+//		bool bind( const int ) ;
+//				
+//		bool listen() const ;
+//		
+//		bool accept( isocket& ) const ;
 		
-		bool accept( isocket& ) const ;
+		void call() ;
 		
-		bool connect( const std::string , const int ) ;
+		void chat( const std::string ) ;
 		
-		bool send( const std::string ) const ;
-		
-		int recv( std::string& ) const ;
+		void read( std::string& ) ;
 		
 		void set_non_blocking( const bool ) ; 
 		
-		bool is_valid() const { return _socket != -1 ; }
+//		bool is_valid() const { return _socket != -1 ; }
 
 		// Constructor
-		isocket() ;
+		isocket( const std::string&, const std::string& ) ;
 		
 		// Destructor
 		virtual ~isocket() ;
 		
 	private:
 	
-		int _socket ;
-		sockaddr_in _addr ;
+		struct addrinfo host_info ;
+		struct addrinfo* host_info_list ;
+		int status ;
+		int socketfd ;
+		ssize_t bytes_sent ;
+		ssize_t bytes_recv ;
+
+		void create() ;
 
 };
 

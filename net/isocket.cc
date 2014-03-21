@@ -8,115 +8,98 @@
 #include <iostream>
 
 // Constructor
-isocket::isocket() : _socket(-1) {
-	std::memset( &_addr, 0, sizeof(_addr) ) ;
+isocket::isocket( const std::string& host, const std::string& port ) {
+	memset( &host_info, 0, sizeof(host_info) ) ;
+	host_info.ai_family = AF_UNSPEC ;
+	host_info.ai_socktype = SOCK_STREAM ;
+
+	status = getaddrinfo(host.c_str(), port.c_str(),
+			&host_info, &host_info_list ) ;
+
+	create() ;
 }
 
 // Destructor
 isocket::~isocket() {
-	if( is_valid() ) {
-		::close( _socket ) ;
+	if( socketfd != -1 ) {
+		close( status ) ;
+		std::cout << "socket closed" << std::endl ;
 	}
 }
 
-bool isocket::create() {
-	_socket = socket( AF_INET, SOCK_STREAM, 0 ) ;
-	if( !is_valid() ) {
-		return false ;
-	}
-	int on = 1 ;
-	if( setsockopt( _socket, SOL_SOCKET, SO_REUSEADDR,
-		(const char*) &on, sizeof(on) ) == -1 )
-	{
-		return false ;
-	}
-	return true ;
-}
-
-bool isocket::bind( const int port ) {
-	if( !is_valid() ) {
-		return false ;
-	}
-	_addr.sin_family = AF_INET ;
-	_addr.sin_addr.s_addr = INADDR_ANY ;
-	_addr.sin_port = htons( port ) ;
-	
-	int bind_check = ::bind( _socket, (struct sockaddr*) &_addr,
-		sizeof(_addr) ) ;
-		
-	if( bind_check == -1 ) {
-		return false ;
-	}
-	return true ;
-}
-		
-bool isocket::listen() const {
-	if( !is_valid() ) {
-		return false ;
-	}
-	int listen_check = ::listen( _socket, MAXHOOKS ) ;
-	if( listen_check == -1 ) {
-		return false ;
-	}
-	return true ;
-}
-
-bool isocket::accept( isocket& n_socket ) const {
-	int addr_length = sizeof(_addr) ;
-	n_socket._socket = ::accept( _socket, (sockaddr*) &_addr,
-		(socklen_t*) &addr_length ) ;
-		
-	if( n_socket._socket <= 0 ) {
-		return false ;
-	} else {
-		return true ;
+void isocket::create() {
+	socketfd = socket( host_info_list->ai_family, host_info_list->ai_socktype,
+		host_info_list->ai_protocol ) ;
+	if( socketfd == -1 ) {
+		std::cout << "Socket creation error." << std::endl ;
 	}
 }
 
-bool isocket::connect( const std::string host, const int port ) {
-	if( !is_valid() ) return false ;
-	
-	_addr.sin_family = AF_INET ;
-	_addr.sin_port = htons( port ) ;
-	
-	int status = inet_pton( AF_INET, host.c_str(), &_addr.sin_addr ) ;
-	if( errno == EAFNOSUPPORT ) return false ;
-	status = ::connect( _socket, (sockaddr*) &_addr, sizeof(_addr) ) ;
-	if( status == 0 ) {
-		return true ;
-	} else {
-		return false ;
-	}
-}
+//bool isocket::bind( const int port ) {
+//	if( !is_valid() ) {
+//		return false ;
+//	}
+//	_addr.sin_family = AF_INET ;
+//	_addr.sin_addr.s_addr = INADDR_ANY ;
+//	_addr.sin_port = htons( port ) ;
+//	
+//	int bind_check = ::bind( _socket, (struct sockaddr*) &_addr,
+//		sizeof(_addr) ) ;
+//		
+//	if( bind_check == -1 ) {
+//		return false ;
+//	}
+//	return true ;
+//}
+//		
+//bool isocket::listen() const {
+//	if( !is_valid() ) {
+//		return false ;
+//	}
+//	int listen_check = ::listen( _socket, MAXHOOKS ) ;
+//	if( listen_check == -1 ) {
+//		return false ;
+//	}
+//	return true ;
+//}
 
-bool isocket::send( const std::string s ) const {
-	int status = ::send( _socket, s.c_str(), s.size(), MSG_NOSIGNAL ) ;
+//bool isocket::accept( isocket& n_socket ) const {
+//	int addr_length = sizeof(_addr) ;
+//	n_socket._socket = ::accept( _socket, (sockaddr*) &_addr,
+//		(socklen_t*) &addr_length ) ;
+//		
+//	if( n_socket._socket <= 0 ) {
+//		return false ;
+//	} else {
+//		return true ;
+//	}
+//}
+
+void isocket::call() {
+	status = connect( socketfd, host_info_list->ai_addr, 
+		host_info_list->ai_addrlen ) ;
 	if( status == -1 ) {
-		return false ;
-	} else {
-		return true ;
+		std::cout << "Connection error" << std::endl ;
 	}
 }
 
-int isocket::recv( std::string& s ) const {
-	char buff [MAXBUFF+1] ;
-	s = "" ;
-	memset( buff, 0, MAXBUFF+1 ) ;
-	int status = ::recv( _socket, buff, MAXBUFF, 0 ) ;
-	if( status == -1 ) {
-		std::cout << "isocket::recv: status(" << status
-				  << ") errno == " << std::strerror(errno) << std::endl ;
-		return 0 ;
-	} else if( status == 0 ) {
-		return 0 ;
-	} else {
-		s = buff ;
-		return status ;
-	}
+void isocket::chat( const std::string s ) {
+	int len ;
+	len = s.size() ;
+	bytes_sent = send( socketfd, s.c_str(), len, 0) ;
+}
+
+void isocket::read( std::string& s ) {
+	char incoming_data_buffer[MAXBUFF+1] ;
+	bytes_recv = recv( socketfd, incoming_data_buffer, MAXBUFF, 0 ) ;
+	// If no data arrives, the program will just wait here until some data arrives.
+	if ( bytes_recv == 0 ) std::cout << "host shut down." << std::endl ;
+	if ( bytes_recv == -1 ) std::cout << "recieve error!" << std::endl ;
+	s = incoming_data_buffer ;
 }
 
 void isocket::set_non_blocking( const bool b ) {
-	int opts = fcntl( _socket, F_GETFL ) ;
+	int opts = fcntl( status, F_GETFL ) ;
 	if( opts < 0 ) {
 		return ;
 	}
@@ -125,5 +108,5 @@ void isocket::set_non_blocking( const bool b ) {
 	} else {
 		opts = ( opts & ~O_NONBLOCK ) ;
 	}
-	fcntl( _socket, F_SETFL, opts ) ;
+	fcntl( status, F_SETFL, opts ) ;
 }
