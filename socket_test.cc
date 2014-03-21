@@ -6,20 +6,20 @@ using namespace std ;
 
 int main() {
 
-	string host = "www.google.com" ;
-	string port = "80" ;
+	string host = "localhost" ;
+	int port = 45000 ;
 	cout << "Creating socket..." << endl ;
 	isocket mysock( host, port ) ;
 	cout << "Connecting..." << endl ;
 	mysock.call() ;
-	mysock.listen() ;
-//	cout << "Sending message..."  << endl;
-//	string msg = "GET / HTTP/1.1\nhost: www.pvp.net\n\n" ;
-//	mysock.chat(msg) ;
-//	cout << "Waiting to recieve data..."  << endl;
-//	string s ;
-//	mysock.read(s) ;
-//	cout << s.c_str() << endl ;	
+//	mysock.listen() ;
+	cout << "Sending message..."  << endl;
+	string msg = "Hello there\n" ;
+	mysock.chat(msg) ;
+	cout << "Waiting to recieve data..."  << endl;
+	string s ;
+	mysock.read(s) ;
+	cout << s << endl ;	
 
 //	int status ;
 //	struct addrinfo host_info ;

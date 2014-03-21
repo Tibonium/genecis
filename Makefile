@@ -12,7 +12,10 @@ MATH_HDR = ${wildcard math/*.h}
 MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
 TREE_HDR = ${wildcard tree/*.h}
-PHYS_HDR = ${wildcard physics/.h}
+PHYS_HDR = ${wildcard physics/*.h}
+
+SRVR_FILES = ${wildcard net/*.cc}
+SRVR_OBJ = $(SRVR_FILES:.cc=.o)
 
 all: $(TESTS)
 	@echo "Build successful"
@@ -46,11 +49,25 @@ clean:
 	done
 	@echo "****Test routines removed****"
 
+server: socket_test server_test
+	@echo "Server build complete"
+	@date
+
 net/isocket.o: net/isocket.cc
-	@echo "Creating obj file isocket.o..."
+	@echo "Creating server obj file net/isocket.o..."
 	@$(CC) -c net/isocket.cc -o net/isocket.o
-	
-socket_test: socket_test.cc net/isocket.o
+
+net/genecis_server.o: net/genecis_server.cc
+	@echo "Creating server obj file net/genecis_server.o..."
+	@$(CC) -c net/genecis_server.cc -o net/genecis_server.o
+
+socket_test: socket_test.cc $(SRVR_OBJ)
 	@echo "Building socket_test..."
 	@$(CC) -o socket_test socket_test.cc net/isocket.o $(CFLAGS)
 
+server_test: server_test.cc $(SRVR_OBJ)
+	@echo "Building server_test..."
+	@$(CC) -o server_test server_test.cc $(SRVR_OBJ) $(CFLAGS)
+	
+	
+	

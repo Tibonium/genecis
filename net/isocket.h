@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <string>
 #include <cstring>
+#include <cstdlib>
 #include <arpa/inet.h>
 
 const int MAXHOSTNAME = 200 ;
@@ -22,11 +23,11 @@ class isocket {
 
 	public:
 		
-//		bool bind( const int ) ;
-//				
-		void listen() const ;
-//		
-//		bool accept( isocket& ) const ;
+		void hook() ;
+				
+		void ready() ;
+		
+		void take( isocket& ) const ;
 		
 		void call() ;
 		
@@ -36,10 +37,12 @@ class isocket {
 		
 		void set_non_blocking( const bool ) ;
 		
-//		bool is_valid() const { return _socket != -1 ; }
+//		void change_port( const int ) ;
 
 		// Constructor
-		isocket( const std::string&, const std::string& ) ;
+		isocket( const std::string&, const int ) ;
+		
+		isocket() ;
 		
 		// Destructor
 		virtual ~isocket() ;
@@ -48,11 +51,14 @@ class isocket {
 	
 		struct addrinfo host_info ;
 		struct addrinfo* host_info_list ;
-		struct sockaddr_in sin ;
-		int status ;
-		int socketfd ;
+		struct sockaddr_in s_addr ;
+		int _socket ;
+		int _socketfd ;
 		ssize_t bytes_sent ;
 		ssize_t bytes_recv ;
+		
+		std::string _host_name ;
+		int _port ;
 
 		void create() ;
 
