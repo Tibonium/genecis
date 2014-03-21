@@ -12,10 +12,12 @@ int main() {
 		genecis_server server( port ) ;
 		
 		while( true ) {
+			cout << "waiting for response from client..." << endl ;
 			genecis_server new_sock ;
 			server.accept( new_sock ) ;
 //			try{
 				while( true ) {
+					cout << "Client intialized..." << endl ;
 					string data ;
 					new_sock >> data ;
 					data = "How are you doing today?" ;
