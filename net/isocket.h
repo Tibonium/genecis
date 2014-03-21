@@ -24,7 +24,7 @@ class isocket {
 		
 //		bool bind( const int ) ;
 //				
-//		bool listen() const ;
+		void listen() const ;
 //		
 //		bool accept( isocket& ) const ;
 		
@@ -34,7 +34,7 @@ class isocket {
 		
 		void read( std::string& ) ;
 		
-		void set_non_blocking( const bool ) ; 
+		void set_non_blocking( const bool ) ;
 		
 //		bool is_valid() const { return _socket != -1 ; }
 
@@ -48,6 +48,7 @@ class isocket {
 	
 		struct addrinfo host_info ;
 		struct addrinfo* host_info_list ;
+		struct sockaddr_in sin ;
 		int status ;
 		int socketfd ;
 		ssize_t bytes_sent ;

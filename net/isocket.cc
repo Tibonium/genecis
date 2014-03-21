@@ -6,6 +6,7 @@
 #include <cerrno>
 #include <fcntl.h>
 #include <iostream>
+#include <cstdio>
 
 // Constructor
 isocket::isocket( const std::string& host, const std::string& port ) {
@@ -13,7 +14,7 @@ isocket::isocket( const std::string& host, const std::string& port ) {
 	host_info.ai_family = AF_UNSPEC ;
 	host_info.ai_socktype = SOCK_STREAM ;
 
-	status = getaddrinfo(host.c_str(), port.c_str(),
+	status = getaddrinfo( host.c_str(), port.c_str(),
 			&host_info, &host_info_list ) ;
 
 	create() ;
@@ -52,16 +53,15 @@ void isocket::create() {
 //	return true ;
 //}
 //		
-//bool isocket::listen() const {
-//	if( !is_valid() ) {
-//		return false ;
-//	}
-//	int listen_check = ::listen( _socket, MAXHOOKS ) ;
-//	if( listen_check == -1 ) {
-//		return false ;
-//	}
-//	return true ;
-//}
+void isocket::listen() const {
+	socklen_t len = sizeof(sin) ;
+	int state = getsockname( socketfd, (struct sockaddr*)&sin, &len ) ;
+	if( state == -1 ) {
+		std::cout << "couldnt get port number" << std::endl ;
+	} else {
+		std::printf("port number %d\n", ntohs(sin.sin_port)) ;
+	}
+}
 
 //bool isocket::accept( isocket& n_socket ) const {
 //	int addr_length = sizeof(_addr) ;
