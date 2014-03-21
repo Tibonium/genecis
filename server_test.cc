@@ -10,27 +10,35 @@ int main() {
 	
 //	try{
 		int port = 45000 ;
-		int rec = 1 ;
+//		int rec = 1 ;
 		genecis_server server( port ) ;
 		
 		while( true ) {
 			cout << "waiting for response from client..." << endl ;
-			genecis_server new_sock ;
-			server.accept( new_sock ) ;
+			genecis_server _sock1 ;
+			server.accept( _sock1 ) ;
+//			genecis_server _sock2 ;
+//			server.accept( _sock2 ) ;
 //			try{
 				while( true ) {
-					cout << "Client intialized..." << endl ;
+//					cout << "Client intialized..." << endl ;
 					stringstream ss ;
 					string data ;
-					new_sock >> data ;
-					ss << "This is request #" << rec ;
-					data = ss.str() ;
+					_sock1 >> data ;
+//					ss << "This is request #" << rec ;
+//					cout << data << endl ;
+					if( strcmp(data.c_str(),"break") == 0 ) break ;
+					cout << "client: " << data << endl ;
+					cout << "msg: " ;
+					string reply ;
+					getline(cin, reply) ;
+					data = reply ;
 //					data = "Yep, got the request." ;
-					new_sock << data ;
-					++rec ;
-					ss.seekp(0) ;
+					_sock1 << data ;
+//					++rec ;
+//					ss.seekp(0) ;
 				}
-//			} catch (int) {}
+			break ;
 		}
 //	} catch (int) {}
 	

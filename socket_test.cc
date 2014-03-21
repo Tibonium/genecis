@@ -13,14 +13,16 @@ int main() {
 	cout << "Connecting..." << endl ;
 	mysock.call() ;
 //	mysock.listen() ;
-	for(int i=0; i<3; ++i) {
-		cout << "Sending message..."  << endl;
-		string msg = "Hello there\n" ;
+	while( true ) {
+		cout << "msg: " ;
+		string msg ;
+		getline(cin, msg) ;
 		mysock.chat(msg) ;
-		cout << "Waiting to recieve data..."  << endl;
+		if( strcmp(msg.c_str(),"break") == 0 ) break ;
+//		cout << "Waiting for reply..."  << endl;
 		string s ;
 		mysock.read(s) ;
-		cout << s.c_str() << endl ;
+		cout << "server: " << s.c_str() << endl ;
 	}
 
 //	int status ;
