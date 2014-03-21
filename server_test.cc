@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "net/genecis_server.h"
 
 using namespace std ;
@@ -9,6 +10,7 @@ int main() {
 	
 //	try{
 		int port = 45000 ;
+		int rec = 1 ;
 		genecis_server server( port ) ;
 		
 		while( true ) {
@@ -18,10 +20,15 @@ int main() {
 //			try{
 				while( true ) {
 					cout << "Client intialized..." << endl ;
+					stringstream ss ;
 					string data ;
 					new_sock >> data ;
-					data = "How are you doing today?" ;
+					ss << "This is request #" << rec ;
+					data = ss.str() ;
+//					data = "Yep, got the request." ;
 					new_sock << data ;
+					++rec ;
+					ss.seekp(0) ;
 				}
 //			} catch (int) {}
 		}

@@ -115,6 +115,7 @@ void isocket::chat( const std::string s ) {
 
 void isocket::read( std::string& s ) {
 	char data_buff[MAXBUFF+1] ;
+	std::memset(data_buff, 0, MAXBUFF) ;
 	bytes_recv = recv( _socketfd, data_buff, MAXBUFF, 0 ) ;
 	// If no data arrives, the program will just wait here until some data arrives.
 //	if ( bytes_recv == 0 ) std::cout << "host shut down." << std::endl ;

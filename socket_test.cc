@@ -13,13 +13,15 @@ int main() {
 	cout << "Connecting..." << endl ;
 	mysock.call() ;
 //	mysock.listen() ;
-	cout << "Sending message..."  << endl;
-	string msg = "Hello there\n" ;
-	mysock.chat(msg) ;
-	cout << "Waiting to recieve data..."  << endl;
-	string s ;
-	mysock.read(s) ;
-	cout << s << endl ;	
+	for(int i=0; i<3; ++i) {
+		cout << "Sending message..."  << endl;
+		string msg = "Hello there\n" ;
+		mysock.chat(msg) ;
+		cout << "Waiting to recieve data..."  << endl;
+		string s ;
+		mysock.read(s) ;
+		cout << s.c_str() << endl ;
+	}
 
 //	int status ;
 //	struct addrinfo host_info ;
