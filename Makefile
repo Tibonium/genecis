@@ -7,7 +7,7 @@
 CC = g++ -Wall -Werror
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
-TESTS = matrix_test math_test tree_test difq_test
+TESTS = matrix_test math_test tree_test difq_test server_test socket_test
 MATH_HDR = ${wildcard math/*.h}
 MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
@@ -25,21 +25,21 @@ math/ode.o: math/ode.cc
 	@echo "Creating obj file ode.o..."
 	@$(CC) -c math/ode.cc -o math/ode.o
 	
-difq_test: difq_test.cc $(MATH_OBJ)
+difq_test: test/difq_test.cc $(MATH_OBJ)
 	@echo "Building difq_test..."
-	@$(CC) -o difq_test difq_test.cc $(MATH_OBJ) $(CFLAGS)
+	@$(CC) -o difq_test test/difq_test.cc $(MATH_OBJ) $(CFLAGS)
 	
-matrix_test: matrix_test.cc $(MATH_HDR)
+matrix_test: test/matrix_test.cc $(MATH_HDR)
 	@echo "Building matrix_test..."
-	@$(CC) -o matrix_test matrix_test.cc $(CFLAGS)
+	@$(CC) -o matrix_test test/matrix_test.cc $(CFLAGS)
 	
-math_test: math_test.cc $(MATH_HDR) $(DIST_HDR)
+math_test: test/math_test.cc $(MATH_HDR) $(DIST_HDR)
 	@echo "Building math_test..."
-	@$(CC) -o math_test math_test.cc $(CFLAGS)
+	@$(CC) -o math_test test/math_test.cc $(CFLAGS)
 
-tree_test: tree_test.cc $(TREE_HDR)
+tree_test: test/tree_test.cc $(TREE_HDR)
 	@echo "Building tree_test..."
-	@$(CC) -o tree_test tree_test.cc $(CFLAGS)
+	@$(CC) -o tree_test test/tree_test.cc $(CFLAGS)
 	
 clean:
 	@echo "****Removing test routines****"
@@ -61,13 +61,13 @@ net/genecis_server.o: net/genecis_server.cc
 	@echo "Creating server obj file net/genecis_server.o..."
 	@$(CC) -c net/genecis_server.cc -o net/genecis_server.o
 
-socket_test: socket_test.cc $(SRVR_OBJ)
+socket_test: test/socket_test.cc $(SRVR_OBJ)
 	@echo "Building socket_test..."
-	@$(CC) -o socket_test socket_test.cc net/isocket.o $(CFLAGS)
+	@$(CC) -o socket_test test/socket_test.cc net/isocket.o $(CFLAGS)
 
-server_test: server_test.cc $(SRVR_OBJ)
+server_test: test/server_test.cc $(SRVR_OBJ)
 	@echo "Building server_test..."
-	@$(CC) -o server_test server_test.cc $(SRVR_OBJ) $(CFLAGS)
+	@$(CC) -o server_test test/server_test.cc $(SRVR_OBJ) $(CFLAGS)
 	
 	
 	

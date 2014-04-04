@@ -1,4 +1,4 @@
-#include "math/ode.h"
+#include "../math/ode.h"
 #include <iostream>
 #include <cstdio>
 

@@ -1,4 +1,4 @@
-#include "tree/trees.h"
+#include "../tree/trees.h"
 #include <ctime>
 
 int main() {

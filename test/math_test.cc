@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include "distribution/distribution.h"
+#include "../distribution/distribution.h"
 
 int main( int argc, char* argv[] ) {
 

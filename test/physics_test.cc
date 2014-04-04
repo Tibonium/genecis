@@ -1,5 +1,5 @@
 #include <iostream>
-#include "math/mathematics.h"
+#include "../math/mathematics.h"
 
 using namespace std ;
 
