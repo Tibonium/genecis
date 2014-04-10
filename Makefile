@@ -7,7 +7,7 @@
 CC = g++ -Wall -Werror
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
-TESTS = matrix_test math_test tree_test difq_test server_test socket_test
+TESTS = matrix_test math_test tree_test difq_test server_test socket_test graph_test
 MATH_HDR = ${wildcard math/*.h}
 MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
@@ -40,6 +40,10 @@ math_test: test/math_test.cc $(MATH_HDR) $(DIST_HDR)
 tree_test: test/tree_test.cc $(TREE_HDR)
 	@echo "Building tree_test..."
 	@$(CC) -o tree_test test/tree_test.cc $(CFLAGS)
+	
+graph_test: test/graph_test.cc tree/graph_tree.h
+	@echo "Buidling graph_test..."
+	@$(CC) -o graph_test test/graph_test.cc $(CFLAGS)
 	
 clean:
 	@echo "****Removing test routines****"
