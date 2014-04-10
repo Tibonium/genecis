@@ -7,6 +7,8 @@
 
 #include <cstdio>
 
+#define INF 1048576 	// 2^20
+
 class graph_node {
 
 	public:
@@ -19,7 +21,7 @@ class graph_node {
 		bool _checked ;
 		
 		void clear() {
-			_steps = 1000 ;
+			_steps = INF ;
 			_checked = false ;
 		}
 		
@@ -34,6 +36,8 @@ class graph_node {
 				_distance = d ;
 			}
 		}
+		
+		graph_node() {}
 
 };
 

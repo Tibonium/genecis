@@ -25,7 +25,7 @@ class graph_tree {
 			for(int i=0; i<_num_nodes; ++i) {
 				if( i != home ) {
 					vector<int> o = find_path(home, i) ;
-					if( _tree[i]._steps < 1000 ) {
+					if( _tree[i]._steps < INF ) {
 						sprintf(buff, "%4d%20d%3s", i, _tree[i]._steps, "" ) ;
 						cout << buff ;
 						for(unsigned k=0; k<o.size(); ++k) {
@@ -51,12 +51,13 @@ class graph_tree {
 				for(int i=0; i<_num_nodes; ++i) {
 					_tree[i].clear() ;
 				}
+				_tree[start]._steps = 0 ;
 				find_dist(start, finish, path) ;
 			}
 			return path ;
 		}
 		
-		graph_tree( graph_node* tree, int n ) : _tree(tree),
+		graph_tree( vector<graph_node> tree, int n ) : _tree(tree),
 			_num_nodes(n)
 		{}
 		
@@ -65,7 +66,7 @@ class graph_tree {
 	private:
 	
 		// Array of all the graph_nodes in the tree
-		graph_node* _tree ;
+		vector<graph_node> _tree ;
 		int _num_nodes ;
 		
 		graph_node operator[] (int n) {
@@ -76,12 +77,12 @@ class graph_tree {
 			if( current != end ) {
 				int n = _tree[current]._num_neighbors ;
 				int temp ;
-				int small = 999 ;
+				int small = INF ;
 				int p ;
 				for(int i=0; i<n; ++i) {
 					int k = _tree[current]._neighborhood[i] ;
 					if( !_tree[k]._checked ) {
-						if( _tree[k]._steps > 999 ) {
+						if( _tree[current]._steps < 1 ) {
 							_tree[k]._steps = _tree[current]._distance[i] ;
 						} else {
 							temp = _tree[current]._steps + _tree[current]._distance[i] ;
