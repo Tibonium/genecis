@@ -6,11 +6,8 @@
 #define TREE_GRAPH_TREE_H
 
 #include "graph_node.h"
-#include <vector>
 #include <algorithm>
 #include <iostream>
-
-using namespace std ;
 
 class graph_tree {
 
@@ -22,14 +19,15 @@ class graph_tree {
 			char buff[64] ;
 			sprintf(buff, "%4s%20s%8s", "Node", "Distance", "Path") ;
 			cout << buff << endl ;
+			find_path(home) ;
 			for(int i=0; i<_num_nodes; ++i) {
 				if( i != home ) {
-					vector<int> o = find_path(home, i) ;
-					if( _tree[i]._steps < INF ) {
-						sprintf(buff, "%4d%20d%3s", i, _tree[i]._steps, "" ) ;
+					if( _tree[i]._distance < INF ) {
+						sprintf(buff, "%4d%20d%3s", i, _tree[i]._distance, "" ) ;
 						cout << buff ;
-						for(unsigned k=0; k<o.size(); ++k) {
-							cout << " " << o[k] ;
+						for(std::vector<int>::iterator it=_tree[i]._path.begin();
+								it!=_tree[i]._path.end()-1; ++it) {
+							cout << " " << *it ;
 						}
 						cout << endl ;
 					} else {
@@ -44,59 +42,73 @@ class graph_tree {
 			}
 		}
 	
-		vector<int> find_path(int start, int finish) {
-			vector<int> path ;
-			int n = _tree[finish]._num_neighbors ;
-			if( n != 0 ) {
-				for(int i=0; i<_num_nodes; ++i) {
-					_tree[i].clear() ;
-				}
-				_tree[start]._steps = 0 ;
-				find_dist(start, finish, path) ;
+		inline void find_path(int& start) {
+			for(int i=0; i<_num_nodes; ++i) {
+				_tree[i].clear() ;
 			}
-			return path ;
+			_tree[start]._distance = 0 ;
+			fill_n(_steps, _num_nodes, INF ) ;
+			find_dist( start ) ;
 		}
 		
+		// Constructor
 		graph_tree( vector<graph_node> tree, int n ) : _tree(tree),
 			_num_nodes(n)
-		{}
+		{
+			_steps = new int[_num_nodes] ;
+			fill_n(_steps, _num_nodes, INF ) ;
+		}
 		
-		~graph_tree() {}
+		// Destructor
+		~graph_tree() {
+			if( _steps != NULL ) {
+				delete _steps ;
+			}
+		}
 		
 	private:
 	
 		// Array of all the graph_nodes in the tree
 		vector<graph_node> _tree ;
+		int* _steps ;
 		int _num_nodes ;
 		
 		graph_node operator[] (int n) {
 			return _tree[n] ;
 		}
 		
-		void find_dist(int& current, int& end, vector<int>& path) {
-			if( current != end ) {
-				int n = _tree[current]._num_neighbors ;
+		inline int smallest(int* arg) {
+			int m = INF ;
+			int v ;
+			for(int i=0; i<_num_nodes; ++i) {
+				if( arg[i] < m && !_tree[i]._visited ) {
+					m = arg[i] ;
+					v = i ;
+				}
+			}
+			return v ;
+		}
+		
+		void find_dist(int& current) {
+			if( !_tree[current]._visited ) {
 				int temp ;
-				int small = INF ;
-				int p ;
-				for(int i=0; i<n; ++i) {
-					int k = _tree[current]._neighborhood[i] ;
-					if( !_tree[k]._checked ) {
-						if( _tree[current]._steps < 1 ) {
-							_tree[k]._steps = _tree[current]._distance[i] ;
-						} else {
-							temp = _tree[current]._steps + _tree[current]._distance[i] ;
-							_tree[k]._steps = min(_tree[k]._steps, temp) ;
+				_tree[current]._path.push_back( current ) ;
+				for(int i=0; i<_tree[current]._num_vertices; ++i) {
+					int k = _tree[current]._vertex[i] ;
+					if( !_tree[k]._visited ) {
+						temp = _tree[current]._distance + _tree[current]._edge[i] ;
+						if( temp < _steps[k] ) {
+							_steps[k] = temp ;
 						}
-						if( _tree[current]._distance[i] < small ) {
-							small = _tree[current]._distance[i] ;
-							p = _tree[current]._neighborhood[i] ;
+						if( temp < _tree[k]._distance ) {
+							_tree[k]._distance = temp ;
+							_tree[k]._path = _tree[current]._path ;
 						}
 					}
 				}
-				_tree[current]._checked = true ;
-				path.push_back( current ) ;
-				find_dist(p, end, path) ;
+				_tree[current]._visited = true ;
+				int next = smallest(_steps) ;
+				find_dist( next ) ;
 			}
 		}
 
