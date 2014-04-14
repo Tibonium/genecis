@@ -4,7 +4,7 @@
 #include <vector>
 
 #define MAX 100
-#define DEBUG
+//#define DEBUG
 
 int main() {
 
@@ -19,7 +19,9 @@ int main() {
 		file.get() ;
 	}
 	file >> nodes ;
-	cout << "nodes: " << nodes << endl ;
+	#ifdef DEBUG
+		cout << "nodes: " << nodes << endl ;
+	#endif
 	while( true ) {
 		string line ;
 		getline(file, line) ;
@@ -77,5 +79,8 @@ int main() {
 
 	graph_tree t(tree, 20) ;
 	
-	t.scan_tree(10) ;
+	int home ;
+	cout << "Please enter home vertex: " ;
+	cin >> home ;
+	t.scan_tree(home) ;
 }
