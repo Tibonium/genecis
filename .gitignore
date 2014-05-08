@@ -14,4 +14,6 @@ socket_test
 server_test
 template_meta_test
 graph_test
+prime
+sort_test
 *~

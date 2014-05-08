@@ -4,10 +4,11 @@
 #
 #*******************************************************************
 
-CC = g++ -Wall -Werror
+CC = g++ -Wall -Werror -std=c++98
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
-TESTS = matrix_test math_test tree_test difq_test server_test socket_test graph_test
+TESTS = matrix_test math_test tree_test difq_test server_test \
+	socket_test graph_test prime sort_test
 MATH_HDR = ${wildcard math/*.h}
 MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
@@ -73,5 +74,10 @@ server_test: test/server_test.cc $(SRVR_OBJ)
 	@echo "Building server_test..."
 	@$(CC) -o server_test test/server_test.cc $(SRVR_OBJ) $(CFLAGS)
 	
+prime: math/prime.cc
+	@echo "Building prime_test..."
+	@$(CC) -o prime math/prime.cc $(CFLAGS)
 	
-	
+sort_test: test/sort_test.cc
+	@echo "Building sort_test..."
+	@$(CC) -o sort_test test/sort_test.cc $(CFLAGS)
