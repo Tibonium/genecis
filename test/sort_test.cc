@@ -28,8 +28,8 @@ int main() {
 	}
 	cout << endl ;
 
-	set<int> myset(&nums) ;
-	cout << "The first element of my set is: " << myset[0] << endl ;
+	set< vector<int> > myset(&nums) ;
+	cout << "The first element of my set is: " << (myset[0])[0] << endl ;
 	matrix<int> m1(2,2) ;
 	matrix<int> m2(2,2) ;
 	for(int i=0 ; i<2; ++i) {
@@ -43,8 +43,8 @@ int main() {
 	m[1] = m2 ;
 	cout << "m[0]: " << m[0] << endl ;
 	set< matrix<int> > matset(m) ;
-	matrix<int> m3 = matset[0] ;
+	matrix<int>* m3 = matset[0]*matset[1] ;
 	cout << "First element of set matset: " << matset[0] << endl ;
-	cout << "m3 now: " << m3 << endl ;
+	cout << "m3 now: " << (*m3) << endl ;
 
 }

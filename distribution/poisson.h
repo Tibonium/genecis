@@ -35,13 +35,16 @@ class poisson : public probability_mass_function<int, double>
 			return _result ;
 		}
 	
-		///constructor
+		// Constructor
 		poisson(double lambda) {
 			if(lambda <= 0.0) {
 				cout << "lambda must be greater then zero, lambda: "
 					<< lambda << endl;
 			} else { _lambda = lambda ;}
 		}
+		
+		// Destructor
+		virtual ~poisson() {}
 
 };
 

@@ -9,8 +9,6 @@
 
 #include <iostream>
 #include <cstdio>
-#include <vector>
-#include "matrix.h"
 
 template<class _T> class set ;
 
@@ -25,10 +23,6 @@ class set {
 		inline _T& operator[] (unsigned i) const {
 			return pSet[i] ;
 		}
-		
-//		inline void operator= (_T rhs) {
-//			
-//		}
 	
 		/**
 		 *	Constructor
@@ -36,26 +30,8 @@ class set {
 		 */
 		set(_T* s) : pSet(s) {}
 		
-		/**
-		 *	Constructor
-		 *	Specialized constructor for vectors
-		 */
-		set(std::vector<_T>* s) {
-			pSet = new _T[s->size()] ;
-			int n = 0 ;
-			for(class std::vector<_T>::iterator i=s->begin(); i!=s->end(); ++i) {
-				pSet[n] = (*i) ;
-				++n ;
-			}
-		}
-		
 		// Destructor
-		~set() {
-			if(pSet) {
-				delete pSet ;
-				pSet = NULL ;
-			}
-		}
+		~set() {}
 
 		friend std::ostream& operator<< <> (std::ostream& os, set& output) ;
 			
