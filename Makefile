@@ -4,7 +4,7 @@
 #
 #*******************************************************************
 
-CC = g++ -Wall -Werror -std=c++98
+CC = g++ -g -Wall -Werror -std=c++98
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test math_test tree_test difq_test server_test \
@@ -21,7 +21,13 @@ SRVR_OBJ = $(SRVR_FILES:.cc=.o)
 all: $(TESTS)
 	@echo "Build successful"
 	@date
-	
+
+clean:
+	@for test in $(TESTS) ; do \
+		rm $$test ; \
+	done
+	@echo "removed " $(TESTS)
+
 math/ode.o: math/ode.cc
 	@echo "Creating obj file ode.o..."
 	@$(CC) -c math/ode.cc -o math/ode.o
@@ -45,14 +51,6 @@ tree_test: test/tree_test.cc $(TREE_HDR)
 graph_test: test/graph_test.cc tree/graph_tree.h
 	@echo "Buidling graph_test..."
 	@$(CC) -o graph_test test/graph_test.cc $(CFLAGS)
-	
-clean:
-	@echo "****Removing test routines****"
-	@for test in $(TESTS) ; do \
-		rm $$test ; \
-		echo "   deleted" $$test ; \
-	done
-	@echo "****Test routines removed****"
 
 server: socket_test server_test
 	@echo "Server build complete"
@@ -78,6 +76,6 @@ prime: math/prime.cc
 	@echo "Building prime_test..."
 	@$(CC) -o prime math/prime.cc $(CFLAGS)
 	
-sort_test: test/sort_test.cc
+sort_test: test/sort_test.cc $(MATH_HDR)
 	@echo "Building sort_test..."
 	@$(CC) -o sort_test test/sort_test.cc $(CFLAGS)
