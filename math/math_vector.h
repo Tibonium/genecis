@@ -10,7 +10,7 @@
 #include <iostream>
 #include <cmath>
 
-template <typename _type> class math_vector {
+template <class _type> class math_vector {
 
 	protected:
 	

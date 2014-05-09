@@ -3,6 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <cstdlib>
+#include "../math/set.h"
+#include "../math/matrix.h"
 
 using namespace std ;
 
@@ -25,5 +27,24 @@ int main() {
 		cout << (*i) << " " ;
 	}
 	cout << endl ;
+
+	set<int> myset(&nums) ;
+	cout << "The first element of my set is: " << myset[0] << endl ;
+	matrix<int> m1(2,2) ;
+	matrix<int> m2(2,2) ;
+	for(int i=0 ; i<2; ++i) {
+		for(int j=0; j<2; ++j) {
+			m1(i,j) = i*2 + j + 1 ;
+			m2(i,j) = i*2 + j + 2 ;
+		}
+	}
+	matrix<int> m[2] ;
+	m[0] = m1 ;
+	m[1] = m2 ;
+	cout << "m[0]: " << m[0] << endl ;
+	set< matrix<int> > matset(m) ;
+	matrix<int> m3 = matset[0] ;
+	cout << "First element of set matset: " << matset[0] << endl ;
+	cout << "m3 now: " << m3 << endl ;
 
 }

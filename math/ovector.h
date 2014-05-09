@@ -9,7 +9,7 @@
 #include "bvector.h"
 /// THIS CLASS, OMNIVECTORS, DOES NOT WORK. DO NOT INSTANTIATE IT!
 
-template <typename _T>
+template <class _T>
 class ovector : public math_vector<_T>  {
 
 	private:
