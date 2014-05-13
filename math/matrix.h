@@ -559,7 +559,7 @@ template<class _T> class matrix {
 		 */
 		virtual ~matrix() {
 			if(pData) {
-				delete pData ;
+				delete[] pData ;
 				pData = NULL ;
 			}
 		}

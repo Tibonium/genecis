@@ -4,7 +4,7 @@
 #
 #*******************************************************************
 
-CC = g++ -g -Wall -Werror -std=c++98
+CC = g++ -g -O3 -Wall -std=c++98
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test math_test tree_test difq_test server_test \

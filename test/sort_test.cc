@@ -30,8 +30,12 @@ int main() {
 	}
 	cout << endl ;
 
-	set< vector<int> > myset(&nums, nums.size()) ;
-	cout << "The first element of my set is: " << (myset[0])[0] << endl ;
+	vector<int> v[3] ;
+	v[0] = nums ;
+	v[1] = nums ;
+	v[2] = nums ;
+	set< vector<int> > myset(v, 3) ;
+	cout << "The first element of my set is: " << (myset[1])[0] << endl ;
 	matrix<int> m1(2,2) ;
 	matrix<int> m2(2,2) ;
 	for(int i=0 ; i<2; ++i) {

@@ -30,23 +30,11 @@ class set {
 		}
 		
 		inline set unite(set& other) {
-			std::vector<_T> temp ;
-			for(size_t i=0; i<m_size; ++i) {
-				temp.push_back( (*this)[i] ) ;
-			}
-			for(size_t i=0; i<other.m_size; ++i) {
-				temp.push_back( other[i] ) ;
-			}
-			int N = temp.size() ;
-			_T* S = new _T[N] ;
-			int j = 0 ;
-			for(typename std::vector<_T>::iterator i=temp.begin();
-					i!=temp.end(); ++i)
-			{
-				S[j] = (*i) ;
-				++j ;
-			}
-			return set<_T>(S, N) ;
+			int N = this->m_size + other.m_size ;
+			set<_T> temp(N) ;
+			memcpy(temp.pSet,this->pSet,sizeof(_T)*m_size) ;
+			memcpy(&temp.pSet[m_size],other.pSet,sizeof(_T)*other.m_size) ;
+			return temp ;
 		}
 		
 		inline set intersect(set& other) {
@@ -61,15 +49,15 @@ class set {
 				}
 			}
 			int N = temp.size() ;
-			_T* S = new _T[N] ;
+			set<_T> new_set(N) ;
 			int j = 0 ;
 			for(typename std::vector<_T>::iterator i=temp.begin();
 					i!=temp.end(); ++i)
 			{
-				S[j] = (*i) ;
+				new_set[j] = (*i) ;
 				++j ;
 			}
-			return set<_T>(S, N) ;
+			return new_set ;
 		}
 		
 		inline set operator- (set& rhs) {
@@ -88,25 +76,30 @@ class set {
 				if( !b_annihilate ) temp.push_back( l ) ;
 			}
 			int N = temp.size() ;
-			_T* S = new _T[N] ;
+			set<_T> new_set(N) ;
 			int j = 0 ;
 			for(typename std::vector<_T>::iterator i=temp.begin();
 					i!=temp.end(); ++i)
 			{
-				S[j] = (*i) ;
+				new_set[j] = (*i) ;
 				++j ;
 			}
-			return set<_T>(S, N) ;
+			return new_set ;
 		}
 	
 		/**
 		 *	Constructor
 		 *	Takes a pointer to a "set"
 		 */
-		set(_T* s, size_t size) : pSet(s), m_size(size) {}
+		set(_T* s, size_t size) : m_size(size) {
+			pSet = new _T[size] ;
+			memcpy(pSet,s,sizeof(_T)*size) ;
+		}
 		
 		// Destructor
-		~set() {}
+		~set() {
+			delete[] pSet ;
+		}
 
 		friend std::ostream& operator<< <> (std::ostream& os, set& output) ;
 			
@@ -115,6 +108,10 @@ class set {
 		// List or set that allows manipulation of its elements
 		_T* pSet ;
 		size_t m_size ;
+		
+		set(size_t N) : m_size(N) {
+			pSet = new _T[N] ;
+		}
 
 };
 
