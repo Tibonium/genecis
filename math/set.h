@@ -30,18 +30,43 @@ class set {
 		}
 		
 		inline set unite(set& other) {
-			int N = this->m_size + other.m_size ;
-			set<_T> temp(N) ;
-			memcpy(temp.pSet,this->pSet,sizeof(_T)*m_size) ;
-			memcpy(&temp.pSet[m_size],other.pSet,sizeof(_T)*other.m_size) ;
-			return temp ;
+			std::vector<_T> temp ;
+			bool* b_dup = new bool[other.m_size] ;
+			memset(b_dup,false,other.m_size) ;
+			for(size_t i=0; i<m_size; ++i) {
+				_T l = (*this)[i] ;
+				temp.push_back( l ) ;
+				for(size_t j=0; j<other.m_size; ++j) {
+					_T r = other[j] ;
+					if( l == r ) {
+						b_dup[j] = true ;
+					}
+				}
+			}
+			for(size_t i=0; i<other.m_size; ++i) {
+				if(!b_dup[i]) {
+					_T r = other[i] ;
+					temp.push_back( r ) ;
+				}
+			}
+			delete[] b_dup ;
+			int N = temp.size() ;
+			set<_T> new_set(N) ;
+			int j = 0 ;
+			for(typename std::vector<_T>::iterator i=temp.begin();
+					i!=temp.end(); ++i)
+			{
+				new_set[j] = (*i) ;
+				++j ;
+			}
+			return new_set ;
 		}
 		
 		inline set intersect(set& other) {
 			std::vector<_T> temp ;
 			for(size_t i=0; i<m_size; ++i) {
+				_T l = (*this)[i] ;
 				for(size_t j=0; j<other.m_size; ++j) {
-					_T l = (*this)[i] ;
 					_T r = other[j] ;
 					if( l == r ) {
 						temp.push_back( r ) ;
