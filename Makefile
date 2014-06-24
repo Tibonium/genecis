@@ -48,7 +48,7 @@ tree_test: test/tree_test.cc $(TREE_HDR)
 	@echo "Building tree_test..."
 	@$(CC) -o tree_test test/tree_test.cc $(CFLAGS)
 	
-graph_test: test/graph_test.cc tree/graph_tree.h
+graph_test: test/graph_test.cc math/graph.h
 	@echo "Buidling graph_test..."
 	@$(CC) -o graph_test test/graph_test.cc $(CFLAGS)
 

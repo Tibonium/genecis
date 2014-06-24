@@ -1,4 +1,4 @@
-#include "../tree/graph_tree.h"
+#include "../math/graph.h"
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -77,10 +77,10 @@ int main() {
 		}
 	#endif
 
-	graph_tree t(tree, 20) ;
+	graph t(tree, 20) ;
 	
 	int home ;
 	cout << "Please enter home vertex: " ;
 	cin >> home ;
-	t.scan_tree(home) ;
+	t.scan_graph(home) ;
 }

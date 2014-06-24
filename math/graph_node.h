@@ -2,8 +2,8 @@
  * @file graph_node.h
  */
  
-#ifndef TREE_GRAPH_NODE_H
-#define TREE_GRAPH_NODE_H
+#ifndef MATH_GRAPH_NODE_H
+#define MATH_GRAPH_NODE_H
 
 #include <cstdio>
 #include <vector>
