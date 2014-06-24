@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "../math/mathematics.h"
 
 using namespace std ;
@@ -19,16 +20,16 @@ int main() {
 		<< myvec.dot(otrvec) << endl ;
 		
 	cout << "The cross product is: "
-		<< myvec.cross(otrvec) << endl ;
+		<< *(myvec.cross(otrvec)) << endl ;
 		
 	cout << "(myvec < otrvec) is " ;
 	(myvec < otrvec) ? cout << "true." << endl :
 		cout << "false." << endl ;
 	
 	cout << "maginutde of myvec: " << myvec.magnitude() << endl ;
-	svector n_vec = myvec.norm<svector>() ;
-	cout << "norm of myvec " << n_vec << endl ;
-	cout << "magnitude of the norm of myvec: " << (myvec.norm<svector>()).magnitude() << endl ;
+	myvec.norm<svector>() ;
+	cout << "norm of myvec: " << myvec << endl ;
+	cout << "magnitude of the norm of myvec: " << myvec.magnitude() << endl ;
 	
 	cout << "\t\t***bvector Test section***" << endl ;
 	bvector i( 1.0, 0.0, 0.0 ) ;
@@ -54,8 +55,32 @@ int main() {
 	cout << "k cross j: " << k.cross(j) << endl ;
 	cout << "k cross k: " << k.cross(k) << endl ;
 
-	ovector<double> omni(1.0,2.0,3.0,i,j,k) ;
-	cout << "omni" << omni << endl ;
+//	ovector<double> omni(1.0,2.0,3.0,i,j,k) ;
+//	cout << "omni" << omni << endl ;
 
-	return 0 ;
+	double r1 = 1.0 ;
+	double t1 = M_PI / 2.0 ;
+	double p1 = 0.0 ;
+	svector s1(r1,t1,p1) ;
+	
+	double r2 = 1.0 ;
+	double t2 = M_PI / 2.0 ;
+	double p2 = M_PI / 2.0 ;
+	svector s2(r2,t2,p2) ;
+	
+	cout << "s1" << s1 << endl ;
+
+	cout << "s2" << s2 << endl ;
+		 
+	svector* s3 = s1+s2 ;
+	cout << "s1+s2" << *s3 << endl ;
+	
+	s3 = s1-s2 ;
+	cout << "s1-s2" << *s3 << endl ;
+	
+	svector* c = s1.cross(s2) ;
+	cout << "c" << *c << endl ;
+
+	delete c ;
+	delete s3 ;
 }

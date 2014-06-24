@@ -46,10 +46,10 @@ class bvector : public math_vector<double> {
 
 // std::output override for bvector
 inline std::ostream& operator<< (std::ostream& os, const bvector& other) {
-	os << "(x,y,z): ("
+	os << "(x,y,z): ["
 	   << other.u1() << ", "
 	   << other.u2() << ", "
-	   << other.u3() << ")" ;
+	   << other.u3() << "]" ;
 	return os ;
 };
 

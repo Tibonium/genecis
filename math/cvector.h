@@ -57,10 +57,10 @@ class cvector : public math_vector<double> {
 
 // std::output override for cvector
 inline std::ostream& operator<< (std::ostream& os, const cvector& other) {
-	os << "(rho,phi,z): ("
+	os << "(rho,phi,z): ["
 	   << other.u1() << ", "
 	   << other.u2() << ", "
-	   << other.u3() << ")" ;
+	   << other.u3() << "]" ;
 	return os ;
 };
 

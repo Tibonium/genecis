@@ -16,4 +16,6 @@ template_meta_test
 graph_test
 prime
 sort_test
+gravity_test
+vector_test
 *~

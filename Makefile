@@ -8,7 +8,7 @@ CC = g++ -g -O3 -Wall -std=c++98
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test math_test tree_test difq_test server_test \
-	socket_test graph_test prime sort_test
+	socket_test graph_test prime sort_test vector_test gravity_test
 MATH_HDR = ${wildcard math/*.h}
 MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
@@ -51,6 +51,10 @@ tree_test: test/tree_test.cc $(TREE_HDR)
 graph_test: test/graph_test.cc math/graph.h
 	@echo "Buidling graph_test..."
 	@$(CC) -o graph_test test/graph_test.cc $(CFLAGS)
+	
+vector_test: test/vector_test.cc math/svector.h
+	@echo "Buidling vector_test..."
+	@$(CC) -o vector_test test/vector_test.cc $(CFLAGS)
 
 server: socket_test server_test
 	@echo "Server build complete"
@@ -79,3 +83,15 @@ prime: math/prime.cc
 sort_test: test/sort_test.cc $(MATH_HDR)
 	@echo "Building sort_test..."
 	@$(CC) -o sort_test test/sort_test.cc $(CFLAGS)
+	
+gravity_test: test/gravity_test.cc physics/gravity.o
+	@echo "Building gravity_test..."
+	@$(CC) -o gravity_test test/gravity_test.cc physics/gravity.o $(CFLAGS)
+	
+physics/gravity.o: physics/gravity.cc
+	@echo "Creating obj file gravity.o..."
+	@$(CC) -c physics/gravity.cc -o physics/gravity.o
+	
+#physics/gravity_netcdf.o: physics/gravity_netcdf.cc
+#	@echo "Creating obj file gravity_netcdf.o..."
+#	@$(CC) -c physics/gravity_netcdf.cc -o -lnetcdf physics/gravity_netcdf.o

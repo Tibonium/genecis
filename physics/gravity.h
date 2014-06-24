@@ -10,54 +10,6 @@
 
 class gravity {
 
-	private:
-	
-		/**
-		 * Universal gravitaiton constant, units are
-		 * m^3 kg^(-1) s^(-2)
-		 */
-		static const double _G = 6.6738480e-11 ;
-		static const double _AU = 149597870700 ;  //meters
-
-		/**
-		 * Terms for a simulation of Newton's Law of
-		 * gravity.
-		 *
-		 * @var _mass1		mass of the first body, units = kg
-		 * @var _mass2		mass of the second body, units = kg
-		 * @var _obj1		position of the first body
-		 * @var _obj2		position of the second body
-		 * @var _dt		Time increment for calculations
-		 */
-		double _mass1 ;
-		double _mass2 ;
-		svector* _obj1 ;
-		svector* _obj2 ;
-		double _dt ;
-		
-		/**
-		 * Marching function for the simulation of gravitational
-		 * interactions between two bodies. All mathematical
-		 * calculations go on during this function call and 
-		 * moves the bodies in accordance to Newton's laws of
-		 * gravity.
-		 */
-		void step() ;
-		
-		/**
-		 * The netCDF file uses to record the motion
-		 * of two bodies due to gravitation forces.
-		 */
-		NcFile* _nc_file ;
-		
-		/** netCDF variables to record the data */
-		NcVar *_nc_pos1, *_nc_pos2, *_nc_v1, *_nc_v2,
-			 *_nc_time ;
-			 
-		
-		/** Current record number in the netCDF file. */
-		int _nc_rec ;
-	
 	public:
 
 		/**
@@ -73,14 +25,57 @@ class gravity {
 		 * is the half the radial distance between the 
 		 * center of mass1 and mass2.
 		 *
-		 * @param obj1		starting position of the first object
-		 * @param obj2		starting position of the second object
-		 * @param mass1	Mass of the first body
-		 * @param mass2	Mass of the second body
+		 * @param mass1		Mass of the first body
+		 * @param mass2		Mass of the second body
 		 * @param dt		Increment of time for iterations
+		 * @param pos1		starting position of the first object
+		 * @param pos2		starting position of the second object
+		 * @param vel1		initial velocity of obj1
+		 * @param vel2		initial velocity of obj2
+		 * @param acc1		initial acceleration of obj1
+		 * @param acc2		initial acceleration of obj2
 		 */
-		gravity(svector* obj1, svector* obj2,
-			   double mass1, double mass2, double dt) ;
+		gravity( double mass1, double mass2, double dt,
+				 svector* pos1, svector* pos2,
+				 svector* vel1, svector* vel2,
+				 svector* acc1, svector* acc2 ) ;
+				 
+		/** General information accessors **/
+		inline svector* position1() {
+			return _p1 ;
+		}
+
+		inline svector* position2() {
+			return _p2 ;
+		}
+
+		inline svector* velocity1() {
+			return _v1 ;
+		}
+		
+		inline svector* velocity2() {
+			return _v2 ;
+		}
+		
+		inline svector* acceleration1() {
+			return _a1 ;
+		}
+		
+		inline svector* acceleration2() {
+			return _a2 ;
+		}
+		
+		inline double mass1() {
+			return _m1 ;
+		}
+		
+		inline double mass2() {
+			return _m2 ;
+		}
+		
+		inline double time() {
+			return _time ;
+		}
 		
 		/**
 		 * Initialize recording of netCDF motion log.
@@ -129,6 +124,64 @@ class gravity {
 		
 		/** Close the netCDF log file. */
 		void close_netcdf() ;
+		
+	private:
+	
+		/**
+		 * Universal gravitaiton constant, units are
+		 * m^3 kg^(-1) s^(-2)
+		 */
+		static const double _G = 6.6738480e-11 ;
+		static const double _AU = 149597870700 ;  //meters
+
+		/**
+		 * Terms for a simulation of Newton's Law of
+		 * gravity.
+		 *
+		 * @var _m1		mass of the first body, units = kg
+		 * @var _m2		mass of the second body, units = kg
+		 * @var _dt		Time increment for calculations
+		 * @var _p1		position of the first body
+		 * @var _p2		position of the second body
+		 * @var _v1		velocity of the first body
+		 * @var _v2		velocity of the second body
+		 * @var _a1		acceleration of the first body
+		 * @var _a2		acceleration of the second body
+		 * @var _time	Current time in the simulation
+		 */
+		double _m1 ;
+		double _m2 ;
+		double _dt ;
+		svector* _p1 ;
+		svector* _p2 ;
+		svector* _v1 ;
+		svector* _v2 ;
+		svector* _a1 ;
+		svector* _a2 ;
+		double _time ;
+		
+		/**
+		 * Marching function for the simulation of gravitational
+		 * interactions between two bodies. All mathematical
+		 * calculations go on during this function call and 
+		 * moves the bodies in accordance to Newton's laws of
+		 * gravity.
+		 */
+		void step() ;
+		
+		/**
+		 * The netCDF file uses to record the motion
+		 * of two bodies due to gravitation forces.
+		 */
+		NcFile* _nc_file ;
+		
+		/** netCDF variables to record the data */
+		NcVar *_nc_pos1, *_nc_pos2, *_nc_v1, *_nc_v2,
+			 *_nc_time ;
+			 
+		
+		/** Current record number in the netCDF file. */
+		int _nc_rec ;
 };
 
 #endif
