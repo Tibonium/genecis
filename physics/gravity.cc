@@ -28,6 +28,9 @@ void gravity::step() {
 	double mag12 = r_12.magnitude() ;
 	r12.norm() ;
 	svector* f12 = r12 * (-(_G*_m1*_m2) / mag12) ;
-	svector f21 = f12 * (-1.0) ;
+	svector f21 = f12 ;
+	f21 * (-1.0) ;
+	_a1 = f12 / _m1 ;
+	_a2 = f21 / _m2 ;
 
 }

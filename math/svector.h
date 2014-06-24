@@ -6,6 +6,8 @@
 #define MATH_SVECTOR_H
 
 #include "math_vector.h"
+#define pi2 2.0*M_PI
+#define pi M_PI
 
 class svector : public math_vector<double> {
 		
@@ -108,6 +110,13 @@ class svector : public math_vector<double> {
 		
 		void operator/ (const double& c) {
 			_u1 /= c ;
+		}
+		
+		inline svecotr* neg() {
+			u2 = -1.0 * _u2 ;
+			u3 = fmod( _u3+pi, pi2 ) ;
+			svector* s = new svector(_u1,u2,u3) ;
+			return s ;
 		}
 				
 		/**
