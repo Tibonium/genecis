@@ -19,12 +19,22 @@ class doubleup {
 		doubleup( int v ) : _v(v) {} ;
 		void times4() ;
 		int& value() ;
+		friend void operator+ ( int lhs, doubleup& rhs ) ;
+		friend void operator+ ( doubleup& lhs, int rhs ) ;
 	private:
 		int _v ;
 };
 
 void doubleup::times4() {
 	_v *= 4 ;
+}
+
+void operator+ ( int lhs, doubleup& rhs ) {
+	rhs._v += lhs ;
+}
+
+void operator+ ( doubleup& lhs, int rhs ) {
+	lhs._v += rhs ;
 }
 
 int& doubleup::value() {
@@ -41,6 +51,10 @@ int main() {
 	d.times4() ;
 	t.print() ;
 	d.times4() ;
+	t.print() ;
+	2 + d ;
+	t.print() ;
+	d + 17 ;
 	t.print() ;
 	return 0 ;
 
