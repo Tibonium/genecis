@@ -18,4 +18,6 @@ prime
 sort_test
 gravity_test
 vector_test
+hash_test
+reference_test
 *~
