@@ -112,8 +112,14 @@ class svector : public math_vector<double> {
 			_u1 /= c ;
 		}
 		
-		inline svecotr* neg() {
-			u2 = -1.0 * _u2 ;
+		/**
+		 * A function that turns the vector r to -r in spherical
+		 * coordinates. The process rotates the vector in theta
+		 * and phi by pi. To keep the values of phi between zero
+		 * and two pi, fmod is used.
+		 */
+		void negate() {
+			u2 = pi - _u2 ;
 			u3 = fmod( _u3+pi, pi2 ) ;
 			svector* s = new svector(_u1,u2,u3) ;
 			return s ;

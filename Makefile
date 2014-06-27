@@ -14,11 +14,12 @@ MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
 TREE_HDR = ${wildcard tree/*.h}
 PHYS_HDR = ${wildcard physics/*.h}
+MISC_TESTS = ${widlcard misc_test/*.cc}
 
 SRVR_FILES = ${wildcard net/*.cc}
 SRVR_OBJ = $(SRVR_FILES:.cc=.o)
 
-all: $(TESTS)
+all: $(TESTS) $(MISC_TESTS)
 	@echo "Build successful"
 	@date
 
@@ -27,7 +28,27 @@ clean:
 		rm $$test ; \
 	done
 	@echo "removed " $(TESTS)
+	@for test in $(MISC_TESTS) ; do \
+		rm $$test ; \
+	done
+	@echo "removed " $(MISC_TESTS)
 
+misc_test: $(MISC_TESTS)
+	@echo "Miscellaneous Tests built."
+	@date
+
+reference_test: misc_test/reference_test.cc
+	@echo "Building reference_test..."
+	@$(CC) -o reference_test misc_test/reference_test.cc $(CFLAGS)
+	
+boost_test: misc_test/boost_test.cc
+	@echo "Building boost_test..."
+	@$(CC) -o boost_test misc_test/boost_test.cc $(CFLAGS)
+	
+hash_test: misc_test/hash_test.cc
+	@echo "Building hash_test..."
+	@$(CC) -o hash_test misc_test/hash_test.cc $(CFLAGS)
+	
 math/ode.o: math/ode.cc
 	@echo "Creating obj file ode.o..."
 	@$(CC) -c math/ode.cc -o math/ode.o
