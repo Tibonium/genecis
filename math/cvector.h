@@ -2,8 +2,8 @@
  * @file cvector.h
  */
  
-#ifndef MATH_CVECTOR_H
-#define MATH_CVECTOR_H
+#ifndef GENECIS_MATH_CVECTOR_H
+#define GENECIS_MATH_CVECTOR_H
 
 #include "math_vector.h"
 

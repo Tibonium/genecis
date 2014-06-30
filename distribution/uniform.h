@@ -2,8 +2,8 @@
  * @file uniform.h
  */
  
-#ifndef DISTRIBUTION_UNIFORM_H
-#define DISTRIBUTION_UNIFORM_H
+#ifndef GENECIS_DISTRIBUTION_UNIFORM_H
+#define GENECIS_DISTRIBUTION_UNIFORM_H
 
 /**
  * The continuous uniform distribution or rectangular

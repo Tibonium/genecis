@@ -3,8 +3,8 @@
  * Mathematics package header
  */
  
-#ifndef MATH_MATHEMATICS_H
-#define MATH_MATHEMATICS_H
+#ifndef GENECIS_MATH_MATHEMATICS_H
+#define GENECIS_MATH_MATHEMATICS_H
 
 #include "math_vector.h"
 #include "svector.h"

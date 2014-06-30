@@ -2,8 +2,8 @@
  * @file svector.h
  */
  
-#ifndef MATH_SVECTOR_H
-#define MATH_SVECTOR_H
+#ifndef GENECIS_MATH_SVECTOR_H
+#define GENECIS_MATH_SVECTOR_H
 
 #include "math_vector.h"
 #define pi2 2.0*M_PI

@@ -2,8 +2,8 @@
  * @file brain.h
  */
  
-#ifndef AI_BRAIN_H
-#define AI_BRAIN_H
+#ifndef GENECIS_AI_BRAIN_H
+#define GENECIS_AI_BRAIN_H
 
 #include <fstream>
 #include <sstream>

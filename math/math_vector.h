@@ -2,8 +2,8 @@
  * @file math_vector.h
  */
  
-#ifndef MATH_MATH_VECTOR_H
-#define MATH_MATH_VECTOR_H
+#ifndef GENECIS_MATH_MATH_VECTOR_H
+#define GENECIS_MATH_MATH_VECTOR_H
 
 #define _USE_MATH_DEFINES
 

@@ -2,8 +2,8 @@
  * @file btree.h
  */
  
-#ifndef TREE_BTREE_H
-#define TREE_BTREE_H
+#ifndef GENECIS_TREE_BTREE_H
+#define GENECIS_TREE_BTREE_H
 
 template <class _type, int _size> class btree {
 

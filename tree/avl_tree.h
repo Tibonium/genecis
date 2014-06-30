@@ -2,8 +2,8 @@
  * @file avl_tree.h
  */
 
-#ifndef TREE_AVL_TREE_H
-#define TREE_AVL_TREE_H
+#ifndef GENECIS_TREE_AVL_TREE_H
+#define GENECIS_TREE_AVL_TREE_H
 
 #include "avl_node.h"
 #include <cstdio>

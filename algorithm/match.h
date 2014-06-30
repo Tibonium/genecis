@@ -1,5 +1,5 @@
-#ifndef ALGORITHM_MATCH_H
-#define ALGORITHM_MATCH_H
+#ifndef GENECIS_ALGORITHM_MATCH_H
+#define GENECIS_ALGORITHM_MATCH_H
 
 #include <vector>
 

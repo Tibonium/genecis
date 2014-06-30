@@ -2,8 +2,8 @@
  * @file bernoulli.h
  */
  
-#ifndef DISTRIBUTION_BERNOULLI_H
-#define DISTRIBUTION_BERNOULLI_H
+#ifndef GENECIS_DISTRIBUTION_BERNOULLI_H
+#define GENECIS_DISTRIBUTION_BERNOULLI_H
 
 /**
  * The Bernoulli distribution is a discrete

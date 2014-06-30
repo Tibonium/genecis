@@ -2,8 +2,8 @@
  *	@file genecis_server.h
  */
 
-#ifndef NET_GENECIS_SERVER_H
-#define NET_GENECIS_SERVER_H
+#ifndef GENECIS_NET_GENECIS_SERVER_H
+#define GENECIS_NET_GENECIS_SERVER_H
 
 #include "isocket.h"
 

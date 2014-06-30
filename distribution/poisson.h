@@ -2,8 +2,8 @@
  * @file poisson.h
  */
  
-#ifndef DISTRIBUTION_POISSON_H
-#define DISTRIBUTION_POISSON_H
+#ifndef GENECIS_DISTRIBUTION_POISSON_H
+#define GENECIS_DISTRIBUTION_POISSON_H
 
 /**
  * The Poisson distribution named after French

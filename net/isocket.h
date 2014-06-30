@@ -2,8 +2,8 @@
  *	@file isocket.h
  */
  
-#ifndef NET_ISOCKET_H
-#define NET_ISOCKET_H
+#ifndef GENECIS_NET_ISOCKET_H
+#define GENECIS_NET_ISOCKET_H
 
 #include <sys/types.h>
 #include <sys/socket.h>

@@ -2,8 +2,8 @@
  * @file binary_tree.h
  */
  
-#ifndef TREE_BINARY_TREE_H
-#define TREE_BINARY_TREE_H 
+#ifndef GENECIS_TREE_BINARY_TREE_H
+#define GENECIS_TREE_BINARY_TREE_H 
 
 #include <iostream>
 #include <cstring>

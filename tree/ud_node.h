@@ -2,8 +2,8 @@
  *	@file ud_node.h
  */
 
-#ifndef TREE_UD_NODE_H
-#define TREE_UD_NODE_H
+#ifndef GENECIS_TREE_UD_NODE_H
+#define GENECIS_TREE_UD_NODE_H
 
 #include <cstdlib>
 #include <iostream>

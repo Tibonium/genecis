@@ -2,8 +2,8 @@
  * @file objective.h
  */
  
-#ifndef AI_OBJECTIVE_H
-#define AI_OBJECTIVE_H
+#ifndef GENECIS_AI_OBJECTIVE_H
+#define GENECIS_AI_OBJECTIVE_H
 
 class objective {
 

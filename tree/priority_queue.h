@@ -2,8 +2,8 @@
  *	@file priority_queue.h
  */
 
-#ifndef TREE_PRIORITY_QUEUE_H
-#define TREE_PRIORITY_QUEUE_H
+#ifndef GENECIS_TREE_PRIORITY_QUEUE_H
+#define GENECIS_TREE_PRIORITY_QUEUE_H
 
 #include <cstring>
 #include <cmath>

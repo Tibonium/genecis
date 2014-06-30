@@ -2,8 +2,8 @@
  * @file gaussian.h
  */
 
-#ifndef DISTRIBUTION_GAUSSIAN_H
-#define DISTRIBUTION_GAUSSIAN_H
+#ifndef GENECIS_DISTRIBUTION_GAUSSIAN_H
+#define GENECIS_DISTRIBUTION_GAUSSIAN_H
 
 /**
  * The normal (or Gaussian) distribution is a continuous

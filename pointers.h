@@ -7,8 +7,8 @@
  * function should be called.
  */
  
-#ifndef POINTERS_H
-#define POINTERS_H
+#ifndef GENECIS_POINTERS_H
+#define GENECIS_POINTERS_H
 
 #include <iostream>
 

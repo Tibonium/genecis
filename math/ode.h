@@ -2,8 +2,8 @@
  *	@file ode.h
  */
  
-#ifndef MATH_ODE_H
-#define MATH_ODE_H
+#ifndef GENECIS_MATH_ODE_H
+#define GENECIS_MATH_ODE_H
 
 class ode {
 

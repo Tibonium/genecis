@@ -2,8 +2,8 @@
  * @file gravity.h
  */
 
-#ifndef PHYSICS_GRAVITY_H
-#define PHYSICS_GRAVITY_H
+#ifndef GENECIS_PHYSICS_GRAVITY_H
+#define GENECIS_PHYSICS_GRAVITY_H
 
 #include "../math/mathematics.h"
 #include <netcdfcpp.h>

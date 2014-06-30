@@ -2,8 +2,8 @@
  * @file new matrix class
  */
 
-#ifndef MATH_MATRIX_H
-#define MATH_MATRIX_H
+#ifndef GENECIS_MATH_MATRIX_H
+#define GENECIS_MATH_MATRIX_H
 
 #include <cstdio>
 #include <cstdlib>

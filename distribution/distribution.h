@@ -2,8 +2,8 @@
  * @file distribution.h Distribution components
  */
 
-#ifndef DISTRIBUTION_DISTRIBUTION_H
-#define DISTRIBUTION_DISTRIBUTION_H
+#ifndef GENECIS_DISTRIBUTION_DISTRIBUTION_H
+#define GENECIS_DISTRIBUTION_DISTRIBUTION_H
 
 #include <iostream>
 #include <iomanip>

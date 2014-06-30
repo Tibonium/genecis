@@ -2,8 +2,8 @@
  * @file goal.h
  */
 
-#ifndef AI_GOAL_H
-#define AI_GOAL_H
+#ifndef GENECIS_AI_GOAL_H
+#define GENECIS_AI_GOAL_H
 
 class goal {
 

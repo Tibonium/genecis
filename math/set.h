@@ -4,8 +4,8 @@
  * various set operations can be performed on.
  */
 
-#ifndef MATH_SET_H
-#define MATH_SET_H
+#ifndef GENECIS_MATH_SET_H
+#define GENECIS_MATH_SET_H
 
 #include <iostream>
 #include <cstdio>

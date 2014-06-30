@@ -2,8 +2,8 @@
  * @file graph_node.h
  */
  
-#ifndef MATH_GRAPH_NODE_H
-#define MATH_GRAPH_NODE_H
+#ifndef GENECIS_MATH_GRAPH_NODE_H
+#define GENECIS_MATH_GRAPH_NODE_H
 
 #include <cstdio>
 #include <vector>
