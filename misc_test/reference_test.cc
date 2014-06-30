@@ -4,10 +4,10 @@ using namespace std ;
 
 class tracker {
 	public:
-		tracker( int& a ) : _a(a) {} ;
+		tracker( const int& a ) : _a(a) {} ;
 		void print() ;
 	private:
-		int& _a ;
+		const int& _a ;
 };
 
 void tracker::print() {
@@ -18,7 +18,7 @@ class doubleup {
 	public:
 		doubleup( int v ) : _v(v) {} ;
 		void times4() ;
-		int& value() ;
+		const int& value() ;
 		friend void operator+ ( int lhs, doubleup& rhs ) ;
 		friend void operator+ ( doubleup& lhs, int rhs ) ;
 	private:
@@ -37,7 +37,7 @@ void operator+ ( doubleup& lhs, int rhs ) {
 	lhs._v += rhs ;
 }
 
-int& doubleup::value() {
+const int& doubleup::value() {
 	return _v ;
 }
 
@@ -45,7 +45,7 @@ int main() {
 
 	int num = 10 ;
 	doubleup d(num) ;
-	int& val = d.value() ;
+	const int& val = d.value() ;
 	tracker t( val ) ;
 	cout << "the number is: " << num << endl ;
 	d.times4() ;
