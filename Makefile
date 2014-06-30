@@ -8,7 +8,8 @@ CC = g++ -g -O3 -Wall -std=c++98
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test math_test tree_test difq_test server_test \
-	socket_test graph_test prime sort_test vector_test gravity_test
+	socket_test graph_test prime sort_test vector_test gravity_test \
+	mathfunc_test
 MATH_HDR = ${wildcard math/*.h}
 MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
@@ -33,6 +34,7 @@ clean:
 	done
 	@echo "removed " $(MISC_TESTS)
 
+# Various miscellaneous test
 misc_test: $(MISC_TESTS)
 	@echo "Miscellaneous Tests built."
 	@date
@@ -49,6 +51,7 @@ hash_test: misc_test/hash_test.cc
 	@echo "Building hash_test..."
 	@$(CC) -o hash_test misc_test/hash_test.cc $(CFLAGS)
 	
+# Regression Tests
 math/ode.o: math/ode.cc
 	@echo "Creating obj file ode.o..."
 	@$(CC) -c math/ode.cc -o math/ode.o
@@ -116,3 +119,12 @@ physics/gravity.o: physics/gravity.cc
 #physics/gravity_netcdf.o: physics/gravity_netcdf.cc
 #	@echo "Creating obj file gravity_netcdf.o..."
 #	@$(CC) -c physics/gravity_netcdf.cc -o -lnetcdf physics/gravity_netcdf.o
+
+math/math_functions.o: math/math_functions.cc
+	@echo "Creating obj file math_functions.o..."
+	@$(CC) -c math/math_functions.cc -o math/math_functions.o
+	
+mathfunc_test:  test/mathfunc_test.cc math/math_functions.o
+	@echo "Building mathfunc_test..."
+	@$(CC) -o mathfunc_test test/mathfunc_test.cc math/math_functions.o $(CFLAGS)
+
