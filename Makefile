@@ -18,7 +18,7 @@ TREE_HDR = ${wildcard tree/*.h}
 PHYS_HDR = ${wildcard physics/*.h}
 
 SRVR_FILES = ${wildcard net/*.cc}
-SRVR_OBJ = $(SRVR_FILES:.cc=.o)
+SRVR_OBJ = $(wildcard net/*.o)
 
 all: $(TESTS) $(MISC_TESTS)
 	@echo "Build successful"
@@ -64,23 +64,23 @@ difq_test: test/difq_test.cc math/ode.o
 	@echo "Building difq_test..."
 	@$(CC) -o difq_test test/difq_test.cc math/ode.o $(CFLAGS)
 	
-matrix_test: test/matrix_test.cc $(MATH_HDR)
+matrix_test: test/matrix_test.cc
 	@echo "Building matrix_test..."
 	@$(CC) -o matrix_test test/matrix_test.cc $(CFLAGS)
 	
-distribution_test: test/distribution_test.cc $(MATH_HDR) $(DIST_HDR)
+distribution_test: test/distribution_test.cc
 	@echo "Building distribution_test..."
 	@$(CC) -o distribution_test test/distribution_test.cc $(CFLAGS)
 
-tree_test: test/tree_test.cc $(TREE_HDR)
+tree_test: test/tree_test.cc
 	@echo "Building tree_test..."
 	@$(CC) -o tree_test test/tree_test.cc $(CFLAGS)
 	
-graph_test: test/graph_test.cc math/graph.h
+graph_test: test/graph_test.cc
 	@echo "Building graph_test..."
 	@$(CC) -o graph_test test/graph_test.cc $(CFLAGS)
 	
-vector_test: test/vector_test.cc math/svector.h
+vector_test: test/vector_test.cc
 	@echo "Building vector_test..."
 	@$(CC) -o vector_test test/vector_test.cc $(CFLAGS)
 
@@ -108,7 +108,7 @@ prime: math/prime.cc
 	@echo "Building prime_test..."
 	@$(CC) -o prime math/prime.cc $(CFLAGS)
 	
-sort_test: test/sort_test.cc $(MATH_HDR)
+sort_test: test/sort_test.cc
 	@echo "Building sort_test..."
 	@$(CC) -o sort_test test/sort_test.cc $(CFLAGS)
 	
@@ -123,12 +123,8 @@ physics/gravity.o: physics/gravity.cc
 #physics/gravity_netcdf.o: physics/gravity_netcdf.cc
 #	@echo "Creating obj file gravity_netcdf.o..."
 #	@$(CC) -c physics/gravity_netcdf.cc -o -lnetcdf physics/gravity_netcdf.o
-
-math/math_functions.o: math/math_functions.cc
-	@echo "Creating obj file math_functions.o..."
-	@$(CC) -c math/math_functions.cc -o math/math_functions.o
 	
-mathfunc_test:  test/mathfunc_test.cc math/math_functions.o
+mathfunc_test:  test/mathfunc_test.cc
 	@echo "Building mathfunc_test..."
-	@$(CC) -o mathfunc_test test/mathfunc_test.cc math/math_functions.o $(CFLAGS)
+	@$(CC) -o mathfunc_test test/mathfunc_test.cc $(CFLAGS)
 

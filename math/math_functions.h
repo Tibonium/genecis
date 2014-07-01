@@ -10,16 +10,18 @@
 namespace genecis {
 namespace math {
 
-class array ;
-
 class math_functions {
 
-	friend class array ;
-
-	private:
+	public:
 	
 		template <typename _T>
-		static void convolve(_T& _u, _T& _v, _T& result) ;
+		static void convolve(_T& _u, _T& _v, _T& result) {
+			for(size_t i=0; i<_u.size(); ++i) {
+				for(size_t j=0; j<_v.size(); ++j) {
+					result(i) += _u(i) * _v(j) ;
+				}
+			}
+		}
 
 };
 
