@@ -19,7 +19,7 @@ int main() {
 	}
 	
 	cout << "v1" << v1 << endl ;
-	math_functions::convolve<array<int> >(v1,v2,r) ;
+	math_functions::convolve(v1,v2,r) ;
 	cout << "result" << r << endl ;
 	
 	return 0 ;
