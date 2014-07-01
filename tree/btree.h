@@ -5,6 +5,9 @@
 #ifndef GENECIS_TREE_BTREE_H
 #define GENECIS_TREE_BTREE_H
 
+namespace genecis {
+namespace tree {
+
 template <class _type, int _size> class btree {
 
 	private:
@@ -116,5 +119,8 @@ template <class _type, int _size> class btree {
 		}
 
 };
+
+}	// end of namespace tree
+}	// end of namespace genecis
 
 #endif

@@ -8,6 +8,9 @@
 #include <typeinfo>
 #include "ud_node.h"
 
+namespace genecis {
+namespace tree {
+
 using namespace std ;
 
 template<class KEY_TYPE, class DATA_TYPE> class ud_tree ;
@@ -208,5 +211,7 @@ inline std::ostream& operator<< (std::ostream& os,
 	return os ;
 }
 
+}	// end of namespace tree
+}	// end of namespace genecis
 
 #endif

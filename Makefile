@@ -7,15 +7,15 @@
 CC = g++ -g -O3 -Wall -std=c++98
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
-TESTS = matrix_test math_test tree_test difq_test server_test \
-	socket_test graph_test prime sort_test vector_test gravity_test \
-	mathfunc_test
+TESTS = matrix_test distribution_test tree_test difq_test server_test \
+	socket_test graph_test prime sort_test vector_test mathfunc_test
+#	gravity_test
+MISC_TESTS = hash_test reference_test boost_test buffer_test
 MATH_HDR = ${wildcard math/*.h}
 MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
 TREE_HDR = ${wildcard tree/*.h}
 PHYS_HDR = ${wildcard physics/*.h}
-MISC_TESTS = ${widlcard misc_test/*.cc}
 
 SRVR_FILES = ${wildcard net/*.cc}
 SRVR_OBJ = $(SRVR_FILES:.cc=.o)
@@ -50,34 +50,38 @@ boost_test: misc_test/boost_test.cc
 hash_test: misc_test/hash_test.cc
 	@echo "Building hash_test..."
 	@$(CC) -o hash_test misc_test/hash_test.cc $(CFLAGS)
-	
+
+buffer_test: misc_test/buffer_test.cc
+	@echo "Building buffer_test..."
+	@$(CC) -o buffer_test misc_test/buffer_test.cc $(CFLAGS)
+
 # Regression Tests
 math/ode.o: math/ode.cc
 	@echo "Creating obj file ode.o..."
 	@$(CC) -c math/ode.cc -o math/ode.o
 	
-difq_test: test/difq_test.cc $(MATH_OBJ)
+difq_test: test/difq_test.cc math/ode.o
 	@echo "Building difq_test..."
-	@$(CC) -o difq_test test/difq_test.cc $(MATH_OBJ) $(CFLAGS)
+	@$(CC) -o difq_test test/difq_test.cc math/ode.o $(CFLAGS)
 	
 matrix_test: test/matrix_test.cc $(MATH_HDR)
 	@echo "Building matrix_test..."
 	@$(CC) -o matrix_test test/matrix_test.cc $(CFLAGS)
 	
-math_test: test/math_test.cc $(MATH_HDR) $(DIST_HDR)
-	@echo "Building math_test..."
-	@$(CC) -o math_test test/math_test.cc $(CFLAGS)
+distribution_test: test/distribution_test.cc $(MATH_HDR) $(DIST_HDR)
+	@echo "Building distribution_test..."
+	@$(CC) -o distribution_test test/distribution_test.cc $(CFLAGS)
 
 tree_test: test/tree_test.cc $(TREE_HDR)
 	@echo "Building tree_test..."
 	@$(CC) -o tree_test test/tree_test.cc $(CFLAGS)
 	
 graph_test: test/graph_test.cc math/graph.h
-	@echo "Buidling graph_test..."
+	@echo "Building graph_test..."
 	@$(CC) -o graph_test test/graph_test.cc $(CFLAGS)
 	
 vector_test: test/vector_test.cc math/svector.h
-	@echo "Buidling vector_test..."
+	@echo "Building vector_test..."
 	@$(CC) -o vector_test test/vector_test.cc $(CFLAGS)
 
 server: socket_test server_test

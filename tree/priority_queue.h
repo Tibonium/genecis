@@ -13,6 +13,9 @@
 #include <iostream>
 #include <typeinfo>
 
+namespace genecis {
+namespace tree {
+
 using namespace std ;
 
 template <class TYPE> class priority_queue ;
@@ -241,5 +244,8 @@ inline ostream& operator<< (ostream& os, const priority_queue<TYPE>& output) {
 	os << buf << endl ;
 	return os ;
 }
+
+}	// end of namespace tree
+}	// end of namespace genecis
 
 #endif

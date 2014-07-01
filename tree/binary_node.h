@@ -6,6 +6,9 @@
 #ifndef GENECIS_TREE_BINARY_NODE_H
 #define GENECIS_TREE_BINARY_NODE_H
 
+namespace genecis {
+namespace tree {
+
 template <typename _T> class binary_node {
 
 	public:
@@ -15,5 +18,8 @@ template <typename _T> class binary_node {
 		binary_node<_T>* right ;
 
 };
+
+}	// end of namespace tree
+}	// end of namespace genecis
 
 #endif

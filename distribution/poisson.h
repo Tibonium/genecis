@@ -15,6 +15,9 @@
  * independently of the time since the last event.
  */
 
+namespace genecis {
+namespace distribution {
+
 class poisson : public probability_mass_function<int, double>
 {
 
@@ -47,5 +50,8 @@ class poisson : public probability_mass_function<int, double>
 		virtual ~poisson() {}
 
 };
+
+}	// end of namespace distribution
+}	// end of namespace genecis
 
 #endif

@@ -9,6 +9,9 @@
 #include <cstdio>
 #include <vector>
 
+namespace genecis {
+namespace distribution {
+
 using namespace std ;
 
 template <class SAMPLE_TYPE, class PROB_TYPE> class discrete_distribution :
@@ -212,5 +215,8 @@ template <class SAMPLE_TYPE, class PROB_TYPE> class discrete_distribution :
 		/// Destructor
 		//~discrete_distribution() {}
 };
+
+}	// end of namespace distribution
+}	// end of namespace genecis
 
 #endif

@@ -3,6 +3,7 @@
 #include "../net/isocket.h"
 
 using namespace std ;
+using namespace genecis::net ;
 
 int main() {
 

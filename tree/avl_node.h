@@ -5,6 +5,9 @@
 #ifndef GENECIS_TREE_AVL_NODE_H
 #define GENECIS_TREE_AVL_NODE_H
 
+namespace genecis {
+namespace tree {
+
 template <class _type> class avl_node {
 
 	public:
@@ -16,5 +19,8 @@ template <class _type> class avl_node {
 		avl_node<_type>* parent ;
 
 };
+
+}	// end of namespace tree
+}	// end of namespace genecis
 
 #endif

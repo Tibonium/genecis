@@ -5,6 +5,8 @@
 #include <ctime>
 #include "../distribution/distribution.h"
 
+using namespace genecis::distribution ;
+
 int main( int argc, char* argv[] ) {
 
 	gaussian* dist = new gaussian(2,10,0.00001) ;

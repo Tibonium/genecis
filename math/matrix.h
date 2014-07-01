@@ -11,6 +11,9 @@
 #include <cstring>
 #include <typeinfo>
 
+namespace genecis {
+namespace math {
+
 using namespace std ;
 
 template<class _T> class matrix ;
@@ -740,5 +743,8 @@ inline std::ostream& operator<< (std::ostream& os, matrix<_T>& output) {
 	}
 	return os ;
 }
+
+}	// end of namespace math
+}	// end of namespace genecis
 
 #endif

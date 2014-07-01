@@ -3,6 +3,7 @@
 #include <cstdio>
 
 using namespace std ;
+using namespace genecis::math ;
 
 int main() {
 

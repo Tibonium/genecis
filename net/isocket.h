@@ -19,6 +19,9 @@ const int MAXHOSTNAME = 200 ;
 const int MAXHOOKS = 5 ;
 const int MAXBUFF = 500 ;
 
+namespace genecis {
+namespace net {
+
 class isocket {
 
 	public:
@@ -63,5 +66,8 @@ class isocket {
 		void create() ;
 
 };
+
+}	// end of namespace net
+}	// end of namespace genecis
 
 #endif

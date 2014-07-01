@@ -1,6 +1,8 @@
 #include "../tree/trees.h"
 #include <ctime>
 
+using namespace genecis::tree ;
+
 int main() {
 
 	cout << "Let's do some binary tree tests!" << endl;

@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <sstream>
 
+using namespace genecis::net ;
+
 // Constructor
 isocket::isocket( const std::string& host, const int port ) :
 	_host_name(host), _port(port)

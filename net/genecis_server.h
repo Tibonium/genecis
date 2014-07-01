@@ -7,6 +7,9 @@
 
 #include "isocket.h"
 
+namespace genecis {
+namespace net {
+
 class genecis_server : public isocket {
 
 	public:
@@ -26,5 +29,8 @@ class genecis_server : public isocket {
 		void accept( genecis_server& ) ;
 
 };
+
+}	// end of namespace net
+}	// end of namespace genecis
 
 #endif

@@ -8,6 +8,9 @@
 #include "avl_node.h"
 #include <cstdio>
 
+namespace genecis {
+namespace tree {
+
 template <class _type> class avl_tree {
 
 	private:
@@ -364,5 +367,8 @@ template <class _type> class avl_tree {
 		}
 
 };
+
+}	// end of namespace tree
+}	// end of namespace genecis
 
 #endif

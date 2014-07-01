@@ -6,6 +6,7 @@
 #include "../math/mathematics.h"
 
 using namespace std ;
+using namespace genecis::math ;
 
 int main() {
 

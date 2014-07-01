@@ -5,6 +5,9 @@
 #ifndef GENECIS_MATH_ODE_H
 #define GENECIS_MATH_ODE_H
 
+namespace genecis {
+namespace math {
+
 class ode {
 
 	public:
@@ -44,5 +47,8 @@ class ode {
 			double y0_p, unsigned n ) ;
 
 };
+
+}	// end of namespace math
+}	// end of namespace genecis
 
 #endif

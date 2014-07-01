@@ -15,6 +15,9 @@
  * maximum values.
  */
 
+namespace genecis {
+namespace distribution {
+
 class uniform : public probability_density_function<double>
 {
 
@@ -43,4 +46,6 @@ class uniform : public probability_density_function<double>
 
 };
 
+}	// end of namespace distribution
+}	// end of namespace genecis
 #endif

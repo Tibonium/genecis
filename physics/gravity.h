@@ -8,6 +8,11 @@
 #include "../math/mathematics.h"
 #include <netcdfcpp.h>
 
+namespace genecis {
+namespace physics {
+
+using namespace genecis::math ;
+
 class gravity {
 
 	public:
@@ -183,5 +188,8 @@ class gravity {
 		/** Current record number in the netCDF file. */
 		int _nc_rec ;
 };
+
+}	// end of namespace net
+}	// end of namespace genecis
 
 #endif

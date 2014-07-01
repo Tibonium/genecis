@@ -10,6 +10,9 @@
 #include <cstring>
 #include <sstream>
 
+namespace genecis {
+namespace tree {
+
 using namespace std ;
 
 template<class KEY_TYPE, class DATA_TYPE> class ud_node ;
@@ -84,5 +87,8 @@ std::ostream& operator<< (std::ostream& os,
 	delete[] _key ;
 	return os ;
 }
+
+}	// end of namespace tree
+}	// end of namespace genecis
 
 #endif

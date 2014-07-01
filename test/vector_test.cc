@@ -3,6 +3,7 @@
 #include "../math/mathematics.h"
 
 using namespace std ;
+using namespace genecis::math ;
 
 int main() {
 
@@ -27,7 +28,7 @@ int main() {
 		cout << "false." << endl ;
 	
 	cout << "maginutde of myvec: " << myvec.magnitude() << endl ;
-	myvec.norm<svector>() ;
+	myvec.norm() ;
 	cout << "norm of myvec: " << myvec << endl ;
 	cout << "magnitude of the norm of myvec: " << myvec.magnitude() << endl ;
 	
@@ -74,6 +75,8 @@ int main() {
 		 
 	svector* s3 = s1+s2 ;
 	cout << "s1+s2" << *s3 << endl ;
+	
+	delete s3 ;
 	
 	s3 = s1-s2 ;
 	cout << "s1-s2" << *s3 << endl ;

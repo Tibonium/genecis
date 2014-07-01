@@ -7,7 +7,7 @@ log
 tree_test
 physics_test
 matrix_test
-math_test
+distribution_test
 buffer_test
 difq_test
 socket_test
@@ -21,4 +21,5 @@ vector_test
 hash_test
 reference_test
 boost_test
+mathfunc_test
 *~

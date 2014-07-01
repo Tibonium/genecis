@@ -4,6 +4,8 @@
 
 #include "gravity.h"
 
+using namespace genecis::physics ;
+
 /**
  * Initialize netCDF file for recording data
  */

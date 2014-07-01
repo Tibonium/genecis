@@ -8,6 +8,9 @@
 #include <cstdio>
 #include <vector>
 
+namespace genecis {
+namespace math {
+
 #define INF 1048576 	// 2^20
 
 using namespace std ;
@@ -52,4 +55,6 @@ class graph_node {
 
 };
 
+}	// end of namespace math
+}	// end of namespace genecis
 #endif

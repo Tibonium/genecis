@@ -7,6 +7,9 @@
 
 #include "math_vector.h"
 
+namespace genecis {
+namespace math {
+
 class cvector : public math_vector<double> {
 
 	public:
@@ -64,4 +67,6 @@ inline std::ostream& operator<< (std::ostream& os, const cvector& other) {
 	return os ;
 };
 
+}	// end of namespace math
+}	// end of namespace genecis
 #endif

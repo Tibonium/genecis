@@ -8,6 +8,9 @@
 #include <cmath>
 #include <algorithm>
 
+namespace genecis {
+namespace distribution {
+
 #define TWO_PI (2.0*M_PI)
 
 using namespace std ;
@@ -30,5 +33,8 @@ template <class SAMPLE_TYPE, class PROB_TYPE> class probability_mass_function {
 
 		//virtual ~distribution() {}	
 };
+
+}	// end of namespace distribution
+}	// end of namespace genecis
 
 #endif

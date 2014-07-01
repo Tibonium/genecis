@@ -4,6 +4,8 @@
 
 #include "genecis_server.h"
 
+using namespace genecis::net ;
+
 const std::string host = "localhost" ;
 
 genecis_server::genecis_server( const int port ) :

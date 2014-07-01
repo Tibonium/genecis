@@ -10,6 +10,9 @@
 #include <cstdio>
 #include "binary_node.h"
 
+namespace genecis {
+namespace tree {
+
 using namespace std ;
 
 template <typename _type> class binary_tree {
@@ -202,5 +205,8 @@ template <typename _type> class binary_tree {
 		}
 
 };
+
+}	// end of namespace tree
+}	// end of namespace genecis
 
 #endif

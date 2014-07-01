@@ -11,6 +11,9 @@
 #include "decision.h"
 #include "goal.h"
 
+namespace genecis {
+namespace ai {
+
 using namespace std ;
 
 /**
@@ -72,4 +75,6 @@ class brain {
 
 };
 
+}	// end of namespace ai
+}	// end of namespace genecis
 #endif

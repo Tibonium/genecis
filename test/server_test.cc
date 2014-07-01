@@ -3,6 +3,7 @@
 #include "../net/genecis_server.h"
 
 using namespace std ;
+using namespace genecis::net ;
 
 int main() {
 	

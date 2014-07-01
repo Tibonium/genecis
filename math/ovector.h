@@ -9,6 +9,9 @@
 #include "bvector.h"
 /// THIS CLASS, OMNIVECTORS, DOES NOT WORK. DO NOT INSTANTIATE IT!
 
+namespace genecis {
+namespace math {
+
 template <class _T>
 class ovector : public math_vector<_T>  {
 
@@ -79,5 +82,8 @@ class ovector : public math_vector<_T>  {
 		}
 
 };
+
+}	// end of namespace math
+}	// end of namespace genecis
 
 #endif

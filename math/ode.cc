@@ -6,6 +6,8 @@
 #include "ode.h"
 #include <iostream>
 
+using namespace genecis::math ;
+
 /**
  * Solves ODEs of the form:
  * 		y'(x) = a, y(x0) = y0

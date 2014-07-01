@@ -12,6 +12,9 @@
  * any two real numbers.
  */
 
+namespace genecis {
+namespace distribution {
+
 class gaussian : public probability_density_function<double>
 {
 	private:
@@ -82,6 +85,7 @@ inline std::ostream& operator<< (std::ostream& os, const gaussian& other) {
 	return os ;
 }
 
-//} ///end of namespace distribution
+}	// end of namespace distribution
+}	// end of namespace genecis
 
 #endif

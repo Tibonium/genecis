@@ -11,6 +11,9 @@
 #include <cstdio>
 #include <vector>
 
+namespace genecis {
+namespace math {
+
 template<class _T> class set ;
 
 template<class _T> std::ostream&
@@ -145,5 +148,8 @@ inline std::ostream& operator<< (std::ostream& os, set<_T>& output) {
 	os << output ;
 	return os ;
 } 
+
+}	// end of namespace math
+}	// end of namespace genecis
 
 #endif

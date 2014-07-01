@@ -12,6 +12,9 @@
  * of false with failure probability q=1-p.
  */
 
+namespace genecis {
+namespace distribution {
+
 class bernoulli : public probability_mass_function<double, bool>
 {
 
@@ -29,5 +32,8 @@ class bernoulli : public probability_mass_function<double, bool>
 		bernoulli(double success) : _success(success) {}
 
 };
+
+}	// end of namespace distribution
+}	// end of namespace genecis
 
 #endif

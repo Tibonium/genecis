@@ -9,6 +9,9 @@
 #include <algorithm>
 #include <iostream>
 
+namespace genecis {
+namespace math {
+
 class graph {
 
 	public:
@@ -114,4 +117,6 @@ class graph {
 
 };
 
+}	// end of namespace math
+}	// end of namespace genecis
 #endif

@@ -3,7 +3,9 @@
  */
 
 #include "math_functions.h"
- 
+
+using namespace genecis::math ;
+
 template <typename _T>
 void math_functions::convolve(
 	_T& _u, _T& _v, _T& result)

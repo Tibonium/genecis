@@ -7,6 +7,7 @@
 #include "../math/matrix.h"
 
 using namespace std ;
+using namespace genecis::math ;
 
 int main() {
 	

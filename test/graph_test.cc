@@ -6,6 +6,8 @@
 #define MAX 100
 //#define DEBUG
 
+using namespace genecis::math ;
+
 int main() {
 
 	vector<graph_node> tree ;

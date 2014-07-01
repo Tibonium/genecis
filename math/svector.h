@@ -9,6 +9,9 @@
 #define pi2 2.0*M_PI
 #define pi M_PI
 
+namespace genecis {
+namespace math {
+
 class svector : public math_vector<double> {
 		
 	public:
@@ -104,12 +107,14 @@ class svector : public math_vector<double> {
 			return s ;
 		}
 		
-		void operator* (const double& c) {
+		inline svector* operator* (const double& c) {
 			_u1 *= c ;
+			return this ;
 		}
 		
-		void operator/ (const double& c) {
+		inline svector* operator/ (const double& c) {
 			_u1 /= c ;
+			return this ;
 		}
 		
 		/**
@@ -119,10 +124,8 @@ class svector : public math_vector<double> {
 		 * and two pi, fmod is used.
 		 */
 		void negate() {
-			u2 = pi - _u2 ;
-			u3 = fmod( _u3+pi, pi2 ) ;
-			svector* s = new svector(_u1,u2,u3) ;
-			return s ;
+			_u2 = pi - _u2 ;
+			_u3 = fmod( _u3+pi, pi2 ) ;
 		}
 				
 		/**
@@ -161,5 +164,8 @@ inline std::ostream& operator<< (std::ostream& os, const svector& other) {
 	   << other.u3() << "]" ;
 	return os ;
 };
+
+}	// end of namespace math
+}	// end of namespace genecis
 
 #endif

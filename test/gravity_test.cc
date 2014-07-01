@@ -3,6 +3,8 @@
 #include "../math/mathematics.h"
 
 using namespace std ;
+using namespace genecis::math ;
+using namespace genecis::physics ;
 
 #define pi M_PI
 

@@ -3,6 +3,9 @@
 
 #include <vector>
 
+namespace genecis {
+namespace algorithm {
+
 template <typename _T>
 class match {
 
@@ -28,5 +31,8 @@ class match {
 		
 
 };
+
+}	// end of namespace algorithm
+}	// end of namespace genecis
 
 #endif

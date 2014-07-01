@@ -11,6 +11,9 @@
 #include <cmath>
 #include <algorithm>
 
+namespace genecis {
+namespace math {
+
 template <class _T> class math_vector {
 
 	protected:
@@ -36,12 +39,11 @@ template <class _T> class math_vector {
 		 *
 		 *  norm(u) = /frac{u} {|u|}
 		 */
-		template <class T>
 		void norm() {
 			_T n = sqrt(dot(*this)) ;
-			u1( _u1 / n ) ;
-			u2( _u2 / n ) ;
-			u3( _u3 / n ) ;
+			this->u1( _u1 / n ) ;
+			this->u2( _u2 / n ) ;
+			this->u3( _u3 / n ) ;
 		}
 
 		/**
@@ -182,29 +184,25 @@ template <class _T> class math_vector {
 		}
 
 		/** Various operators for scalar arithmetics */
-		template<class T>
-		void operator+ (const T& val) {
+		void operator+ (const _T& val) {
 			_u1 += val ;
 			_u2 += val ;
 			_u3 += val ;
 		}
 
-		template<class T>
-		void operator- (const T& val) {
+		void operator- (const _T& val) {
 			_u1 -= val ;
 			_u2 -= val ;
 			_u3 -= val ;
 		}
 		
-		template<class T>
-		void operator* (const T& val) {
+		void operator* (const _T& val) {
 			_u1 *= val ;
 			_u2 *= val ;
 			_u3 *= val ;
 		}
 		
-		template<class T>
-		void operator/ (const T& val) {
+		void operator/ (const _T& val) {
 			_u1 /= val ;
 			_u2 /= val ;
 			_u3 /= val ;
@@ -214,5 +212,8 @@ template <class _T> class math_vector {
 		virtual ~math_vector() {} ;
 		
 };
+
+}	// end of namespace math
+}	// end of namespace genecis
 
 #endif
