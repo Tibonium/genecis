@@ -18,7 +18,7 @@ TREE_HDR = ${wildcard tree/*.h}
 PHYS_HDR = ${wildcard physics/*.h}
 
 SRVR_FILES = ${wildcard net/*.cc}
-SRVR_OBJ = $(wildcard net/*.o)
+SRVR_OBJ = $(wildcard net/*.cc)
 
 all: $(TESTS) $(MISC_TESTS)
 	@echo "Build successful"

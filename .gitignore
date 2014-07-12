@@ -22,4 +22,5 @@ hash_test
 reference_test
 boost_test
 mathfunc_test
+math_test
 *~

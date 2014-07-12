@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstring>
 #include <sstream>
-#include <netcdfcpp.h>
+//#include <netcdfcpp.h>
 
 using namespace std ;
 
