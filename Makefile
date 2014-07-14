@@ -10,7 +10,7 @@ CFLAGS = -I $(IDIR)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime sort_test vector_test mathfunc_test
 #	gravity_test
-MISC_TESTS = hash_test reference_test boost_test buffer_test
+MISC_TESTS = hash_test reference_test boost_test buffer_test template_test
 MATH_HDR = ${wildcard math/*.h}
 MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
@@ -55,6 +55,10 @@ buffer_test: misc_test/buffer_test.cc
 	@echo "Building buffer_test..."
 	@$(CC) -o buffer_test misc_test/buffer_test.cc $(CFLAGS)
 
+template_test: misc_test/template_test.cc
+	@echo "Building template_test..."
+	@$(CC) -o template_test misc_test/template_test.cc $(CFLAGS)
+	
 # Regression Tests
 math/ode.o: math/ode.cc
 	@echo "Creating obj file ode.o..."

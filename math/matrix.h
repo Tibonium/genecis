@@ -52,52 +52,55 @@ template<class _T> class matrix {
 /************************* Operators ******************************/
 		/* Accessor and Assigner */
 		inline _T& operator() (size_t i, size_t j) {
-			m_index = i * m_ncol + j ;
-			return pData[m_index] ;
+			return pData[ i * m_ncol + j ] ;
 		}
 
+		template<size_t _index>
 		inline void operator= (_T c) {
 			bVerify = true ;
-			pData[m_index] = c ;
+			pData[_index] = c ;
 		}
 
 	/*================= Matrix Scalar Operators ================*/
-		inline matrix& operator* (_T c) {
+		inline matrix* operator* (_T c) {
+			matrix<_T>* temp = new matrix<_T>(*this) ;
 			for(size_t i=0; i<(m_nrow*m_ncol); ++i) {
-				pData[i] *= c ;
+				temp->pData[i] *= c ;
 			}
-			determinant() ;
-			return *this ;
+			temp->m_det *= pow(c,m_nrow) ;
+			return temp ;
 		}
 
 		inline void operator*= (_T c) {
 			for(size_t i=0; i<(m_nrow*m_ncol); ++i) {
 				pData[i] *= c ;
 			}
-			determinant() ;
+			m_det *= pow(c,m_nrow) ; ;
 		}
 
-		inline matrix& operator/ (_T c) {
+		inline matrix* operator/ (_T c) {
+			matrix<_T>* temp = new matrix<_T>(*this) ;
 			for(size_t i=0; i<(m_nrow*m_ncol); ++i) {
-				pData[i] /= c ;
+				temp->pData[i] /= c ;
 			}
-			determinant() ;
-			return *this ;
+			temp->m_det /= pow(c,m_nrow) ; ;
+			return temp ;
 		}
 
 		inline void operator/= (_T c) {
 			for(size_t i=0; i<(m_nrow*m_ncol); ++i) {
 				pData[i] /= c ;
 			}
-			determinant() ;
+			m_det /= pow(c,m_nrow) ; ;
 		}
 
-		inline matrix& operator+ (_T c) {
+		inline matrix* operator+ (_T c) {
+			matrix<_T>* temp = new matrix<_T>(*this) ;
 			for(size_t i=0; i<(m_nrow*m_ncol); ++i) {
-				pData[i] += c ;
+				temp->pData[i] += c ;
 			}
-			determinant() ;
-			return *this ;
+			temp->determinant() ;
+			return temp ;
 		}
 
 		inline void operator+= (_T c) {
@@ -107,12 +110,13 @@ template<class _T> class matrix {
 			determinant() ;
 		}
 
-		inline matrix& operator- (_T c) {
+		inline matrix* operator- (_T c) {
+			matrix<_T>* temp = new matrix<_T>(*this) ;
 			for(size_t i=0; i<(m_nrow*m_ncol); ++i) {
-				pData[i] -= c ;
+				temp->pData[i] -= c ;
 			}
-			determinant() ;
-			return *this ;
+			temp->determinant() ;
+			return temp ;
 		}
 
 		inline void operator-= (_T c) {
@@ -122,12 +126,13 @@ template<class _T> class matrix {
 			determinant() ;
 		}
 
-		inline matrix& operator% (_T c) {
+		inline matrix* operator% (_T c) {
+			matrix<_T>* temp = new matrix<_T>(*this) ;
 			for(size_t i=0; i<(m_nrow*m_ncol); ++i) {
-				pData[i] %= c ;
+				temp->pData[i] %= c ;
 			}
-			determinant() ;
-			return *this ;
+			temp->determinant() ;
+			return temp ;
 		}
 
 		inline void operator%= (_T c) {
@@ -574,7 +579,6 @@ template<class _T> class matrix {
 		_T* pData ;
 		size_t m_nrow ;
 		size_t m_ncol ;
-		size_t m_index ;
 		bool bSingular ;
 		bool bVerify ;
 		_T m_det ;

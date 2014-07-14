@@ -10,11 +10,11 @@ using namespace genecis::math ;
 
 int main() {
 
-//	matrix<int> m(3,3) ;
-//	m(0,0) = 1 ; m(0,1) = 4 ; m(0,2) = 7 ;
-//	m(1,0) = 0 ; m(1,1) = 1 ; m(1,2) = 0 ;
-//	m(2,0) = 0 ; m(2,1) = 0 ; m(2,2) = 1 ;
-//	cout << "m: " << m << endl ;
+	matrix<int> mt(3,3) ;
+	mt(0,0) = 1 ; mt(0,1) = 4 ; mt(0,2) = 7 ;
+	mt(1,0) = 0 ; mt(1,1) = 1 ; mt(1,2) = 0 ;
+	mt(2,0) = 0 ; mt(2,1) = 0 ; mt(2,2) = 1 ;
+	cout << "mt: " << mt << endl ;
 
 //	srand(time(NULL)) ;
 //	matrix<double> mymatx(5,5) ;
@@ -98,7 +98,7 @@ int main() {
 	unsigned N = 2 ;
 	matrix<double> m(N,N) ;
 	matrix<double> m2(N,N) ;
-//	matrix<double>* temp = new matrix<double>;
+	matrix<double>* temp ;
 //	boost::numeric::ublas::matrix<double> m3(N,N) ;
 	for(unsigned i=0; i<N; ++i) {
 		for(unsigned j=0; j<N; ++j) {
@@ -118,27 +118,28 @@ int main() {
 	cout << "m: " << m << endl ;
 	cout << "m2: " << m2 << endl ;
 //	cout << "m2: " << m2 << endl ;
-//	(*temp) = m2*2.0 ;
-//	cout << "m2*2.0: " << (*temp) << endl ;
-//	cout << "Starting matrix multiply" << endl ;
-//	struct timeval time ;
-//    struct timezone zone ;
-//    double start ;
-//    double complete ;
-//    double avg = 0 ;
-//    for(unsigned i=0; i<N; ++i) {
-//	    gettimeofday( &time, &zone ) ;
-//    	start = time.tv_sec + time.tv_usec * 1e-6 ;
+	temp = m2*2.0 ;
+	cout << "m2*2.0: " << (*temp) << endl ;
+	cout << "Starting matrix multiply" << endl ;
+	struct timeval time ;
+    struct timezone zone ;
+    double start ;
+    double complete ;
+    double avg = 0 ;
+    for(unsigned i=0; i<N; ++i) {
+	    gettimeofday( &time, &zone ) ;
+    	start = time.tv_sec + time.tv_usec * 1e-6 ;
 //	temp = m2 * m2 ;
 //		prod(m3, m3) ;
-//		m2 * 4.0 ;
-//		gettimeofday( &time, &zone ) ;
-//    	complete = time.tv_sec + time.tv_usec * 1e-6 ;
-//    	avg += (complete-start) ;
-//    	cout << "matrix.h Complete...time: " << (complete-start) << endl ;
-//    }
-//    cout << "Average execute time: " << avg/N << endl ;
-//    cout << "temp: " << temp << endl ;
+		m2 *= 4.0 ;
+		gettimeofday( &time, &zone ) ;
+    	complete = time.tv_sec + time.tv_usec * 1e-6 ;
+    	avg += (complete-start) ;
+    	cout << "matrix.h Complete...time: " << (complete-start) << endl ;
+    }
+    cout << "Average execute time: " << avg/N << endl ;
+    cout << "temp: " << (*temp) << endl ;
+    delete temp ;
 //    gettimeofday( &time, &zone ) ;
 //    start = time.tv_sec + time.tv_usec * 1e-6 ;
 //	gettimeofday( &time, &zone ) ;
