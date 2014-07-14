@@ -23,4 +23,5 @@ reference_test
 boost_test
 mathfunc_test
 template_test
+math_test
 *~
