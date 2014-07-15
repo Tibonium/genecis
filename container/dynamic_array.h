@@ -2,8 +2,8 @@
  * @file dynamic_array.h
  */
 
-#ifndef GENECIS_CONTAINER_DYNAMIC_ARRAY
-#define GENECIS_CONTAINER_DYNAMIC_ARRAY
+#ifndef GENECIS_CONTAINER_DYNAMIC_ARRAY_H
+#define GENECIS_CONTAINER_DYNAMIC_ARRAY_H
 
 #include <iostream>
 #include <cstring>
