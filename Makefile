@@ -4,13 +4,14 @@
 #
 #*******************************************************************
 
-CC = g++ -g -O3 -Wall -std=c++98
+CC = g++ -g -O0 -Wall -std=c++98
 IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime sort_test vector_test mathfunc_test
 #	gravity_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test
+MATRIX = math/matrix.h math/matrix_expression.h #math/matrix_math.h
 MATH_HDR = ${wildcard math/*.h}
 MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
@@ -68,7 +69,7 @@ difq_test: test/difq_test.cc math/ode.o
 	@echo "Building difq_test..."
 	@$(CC) -o difq_test test/difq_test.cc math/ode.o $(CFLAGS)
 	
-matrix_test: test/matrix_test.cc
+matrix_test: test/matrix_test.cc $(MATRIX)
 	@echo "Building matrix_test..."
 	@$(CC) -o matrix_test test/matrix_test.cc $(CFLAGS)
 	
