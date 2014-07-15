@@ -101,16 +101,16 @@ class dynamic_array {
 		 * Concatenates two dynamic arrays and passes back a new
 		 * dynamic array.
 		 */
-		dynamic_array* operator+(dynamic_array const& rhs) const {
+		dynamic_array operator+(dynamic_array& rhs) {
 			int temp_size = _size + rhs.size() ;
 			dynamic_array<T>* temp = new dynamic_array<T>(temp_size) ;
 			for(int i=0; i<_size; ++i) {
-				temp->data[i] = _data[i] ; 
+				(*temp)(i) = (*this)(i) ; 
 			}
-			for(int i=_size; i<rhs.size(); ++i) {
-				temp->data[i] = rhs.data[i] ;
+			for(int i=_size; i<temp_size; ++i) {
+				(*temp)(i) = rhs(i-_size) ;
 			}
-			return temp ;
+			return (*temp) ;
 		}
 		
 		/**
@@ -120,10 +120,10 @@ class dynamic_array {
 			int temp_size = _size + rhs.size() ;
 			dynamic_array<T>* temp = new dynamic_array<T>(temp_size) ;
 			for(int i=0; i<_size; ++i) {
-				temp->data[i] = _data[i] ; 
+				(*temp)(i) = (*this)(i) ; 
 			}
-			for(int i=_size; i<rhs.size(); ++i) {
-				temp->data[i] = rhs.data[i] ;
+			for(int i=_size; i<temp_size; ++i) {
+				(*temp)(i) = rhs(i-_size) ;
 			}
 			delete[] _data ;
 			_size = temp_size ;
