@@ -28,6 +28,50 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		typedef matrix<T> self_type ;
 
 	public:
+/******************** Constructor/Destructors *********************/
+		/**
+		 * Main  Constructor
+		 * Creates an NxM matrix from a basic array
+		 * Defaults to a 1x1 matrix
+		 */
+		matrix(size_t rows=1, size_t cols=1) : 
+			_rows(rows), _cols(cols),
+			bSingular(false), bVerify(true)
+		{
+			size_t N = _rows * _cols ;
+			pData = new T[N] ;
+			memset(pData, 0, N * sizeof(T)) ;
+		}
+
+		/**
+		 * Copy Constructor
+		 */
+		template<template <typename> class E>
+		matrix(matrix_expression<E,T> const& r) {
+			E<T> const& rhs = r ;
+			_rows = rhs.rows() ;
+			_cols = rhs.cols() ;
+			bVerify = true ;
+			bSingular = rhs.singular() ;
+			size_t N = _rows * _cols ;
+			pData = new T[N] ;
+			for(size_t i=0; i<_rows; ++i) {
+				for(size_t j=0; j<_cols; ++j) {
+					pData[i*_cols+j] = rhs(i,j) ;
+				}
+			}
+		}
+		
+		/**
+		 * Destructor
+		 */
+		virtual ~matrix() {
+			if(pData) {
+				delete[] pData ;
+				pData = NULL ;
+			}
+		}
+
 		inline size_t rows() const {
 			return _rows ;
 		}
@@ -479,50 +523,6 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 
 		inline bool operator!= (matrix& rhs) {
 			return !(*this==rhs) ;
-		}
-
-/******************** Constructor/Destructors *********************/
-		/**
-		 * Main  Constructor
-		 * Creates an NxM matrix from a basic array
-		 * Defaults to a 1x1 matrix
-		 */
-		matrix(size_t rows=1, size_t cols=1) : 
-			_rows(rows), _cols(cols),
-			bSingular(false), bVerify(true)
-		{
-			size_t N = _rows * _cols ;
-			pData = new T[N] ;
-			memset(pData, 0, N * sizeof(T)) ;
-		}
-
-		/**
-		 * Copy Constructor
-		 */
-		template<template <typename> class E>
-		matrix(matrix_expression<E,T> const& r) {
-			E<T> const& rhs = r ;
-			_rows = rhs.rows() ;
-			_cols = rhs.cols() ;
-			bVerify = true ;
-			bSingular = rhs.singular() ;
-			size_t N = _rows * _cols ;
-			pData = new T[N] ;
-			for(size_t i=0; i<_rows; ++i) {
-				for(size_t j=0; j<_cols; ++j) {
-					pData[i*_cols+j] = rhs(i,j) ;
-				}
-			}
-		}
-		
-		/**
-		 * Destructor
-		 */
-		virtual ~matrix() {
-			if(pData) {
-				delete[] pData ;
-				pData = NULL ;
-			}
 		}
 
 /********************** IO Stream overloads ***********************/

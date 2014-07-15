@@ -29,7 +29,10 @@ class array {
 		
 		// Destructor
 		~array() {
-			delete _a ;
+			if( _a ) {
+				delete[] _a ;
+				_a = NULL ;
+			}
 		}
 
 		inline size_t size() {
@@ -37,10 +40,10 @@ class array {
 		}
 		
 		inline _T& operator() (size_t t) {
-			_index = t ;
 			return _a[t] ;
 		}
 		
+		template<typename _index>
 		inline void operator= (_T c) {
 			_a[_index] = c ;
 		}
@@ -51,7 +54,6 @@ class array {
 	private:
 		_T* _a ;
 		size_t _s ;
-		size_t _index ;	
 };
 
 template <class _T>

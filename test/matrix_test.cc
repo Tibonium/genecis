@@ -17,19 +17,19 @@ int main() {
 //	cout << "mt: " << mt << endl ;
 
 //	srand(time(NULL)) ;
-//	matrix<double> mymatx(5,5) ;
-//	for(unsigned i=0; i<mymatx.nrow(); ++i) {
-//		for(unsigned j=0; j<mymatx.ncol(); ++j) {
-//			mymatx(i,j) = rand() % 15 ;
-//			mymatx(i,j) = (16+i*8 - j*2) % 7 ;
-//		}
-//	}
-//	for(unsigned i=0; i<mymatx.nrow(); ++i) {
+	matrix<double> mymatx(5,5) ;
+	for(unsigned i=0; i<mymatx.rows(); ++i) {
+		for(unsigned j=0; j<mymatx.cols(); ++j) {
+			mymatx(i,j) = rand() % 15 ;
+			mymatx(i,j) = (16+i*8 - j*2) % 7 ;
+		}
+	}
+//	for(unsigned i=0; i<mymatx.rows(); ++i) {
 //		mymatx(i,i) = 1 ;
 //	}
 //	matrix<double> omatx(5,1) ;
-//	for(unsigned i=0; i<omatx.nrow(); ++i) {
-//		for(unsigned j=0; j<omatx.ncol(); ++j) {
+//	for(unsigned i=0; i<omatx.rows(); ++i) {
+//		for(unsigned j=0; j<omatx.cols(); ++j) {
 //			omatx(i,j) = i+j ;
 //		}
 //	}
@@ -55,23 +55,23 @@ int main() {
 //	omatx *= mymatx ;
 //	cout << "new omatx: " << omatx << endl ;
 //	mtx = &omatx ;
-//	matrix<int>* mtx = new matrix<int>(2,2) ;
-//	for(unsigned i=0; i<mtx->nrow(); ++i) {
-//		for(unsigned j=0; j<mtx->ncol(); ++j) {
-//			(*mtx)(i,j) = i*900+j*100 ;
-//		}
-//	}
+	matrix<double> mtx(2,2) ;
+	for(unsigned i=0; i<mtx.rows(); ++i) {
+		for(unsigned j=0; j<mtx.cols(); ++j) {
+			mtx(i,j) = i*900+j*100 ;
+		}
+	}
 //	cout << "mtx: " << *mtx << endl ;
 //	(*mtx)(0,0) = 2 ;
 //	(*mtx)^2 ;
 //	cout << "mtx^2: " << *mtx << endl ;
 //	
-//	matrix<double> dmtx(2,2) ;
-//	for(unsigned i=0; i<dmtx.nrow(); ++i) {
-//		for(unsigned j=0; j<dmtx.ncol(); ++j) {
-//			dmtx(i,j) = i+j*0.0234+1 ;
-//		}
-//	}
+	matrix<double> dmtx(2,2) ;
+	for(unsigned i=0; i<dmtx.rows(); ++i) {
+		for(unsigned j=0; j<dmtx.cols(); ++j) {
+			dmtx(i,j) = i+j*0.0234+1 ;
+		}
+	}
 //	cout << "dmtx: " << dmtx << endl ;
 //	dmtx.swap_row(0,1) ;
 //	cout << "dmtx after swap_row: " << dmtx << endl ;
@@ -81,11 +81,11 @@ int main() {
 //	omatx = omatx + omatx ;
 //	cout << "+omatx: " << omatx << endl ;
 //	dmtx.inverse() ;
-//	dmtx.lu_decomp(mtx,mymatx) ;
-//	cout << "dmtx decomp: upper" << endl ;
-//	cout << mtx << endl ;
-//	cout << "lower" << endl ;
-//	cout << mymatx << endl ;
+	dmtx.lu_decomp(mtx,mymatx) ;
+	cout << "dmtx decomp: upper" << endl ;
+	cout << mtx << endl ;
+	cout << "lower" << endl ;
+	cout << mymatx << endl ;
 //	cout << "LU" << endl ;
 //	cout << mymatx*mtx << endl ;
 
