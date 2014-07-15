@@ -6,12 +6,12 @@
 #define GENECIS_MATH_MATRIX_H
 
 #include <cstdio>
+#include <cassert>
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
 #include <typeinfo>
 #include "matrix_expression.h"
-//#include "matrix_math.h"
 
 namespace genecis {
 namespace math {
@@ -148,32 +148,6 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		}
 
 	/*================ Matrix Matrix Operators =================*/
-//		inline matrix* operator* (matrix& rhs) {
-//			try {
-//				if( _cols != rhs._rows ) {
-//					throw 1;
-//				} else {
-//					matrix<T>* temp = new matrix<T>(_rows,rhs._cols) ;
-//					T c = 0 ;
-//					for(size_t n=0; n<temp->_rows; ++n) {
-//						for(size_t m=0; m<temp->_cols; ++m) {
-//							for(size_t i=0; i<_cols; ++i) {
-//								c += pData[n*_rows+i] * rhs.pData[i*_cols+m] ;
-//							}
-//							temp->pData[n*_rows+m] = c ;
-//							c = 0 ;
-//						}
-//					}
-//					return temp ;
-//				}
-//			} catch (int e) {
-//				cout << "matrix::operator*: A cols(" << _cols
-//					 << ") must equal B rows(" << rhs._rows
-//					 << ")." << endl ;
-//				exit(e) ;
-//			}
-//		}
-
 		inline void operator*= (matrix& rhs) {
 			try {
 				if( _cols != rhs._rows ) {
@@ -192,29 +166,6 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 			}
 		}
 		
-		inline matrix* operator+ (matrix& rhs) {
-			try {
-				if( _rows != rhs._rows || _cols != rhs._cols ) {
-					throw 1 ;
-				} else {
-					matrix<T>* temp = new matrix<T>(_rows,rhs._cols) ;
-					for(size_t i=0; i<_rows; ++i) {
-						for(size_t j=0; j<_cols; ++j) {
-							temp->pData[i*_rows+j] = 
-								pData[i*_rows+j] + rhs.pData[i*_rows+j] ;
-						}
-					}
-					return temp ;
-				}
-			} catch (int e) {
-				cout << "matrix::operator+: Only defined for matrices with "
-					 << "the same number of rows and columns." << endl ;
-				cout << *this << endl ;
-				cout << rhs << endl ;
-				exit(e) ;
-			}
-		}
-		
 		inline void operator+= (matrix& rhs) {
 			try {
 				if( _rows != rhs._rows || _cols != rhs._cols ) {
@@ -227,29 +178,6 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 				}
 			} catch (int e) {
 				cout << "matrix::operator+=: Only defined for matrices with "
-					 << "the same number of rows and columns." << endl ;
-				cout << *this << endl ;
-				cout << rhs << endl ;
-				exit(e) ;
-			}
-		}
-		
-		inline matrix* operator- (matrix& rhs) {
-			try {
-				if( _rows != rhs._rows || _cols != rhs._cols ) {
-					throw 1 ;
-				} else {
-					matrix<T>* temp = new matrix<T>(_rows,rhs._cols) ;
-					for(size_t i=0; i<_rows; ++i) {
-						for(size_t j=0; j<_cols; ++j) {
-							temp->pData[i*_rows+j] = 
-								pData[i*_rows+j] - rhs.pData[i*_rows+j] ;
-						}
-					}
-					return temp ;
-				}
-			} catch (int e) {
-				cout << "matrix::operator-: Only defined for matrices with "
 					 << "the same number of rows and columns." << endl ;
 				cout << *this << endl ;
 				cout << rhs << endl ;
@@ -383,6 +311,10 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 			}
 		}
 
+		/**
+		 * Decomposes a matrix into its upper and lower triangular
+		 * matricies.
+		 */
 		inline void lu_decomp(matrix& upper, matrix& lower) {
 			try {
 				if( _rows != _cols ) {
@@ -870,6 +802,56 @@ matrix_prod<T> const operator* (matrix<T> const& lhs, matrix<T> const& rhs)
 {
 	assert( lhs.cols() == rhs.rows() ) ;
 	return matrix_prod<T>(lhs,rhs) ;
+}
+
+/** ===================== Matrix Addition ===================== **/
+template<typename T>
+class matrix_sum : public matrix_expression<matrix_sum,T> {
+		matrix<T> const& _lhs ;
+		matrix<T> const& _rhs ;
+	public:
+		matrix_sum(matrix<T> const& lhs, matrix<T> const& rhs) :
+			_lhs(lhs), _rhs(rhs) {}
+		size_t rows() const { return _lhs.rows() ; }
+		size_t cols() const { return _rhs.cols() ; }
+		bool verify() const { return true ; }
+		bool singular() const { return false ; }
+		T operator() (size_t i, size_t j) const {
+			return _lhs(i,j) + _rhs(i,j) ;
+		}
+};
+
+template<typename T>
+matrix_sum<T> const operator+ (matrix<T> const& lhs, matrix<T> const& rhs)
+{
+	assert( lhs.cols() == rhs.cols() &&
+			lhs.rows() == rhs.rows() ) ;
+	return matrix_sum<T>(lhs,rhs) ;
+}
+
+/** =================== Matrix Subtraction =================== **/
+template<typename T>
+class matrix_minus : public matrix_expression<matrix_minus,T> {
+		matrix<T> const& _lhs ;
+		matrix<T> const& _rhs ;
+	public:
+		matrix_minus(matrix<T> const& lhs, matrix<T> const& rhs) :
+			_lhs(lhs), _rhs(rhs) {}
+		size_t rows() const { return _lhs.rows() ; }
+		size_t cols() const { return _rhs.cols() ; }
+		bool verify() const { return true ; }
+		bool singular() const { return false ; }
+		T operator() (size_t i, size_t j) const {
+			return _lhs(i,j) - _rhs(i,j) ;
+		}
+};
+
+template<typename T>
+matrix_minus<T> const operator- (matrix<T> const& lhs, matrix<T> const& rhs)
+{
+	assert( lhs.cols() == rhs.cols() &&
+			lhs.rows() == rhs.rows() ) ;
+	return matrix_minus<T>(lhs,rhs) ;
 }
 
 }	// end of namespace math

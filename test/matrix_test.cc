@@ -95,7 +95,7 @@ int main() {
 //	cout << "omatx: " << omatx << endl ;
 	
 	srand(time(0)) ;
-	unsigned N = 2 ;
+	unsigned N = 10 ;
 	matrix<double> m(N,N) ;
 	matrix<double> m2(N,N) ;
 //	boost::numeric::ublas::matrix<double> m3(N,N) ;
@@ -107,19 +107,19 @@ int main() {
 		}
 	}
 	
-	cout << "m: " << m << endl ;
-	cout << "m2: " << m2 << endl ;
-	matrix<double> m3 = m * m2 ;
-	cout << "m3: " << m3 << endl ;
+//	cout << "m: " << m << endl ;
+//	cout << "m2: " << m2 << endl ;
+//	matrix<double> m3 = m * m2 ;
+//	cout << "m3: " << m3 << endl ;
 //	if (true) {
-//	matrix<double>* mn = m-m2 ;
-//	cout << "m-m2: " << (*mn) << endl ;
+	matrix<double> mn = m-m2 ;
+//	cout << "m-m2: " << mn << endl ;
 //	delete mn ;
 //	}
 //	cout << "m: " << m << endl ;
 //	cout << "m2: " << m2 << endl ;
 	matrix<double> temp = 2.0 * m2 ;
-	cout << "m2*2.0: " << temp << endl ;
+//	cout << "m2*2.0: " << temp << endl ;
 	cout << "Starting matrix multiply" << endl ;
 	struct timeval time ;
     struct timezone zone ;
@@ -129,7 +129,7 @@ int main() {
     for(unsigned i=0; i<N; ++i) {
 	    gettimeofday( &time, &zone ) ;
     	start = time.tv_sec + time.tv_usec * 1e-6 ;
-//	temp = m2 * m2 ;
+//		temp = m2 * m2 ;
 //		prod(m3, m3) ;
 		m2 *= 4.0 ;
 		gettimeofday( &time, &zone ) ;
@@ -138,7 +138,7 @@ int main() {
     	cout << "matrix.h Complete...time: " << (complete-start) << endl ;
     }
     cout << "Average execute time: " << avg/N << endl ;
-    cout << "temp: " << temp << endl ;
+//    cout << "temp: " << temp << endl ;
 //    gettimeofday( &time, &zone ) ;
 //    start = time.tv_sec + time.tv_usec * 1e-6 ;
 //	gettimeofday( &time, &zone ) ;
