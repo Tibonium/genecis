@@ -1,7 +1,6 @@
 #include "../math/graph.h"
 #include <fstream>
 #include <sstream>
-#include <vector>
 
 #define MAX 100
 //#define DEBUG

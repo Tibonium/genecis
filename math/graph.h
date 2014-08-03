@@ -8,6 +8,7 @@
 #include "graph_node.h"
 #include <algorithm>
 #include <iostream>
+#include <vector>
 
 namespace genecis {
 namespace math {
