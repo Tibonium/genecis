@@ -45,11 +45,11 @@ class graph_node {
 		}
 		
 		graph_node() {
-			if( _vertex != NULL ) {
-				delete _vertex ;
+			if( _vertex ) {
+				delete[] _vertex ;
 			}
-			if( _edge != NULL ) {
-				delete _edge ;
+			if( _edge ) {
+				delete[] _edge ;
 			}
 		}
 
