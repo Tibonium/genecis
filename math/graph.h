@@ -64,8 +64,8 @@ class graph {
 		
 		// Destructor
 		~graph() {
-			if( _steps != NULL ) {
-				delete _steps ;
+			if( _steps ) {
+				delete[] _steps ;
 			}
 		}
 		
