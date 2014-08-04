@@ -25,4 +25,5 @@ mathfunc_test
 template_test
 math_test
 container_test
+graph_array_test
 *~

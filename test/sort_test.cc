@@ -50,9 +50,9 @@ int main() {
 	m[1] = m2 ;
 	cout << "m[0]: " << m[0] << endl ;
 	set< matrix<int> > matset(m, 2) ;
-	matrix<int>* m3 = matset[0]*matset[1] ;
+	matrix<int> m3 = matset[0]*matset[1] ;
 	cout << "First element of set matset: " << matset[0] << endl ;
-	cout << "m3 now: " << (*m3) << endl ;
+	cout << "m3 now: " << m3 << endl ;
 
 	int s1[] = {1, 3, 5, 6, 8} ;
 	int s2[] = {2, 3, 4, 7, 9} ;

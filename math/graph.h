@@ -50,7 +50,7 @@ class graph {
 				_g[i].clear() ;
 			}
 			_g[start]._distance = 0 ;
-			fill_n(_steps, _num_nodes, INF ) ;
+			fill_n( _steps, _num_nodes, INF ) ;
 			find_dist( start ) ;
 		}
 		
@@ -64,8 +64,8 @@ class graph {
 		
 		// Destructor
 		~graph() {
-			if( _steps != NULL ) {
-				delete _steps ;
+			if( _steps ) {
+				delete[] _steps ;
 			}
 		}
 		

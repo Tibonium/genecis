@@ -43,7 +43,7 @@ class array {
 			return _a[t] ;
 		}
 		
-		template<typename _index>
+		template<int _index>
 		inline void operator= (_T c) {
 			_a[_index] = c ;
 		}

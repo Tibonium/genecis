@@ -9,7 +9,7 @@ IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime sort_test vector_test mathfunc_test \
-	container_test #	gravity_test
+	container_test graph_array_test #	gravity_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test
 MATRIX = math/matrix.h math/matrix_expression.h
 CONTAINER = container/array.h container/dynamic_array.h
@@ -105,6 +105,10 @@ sort_test: test/sort_test.cc
 mathfunc_test:  test/mathfunc_test.cc
 	@echo "Building mathfunc_test..."
 	@$(CC) -o mathfunc_test test/mathfunc_test.cc $(CFLAGS)
+	
+graph_array_test:  test/graph_array_test.cc
+	@echo "Building graph_array_test..."
+	@$(CC) -o graph_array_test test/graph_array_test.cc $(CFLAGS)
 	
 # Server Tests
 server: socket_test server_test
