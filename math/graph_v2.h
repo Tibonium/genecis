@@ -1,5 +1,5 @@
 /**
- *	@file graph.h
+ *	@file graph_v2.h
  */
 
 #ifndef GENECIS_MATH_GRAPH_V2_H

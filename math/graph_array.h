@@ -230,6 +230,22 @@ class graph_array {
 		}
 		
 		/**
+		 * Finds the node in the graph with the smallest
+		 * path distance.
+		 */
+		int find_smallest() {
+			int m = INF ;
+			int v = 0 ;
+			for(size_t i=1; i<_num_vertices; ++i) {
+				if ( !_visited[i] && _distance[i] < m ) {
+					m = _distance[i] ;
+					v = i ;
+				}
+			}
+			return v ;
+		}
+
+		/**
 		 * Recursive formula to find the shortest path length from
 		 * the home node to all other nodes in the graph.
 		 */
@@ -250,10 +266,12 @@ class graph_array {
 						}
 					}
 				}
-				for(size_t i=index_min; i<index_max; ++i) {
-					int k = _second_vertex[i] ;
-					find_path( k ) ;
-				}
+				int next = find_smallest() ;
+				find_path( next ) ;
+//				for(size_t i=index_min; i<index_max; ++i) {
+//					int k = _second_vertex[i] ;
+//					find_path( k ) ;
+//				}
 			}
 		}
 
