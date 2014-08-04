@@ -268,10 +268,6 @@ class graph_array {
 				}
 				int next = find_smallest() ;
 				find_path( next ) ;
-//				for(size_t i=index_min; i<index_max; ++i) {
-//					int k = _second_vertex[i] ;
-//					find_path( k ) ;
-//				}
 			}
 		}
 
