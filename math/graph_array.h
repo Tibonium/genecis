@@ -13,7 +13,7 @@
 #include <map>
 
 namespace genecis {
-namespace math{
+namespace math {
 
 #define INF 99999999
 
