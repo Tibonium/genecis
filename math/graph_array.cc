@@ -93,6 +93,53 @@ void graph_array::scan_graph( const size_t& home ) {
 }
 
 /**
+ * Recursive formula to find the shortest path length from
+ * the home node to all other nodes in the graph.
+ */
+void graph_array::find_path( const int& current ) {
+	if ( _unvisited[current] ) {
+		_unvisited.erase( current ) ;
+		size_t index_min = _first_vertex[current] ;
+		size_t index_max = _first_vertex[current+1] ;
+		int temp_distance ;
+		for(size_t i=index_min; i<index_max; ++i) {
+			int k = _second_vertex[i] ;
+			if ( _unvisited[k] ) {
+				temp_distance = _distance[current] + _weight[i] ;
+				if ( temp_distance < _distance[k] ) {
+					_distance[k] = temp_distance ;
+					_path[k] = _path[current] ;
+					_path[k].push_back( current ) ;
+				}
+			}
+		}
+		int next = find_smallest() ;
+		find_path( next ) ;
+	}
+}
+
+
+/**
+ * Finds the node in the graph with the smallest
+ * path distance.
+ */
+int graph_array::find_smallest() {
+	int m = INF ;
+	int v = 0 ;
+	for(map<int,int*>::iterator it=_unvisited.begin(); 
+			it!=_unvisited.end(); ++it)
+	{
+		if( it->second ) {
+			if( (*it->second) < m ) {
+				m = (*it->second) ;
+				v = it->first ;
+			}
+		}
+	}
+	return v ;
+}
+
+/**
  * Creates the graph from a vector of arc_pairs.
  */
 void graph_array::generate_graph( vector<arc_pair> g ) {
@@ -175,50 +222,4 @@ void graph_array::create_graph( const char* filename ) {
 	}
 	_distance.resize( _num_vertices ) ;
 	_path.resize( _num_vertices ) ;
-}
-
-/**
- * Finds the node in the graph with the smallest
- * path distance.
- */
-int graph_array::find_smallest() {
-	int m = INF ;
-	int v = 0 ;
-	for(map<int,int*>::iterator it=_unvisited.begin(); 
-			it!=_unvisited.end(); ++it)
-	{
-		if( it->second ) {
-			if( (*it->second) < m ) {
-				m = (*it->second) ;
-				v = it->first ;
-			}
-		}
-	}
-	return v ;
-}
-
-/**
- * Recursive formula to find the shortest path length from
- * the home node to all other nodes in the graph.
- */
-void graph_array::find_path( const int& current ) {
-	if ( _unvisited[current] ) {
-		_unvisited.erase( current ) ;
-		size_t index_min = _first_vertex[current] ;
-		size_t index_max = _first_vertex[current+1] ;
-		int temp_distance ;
-		for(size_t i=index_min; i<index_max; ++i) {
-			int k = _second_vertex[i] ;
-			if ( _unvisited[k] ) {
-				temp_distance = _distance[current] + _weight[i] ;
-				if ( temp_distance < _distance[k] ) {
-					_distance[k] = temp_distance ;
-					_path[k] = _path[current] ;
-					_path[k].push_back( current ) ;
-				}
-			}
-		}
-		int next = find_smallest() ;
-		find_path( next ) ;
-	}
 }

@@ -98,6 +98,18 @@ class graph_array {
 		vector<vector<int> > _path ;
 
 		/**
+		 * Recursive formula to find the shortest path length from
+		 * the home node to all other nodes in the graph.
+		 */
+		void find_path( const int& current ) ;
+
+		/**
+		 * Finds the node in the graph with the smallest
+		 * path distance.
+		 */
+		int find_smallest() ;
+
+		/**
 		 * Creates the graph from a vector of arc_pairs.
 		 * The arc_pairs are split into the new format of
 		 * _first_vertex, _second_vertex, and _weight following 
@@ -112,18 +124,6 @@ class graph_array {
 		 * used to construct the arrays in the graph_array class.
 		 */
 		void create_graph( const char* filename ) ;
-		
-		/**
-		 * Finds the node in the graph with the smallest
-		 * path distance.
-		 */
-		int find_smallest() ;
-
-		/**
-		 * Recursive formula to find the shortest path length from
-		 * the home node to all other nodes in the graph.
-		 */
-		void find_path( const int& current ) ;
 
 };
 
