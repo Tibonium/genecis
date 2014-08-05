@@ -43,8 +43,18 @@ class arc_pair {
 		 */
 		~arc_pair() {}
 		
-		friend ostream& operator<< ( ostream& os, const arc_pair& output ) ;
-		
+		/**
+		 * Formated output to standard out
+		 */
+		friend ostream& operator<< ( ostream& os, const arc_pair& output ) {
+			os << "( "
+			   << output.first_node() << " "
+			   << output.second_node() << " "
+			   << output.weight()
+			   << " )" ;
+			return os ;
+		}
+
 		/** Various operator overloads **/
 		
 		void operator= ( const arc_pair& rhs ) {
@@ -107,15 +117,6 @@ class arc_pair {
 		int _v ;
 		int _w ;
 
-};
-
-ostream& operator<< ( ostream& os, const arc_pair& output ) {
-	os << "( "
-	   << output.first_node() << " "
-	   << output.second_node() << " "
-	   << output.weight()
-	   << " )" ;
-	return os ;
 };
 
 }	// end of namespace math

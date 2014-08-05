@@ -106,9 +106,13 @@ mathfunc_test:  test/mathfunc_test.cc
 	@echo "Building mathfunc_test..."
 	@$(CC) -o mathfunc_test test/mathfunc_test.cc $(CFLAGS)
 	
-graph_array_test:  test/graph_array_test.cc
+math/graph_array.o: math/graph_array.cc
+	@echo "Creating obj file graph_array.o..."
+	@$(CC) -c math/graph_array.cc -o math/graph_array.o
+
+graph_array_test:  test/graph_array_test.cc math/graph_array.o
 	@echo "Building graph_array_test..."
-	@$(CC) -o graph_array_test test/graph_array_test.cc $(CFLAGS)
+	@$(CC) -o graph_array_test test/graph_array_test.cc math/graph_array.o $(CFLAGS)
 	
 # Server Tests
 server: socket_test server_test
