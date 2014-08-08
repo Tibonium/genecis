@@ -20,39 +20,65 @@ class array {
 
 	public:
 	
-		// Constructor
-		array(size_t t) {
+		/**
+		 * Constructs an array of type _T with size specificed and
+		 * fills the array with the value c or zeros.
+		 */
+		array(size_t t, const _T& c=0) {
 			_a = new _T[t] ;
-			memset(_a, 0, t) ;
+			fill_n(_a, t, c) ;
 			_s = t ;
 		}
 		
-		// Destructor
-		~array() {
+		/**
+		 * Destructor
+		 */
+		virtual ~array() {
 			if( _a ) {
 				delete[] _a ;
 				_a = NULL ;
 			}
 		}
 
-		inline size_t size() {
+		/**
+		 * Returns the number of elements in the data array
+		 */
+		size_t size() const {
 			return _s ;
 		}
+
+		/**
+		 * Returns a pointer to the data array in the class
+		 */
+		_T* data() const {
+			return _a ;
+		}
 		
-		inline _T& operator() (size_t t) {
+		/**
+		 * Element accessor
+		 */
+		_T& operator() (size_t t) {
 			return _a[t] ;
 		}
 		
+		/**
+		 * Element assignment
+		 */
 		template<int _index>
-		inline void operator= (_T c) {
+		void operator= (_T c) {
 			_a[_index] = c ;
 		}
 		
-	friend std::ostream& operator<< <>
-		(std::ostream& os, array& a) ;
+		/**
+		 * Output format
+		 */
+		friend std::ostream& operator<< <>
+			(std::ostream& os, array& a) ;
 	
 	private:
+		// Data array
 		_T* _a ;
+		// size of array
 		size_t _s ;
 };
 

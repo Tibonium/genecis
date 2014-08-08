@@ -9,18 +9,20 @@ IDIR = /usr/local/include
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime sort_test vector_test mathfunc_test \
-	container_test graph_array_test #	gravity_test
+	container_test graph_array_test pattern_test#	gravity_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test
 MATRIX = math/matrix.h math/matrix_expression.h
 CONTAINER = container/array.h container/dynamic_array.h
 MATH_HDR = ${wildcard math/*.h}
-MATH_OBJ = ${wildcard math/*.o}
 DIST_HDR = ${wildcard distribution/*.h}
 TREE_HDR = ${wildcard tree/*.h}
 PHYS_HDR = ${wildcard physics/*.h}
-
 SRVR_FILES = ${wildcard net/*.cc}
-SRVR_OBJ = $(wildcard net/*.cc)
+
+MATH_OBJ = ${wildcard math/*.o}
+AI_OBJ = ${wildcard ai/*.o}
+PHYS_OBJ = ${wildcard physics/*.o}
+SRVR_OBJ = $(wildcard net/*.o)
 
 all: $(TESTS) $(MISC_TESTS)
 	@echo "Build successful"
@@ -29,12 +31,14 @@ all: $(TESTS) $(MISC_TESTS)
 clean:
 	@for test in $(TESTS) ; do \
 		rm $$test ; \
+		@echo "removed " $$test "\n" \
 	done
 	@echo "removed " $(TESTS)
 	@for test in $(MISC_TESTS) ; do \
 		rm $$test ; \
+		@echo "removed " $$test "\n" \
 	done
-	@echo "removed " $(MISC_TESTS)
+#	@rm -f .gitignore
 
 # Various miscellaneous test
 misc_test: $(MISC_TESTS)
@@ -62,14 +66,14 @@ template_test: misc_test/template_test.cc
 	@$(CC) -o template_test misc_test/template_test.cc $(CFLAGS)
 
 # Regression Tests
-math/ode.o: math/ode.cc
+math/ode.o: math/ode.cc math/ode.h
 	@echo "Creating obj file ode.o..."
 	@$(CC) -c math/ode.cc -o math/ode.o
 	
 difq_test: test/difq_test.cc math/ode.o
 	@echo "Building difq_test..."
 	@$(CC) -o difq_test test/difq_test.cc math/ode.o $(CFLAGS)
-	
+		
 matrix_test: test/matrix_test.cc $(MATRIX)
 	@echo "Building matrix_test..."
 	@$(CC) -o matrix_test test/matrix_test.cc $(CFLAGS)
@@ -106,20 +110,28 @@ mathfunc_test:  test/mathfunc_test.cc
 	@echo "Building mathfunc_test..."
 	@$(CC) -o mathfunc_test test/mathfunc_test.cc $(CFLAGS)
 	
-math/graph_array.o: math/graph_array.cc
+math/graph_array.o: math/graph_array.cc math/graph_array.h
 	@echo "Creating obj file graph_array.o..."
 	@$(CC) -c math/graph_array.cc -o math/graph_array.o
-
+	
 graph_array_test:  test/graph_array_test.cc math/graph_array.o
 	@echo "Building graph_array_test..."
 	@$(CC) -o graph_array_test test/graph_array_test.cc math/graph_array.o $(CFLAGS)
+
+ai/number_pattern.o: ai/number_pattern.cc ai/number_pattern.h
+	@echo "Creating obj file number_pattern.o..."
+	@$(CC) -c ai/number_pattern.cc -o ai/number_pattern.o
+
+pattern_test:  test/pattern_test.cc ai/number_pattern.o
+	@echo "Building pattern_test..."
+	@$(CC) -o pattern_test test/pattern_test.cc ai/number_pattern.o $(CFLAGS)
 	
 # Server Tests
 server: socket_test server_test
 	@echo "Server build complete"
 	@date
 
-net/isocket.o: net/isocket.cc
+net/isocket.o: net/isocket.cc net/isocket.h
 	@echo "Creating server obj file net/isocket.o..."
 	@$(CC) -c net/isocket.cc -o net/isocket.o
 
@@ -136,10 +148,10 @@ server_test: test/server_test.cc $(SRVR_OBJ)
 	@$(CC) -o server_test test/server_test.cc $(SRVR_OBJ) $(CFLAGS)
 	
 # Physics Tests
-gravity_test: test/gravity_test.cc physics/gravity.o
+gravity_test: test/gravity_test.cc physics/gravity.o physics/gravity.h
 	@echo "Building gravity_test..."
 	@$(CC) -o gravity_test test/gravity_test.cc physics/gravity.o $(CFLAGS)
-	
+		
 physics/gravity.o: physics/gravity.cc
 	@echo "Creating obj file gravity.o..."
 	@$(CC) -c physics/gravity.cc -o physics/gravity.o
