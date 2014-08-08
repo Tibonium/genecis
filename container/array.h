@@ -24,41 +24,53 @@ class array {
 		 * Constructs an array of type _T with size specificed and
 		 * fills the array with the value c or zeros.
 		 */
-		array(size_t t, const _T& c=0) {
-			_a = new _T[t] ;
-			fill_n(_a, t, c) ;
-			_s = t ;
+		array(size_t s, const _T& c=0) {
+			__data = new _T[s] ;
+			fill_n(__data, s, c) ;
+			__size = s ;
 		}
 		
 		/**
 		 * Destructor
 		 */
 		virtual ~array() {
-			if( _a ) {
-				delete[] _a ;
-				_a = NULL ;
+			if( __data ) {
+				delete[] __data ;
+				__data = NULL ;
 			}
 		}
 
 		/**
 		 * Returns the number of elements in the data array
 		 */
+		size_t size() {
+			return __size ;
+		}
+
 		size_t size() const {
-			return _s ;
+			return __size ;
 		}
 
 		/**
 		 * Returns a pointer to the data array in the class
 		 */
+		_T* data() {
+			return __data ;
+		}
+
 		_T* data() const {
-			return _a ;
+			return __data ;
 		}
 		
 		/**
 		 * Element accessor
 		 */
 		_T& operator() (size_t t) {
-			return _a[t] ;
+			return __data[t] ;
+		}
+		
+		_T& operator() (size_t t) const {
+			return __data[t] ;
 		}
 		
 		/**
@@ -66,7 +78,7 @@ class array {
 		 */
 		template<int _index>
 		void operator= (_T c) {
-			_a[_index] = c ;
+			__data[_index] = c ;
 		}
 		
 		/**
@@ -77,9 +89,9 @@ class array {
 	
 	private:
 		// Data array
-		_T* _a ;
+		_T* __data ;
 		// size of array
-		size_t _s ;
+		size_t __size ;
 };
 
 template <class _T>

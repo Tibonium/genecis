@@ -24,25 +24,29 @@ AI_OBJ = ${wildcard ai/*.o}
 PHYS_OBJ = ${wildcard physics/*.o}
 SRVR_OBJ = $(wildcard net/*.o)
 
-all: $(TESTS) $(MISC_TESTS)
-	@echo "Build successful"
+all: regression_test misc_test
 	@date
 
 clean:
+	@echo "The following tests have been removed: "
 	@for test in $(TESTS) ; do \
-		rm $$test ; \
-		@echo "removed " $$test "\n" \
+		if [ -a $$test ] ; \
+		then \
+			rm $$test ; \
+		fi ; \
+		echo "  " $$test ; \
 	done
-	@echo "removed " $(TESTS)
 	@for test in $(MISC_TESTS) ; do \
-		rm $$test ; \
-		@echo "removed " $$test "\n" \
+		if [ -a $$test ] ; \
+		then \
+			rm $$test ; \
+		fi ; \
+		echo "  " $$test ; \
 	done
 
 # Various miscellaneous test
 misc_test: $(MISC_TESTS)
-	@echo "Miscellaneous Tests built."
-	@date
+	@echo "Miscellaneous Tests built"
 
 reference_test: misc_test/reference_test.cc
 	@echo "Building reference_test..."
@@ -65,6 +69,9 @@ template_test: misc_test/template_test.cc
 	@$(CC) -o template_test misc_test/template_test.cc $(CFLAGS)
 
 # Regression Tests
+regression_test: $(TESTS)
+	@echo "Regression Tests built"
+
 math/ode.o: math/ode.cc math/ode.h
 	@echo "Creating obj file ode.o..."
 	@$(CC) -c math/ode.cc -o math/ode.o

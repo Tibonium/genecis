@@ -15,7 +15,7 @@ namespace container {
 
 using namespace std ;
 
-template<typename T>
+template<class _T>
 class dynamic_array {
 
 	public:
@@ -23,60 +23,58 @@ class dynamic_array {
 		 * Constructor with specified size.
 		 * @param size		size of array to be allocated
 		 */
-		dynamic_array(int size) : _size(size) {
-			try {
-				if ( _size <= 0 ) {
-					throw 1 ;
-				} else {
-					_data = new T[size] ;
-					memset(_data,0,size*sizeof(T)) ;
-				}
-			} catch (int e) {
-				cout << "Cannot initialize array of size zero or with"
-					 << " a negative size." << endl ;
-				exit(e) ;
-			}
+		dynamic_array(size_t size) : __size(size) {
+			__data = new _T[__size] ;
+			memset( __data, 0, size*sizeof(_T) ) ;
 		}
 		
 		/**
 		 * Default constructor, intializes array size to default_size
 		 */
-		dynamic_array() : _size(DEFAULT_SIZE) {
-			_data = new T[_size] ;
-			memset(_data,0,_size*sizeof(T)) ;
+		dynamic_array() : __size(DEFAULT_SIZE) {
+			__data = new _T[__size] ;
+			memset( __data, 0, __size*sizeof(_T) ) ;
 		}
 		
 		/**
 		 * Copy constructor
 		 */
 		dynamic_array(dynamic_array const& other) {
-			_size = other.size() ;
-			_data = new T[_size] ;
-			memcpy(_data,other.data(),_size*sizeof(T)) ;
+			__size = other.size() ;
+			__data = new _T[__size] ;
+			memcpy( __data, other.data(), __size*sizeof(_T) ) ;
 		}
 
 		/**
 		 * Destructor
 		 */
 		virtual ~dynamic_array() {
-			if( _data ) {
-				delete[] _data ;
-				_data = NULL ;
+			if( __data ) {
+				delete[] __data ;
+				__data = NULL ;
 			}
 		}
 
 		/**
 		 * Returns the maximum capacity of the data array.
 		 */
-		inline int size() const {
-			return _size ;
+		int size() {
+			return __size ;
+		}
+		
+		int size() const {
+			return __size ;
 		}
 		
 		/**
 		 * Returns a pointer to the data array of the class.
 		 */
-		inline T* data() const {
-			return _data ;
+		_T* data() {
+			return __data ;
+		}
+		
+		_T* data() const {
+			return __data ;
 		}
 		
 		/**
@@ -85,10 +83,10 @@ class dynamic_array {
 		 */
 		string str() const {
 			string s = "[ " ;
-			for(int i=0; i<_size; ++i) {
+			for(size_t i=0; i<__size; ++i) {
 				ostringstream o ;
 				if ( i != 0 ) s += ", " ;
-				o << _data[i] ;
+				o << __data[i] ;
 				s += o.str() ;
 			}
 			s += " ]" ;
@@ -102,13 +100,13 @@ class dynamic_array {
 		 * dynamic array.
 		 */
 		dynamic_array operator+(dynamic_array& rhs) {
-			int temp_size = _size + rhs.size() ;
-			dynamic_array<T>* temp = new dynamic_array<T>(temp_size) ;
-			for(int i=0; i<_size; ++i) {
+			int temp_size = __size + rhs.size() ;
+			dynamic_array<_T>* temp = new dynamic_array<_T>(temp_size) ;
+			for(size_t i=0; i<__size; ++i) {
 				(*temp)(i) = (*this)(i) ; 
 			}
-			for(int i=_size; i<temp_size; ++i) {
-				(*temp)(i) = rhs(i-_size) ;
+			for(int i=__size; i<temp_size; ++i) {
+				(*temp)(i) = rhs(i-__size) ;
 			}
 			return (*temp) ;
 		}
@@ -116,28 +114,28 @@ class dynamic_array {
 		/**
 		 * Concatenates this array with the rhs into this array.
 		 */
-		inline void operator+=(dynamic_array const& rhs) {
-			int temp_size = _size + rhs.size() ;
-			dynamic_array<T>* temp = new dynamic_array<T>(temp_size) ;
-			for(int i=0; i<_size; ++i) {
+		void operator+=(dynamic_array const& rhs) {
+			int temp_size = __size + rhs.size() ;
+			dynamic_array<_T>* temp = new dynamic_array<_T>(temp_size) ;
+			for(size_t i=0; i<__size; ++i) {
 				(*temp)(i) = (*this)(i) ; 
 			}
-			for(int i=_size; i<temp_size; ++i) {
-				(*temp)(i) = rhs(i-_size) ;
+			for(int i=__size; i<temp_size; ++i) {
+				(*temp)(i) = rhs(i-__size) ;
 			}
-			delete[] _data ;
-			_size = temp_size ;
-			_data = temp->data() ;
+			delete[] __data ;
+			__size = temp_size ;
+			__data = temp->data() ;
 		}
 		
 		/**
 		 * Class assignment operator
 		 */
-		inline void operator=(dynamic_array const& rhs) {
-			delete[] _data ;
-			_size = rhs.size() ;
-			_data = new T[_size] ;
-			memcpy(_data,rhs.data(),_size*sizeof(T)) ;
+		void operator=(dynamic_array const& rhs) {
+			delete[] __data ;
+			__size = rhs.size() ;
+			__data = new _T[__size] ;
+			memcpy( __data, rhs.data(), __size*sizeof(_T) ) ;
 		}
 		
 		/**
@@ -148,21 +146,21 @@ class dynamic_array {
 		 *	2. If index is negative, _data will be accessed from the end
 		 *	   in reverse order.
 		 */
-		inline T& operator() (int index) {
-			if( index > _size-1 ) {
+		_T& operator() (size_t index) {
+			if( index > __size-1 ) {
 				resize(index+1) ;
 			} else if ( index < 0 ) {
-				index += _size ;
+				index += __size ;
 			}
-			return _data[index] ;
+			return __data[index] ;
 		}
 		
 		/**
 		 * Array assignment operator
 		 */
-		template<int _index>
-		inline void operator= (T c) {
-			_data[_index] = c ;
+		template<size_t _index>
+		void operator= (_T c) {
+			__data[_index] = c ;
 		}
 
 	private:
@@ -174,12 +172,12 @@ class dynamic_array {
 		/**
 		 * Maximum size of the array
 		 */
-		int _size ;
+		size_t __size ;
 		
 		/**
 		 * Pointer to the data stored in the dynamic_array
 		 */
-		T* _data ;
+		_T* __data ;
 		
 		/**
 		 * Resizes the data array to prevent the array from going
@@ -187,12 +185,12 @@ class dynamic_array {
 		 * the array.
 		 */
 		void resize(const int& new_size) {
-			T* n_data = new T[new_size] ;
-			memset(n_data,0,new_size*sizeof(T)) ;
-			memcpy(n_data,_data,_size*sizeof(T)) ;
-			delete[] _data ;
-			_data = n_data ;
-			_size = new_size ;
+			_T* n_data = new _T[new_size] ;
+			memset( n_data, 0, new_size*sizeof(_T) ) ;
+			memcpy( n_data, __data, __size*sizeof(_T) ) ;
+			delete[] __data ;
+			__data = n_data ;
+			__size = new_size ;
 		}
 
 };

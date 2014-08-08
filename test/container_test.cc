@@ -1,4 +1,5 @@
 #include "../container/dynamic_array.h"
+#include "../container/array.h"
 
 using namespace genecis::container ;
 
