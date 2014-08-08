@@ -18,4 +18,12 @@ int main() {
 	a(10) = 10 ;
 	cout << a.str() << endl ;
 	
+	array<int> k(5) ;
+	array<int>::iterator i=k.rbegin() ;
+	for(unsigned j=0; j<k.size(); ++j) {
+		--i ;
+		(*i) = j+10 ;
+	}
+	cout << k << endl ;
+	
 }
