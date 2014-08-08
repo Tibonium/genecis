@@ -38,7 +38,6 @@ clean:
 		rm $$test ; \
 		@echo "removed " $$test "\n" \
 	done
-#	@rm -f .gitignore
 
 # Various miscellaneous test
 misc_test: $(MISC_TESTS)
