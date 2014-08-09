@@ -6,6 +6,7 @@
 #define GENECIS_CONTAINER_ARRAY_H
 
 #include <iostream>
+#include <cstddef>
 
 namespace genecis {
 namespace container {

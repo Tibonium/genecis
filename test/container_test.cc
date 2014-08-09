@@ -19,7 +19,7 @@ int main() {
 	cout << a.str() << endl ;
 	
 	array<int> k(5) ;
-	array<int>::iterator i=k.rbegin() ;
+	array<int>::reverse_iterator i=k.rbegin() ;
 	for(unsigned j=0; j<k.size(); ++j) {
 		--i ;
 		(*i) = j+10 ;
