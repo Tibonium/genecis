@@ -18,14 +18,21 @@ namespace math {
 
 using namespace std ;
 
-template<class T> class matrix ;
+template<class _T> class matrix ;
 
-template<class T>
-std::ostream& operator<< (std::ostream& os, matrix<T>& output) ;
+template<class _T>
+std::ostream& operator<< (std::ostream& os, matrix<_T>& output) ;
 
-template<class T> class matrix : public matrix_expression<matrix, T> {
+template<class _T> class matrix : public matrix_expression<matrix, _T> {
 
-		typedef matrix<T> self_type ;
+		typedef matrix<_T> 		self_type ;
+		typedef _T			value_type ;
+		typedef size_t			size_type ;
+		typedef _T *			pointer ;
+		typedef _T &			reference ;
+		typedef const _T &		const_reference ;
+		typedef pointer		iterator ;
+		typedef const pointer	const_iterator ;
 
 	public:
 /******************** Constructor/Destructors *********************/
@@ -34,30 +41,30 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		 * Creates an NxM matrix from a basic array
 		 * Defaults to a 1x1 matrix
 		 */
-		matrix(size_t rows=1, size_t cols=1) : 
-			_rows(rows), _cols(cols),
+		matrix(size_type _rows=1, size_type _cols=1) : 
+			__rows(_rows), __cols(_cols),
 			bSingular(false), bVerify(true)
 		{
-			size_t N = _rows * _cols ;
-			pData = new T[N] ;
-			memset(pData, 0, N * sizeof(T)) ;
+			size_type N = __rows * __cols ;
+			__data = new value_type[N] ;
+			memset(__data, 0, N * sizeof(value_type)) ;
 		}
 
 		/**
 		 * Copy Constructor
 		 */
 		template<template <typename> class E>
-		matrix(matrix_expression<E,T> const& r) {
-			E<T> const& rhs = r ;
-			_rows = rhs.rows() ;
-			_cols = rhs.cols() ;
+		matrix(matrix_expression<E,value_type> const& r) {
+			E<value_type> const& rhs = r ;
+			__rows = rhs.rows() ;
+			__cols = rhs.cols() ;
 			bVerify = true ;
 			bSingular = rhs.singular() ;
-			size_t N = _rows * _cols ;
-			pData = new T[N] ;
-			for(size_t i=0; i<_rows; ++i) {
-				for(size_t j=0; j<_cols; ++j) {
-					pData[i*_cols+j] = rhs(i,j) ;
+			size_type N = __rows * __cols ;
+			__data = new value_type[N] ;
+			for(size_type i=0; i<__rows; ++i) {
+				for(size_type j=0; j<__cols; ++j) {
+					__data[i*__cols+j] = rhs(i,j) ;
 				}
 			}
 		}
@@ -66,25 +73,25 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		 * Destructor
 		 */
 		virtual ~matrix() {
-			if(pData) {
-				delete[] pData ;
-				pData = NULL ;
+			if(__data) {
+				delete[] __data ;
+				__data = NULL ;
 			}
 		}
 
-		inline size_t rows() const {
-			return _rows ;
+		inline size_type rows() const {
+			return __rows ;
 		}
 
-		inline size_t cols() const {
-			return _cols ;
+		inline size_type cols() const {
+			return __cols ;
 		}
 
 		inline bool singular() const {
 			return bSingular ;
 		}
 		
-		inline T det() {
+		inline value_type det() {
 			if ( bVerify ) {
 				singularity() ;
 			}
@@ -95,54 +102,54 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 			return bVerify ;
 		}
 		
-		inline T* data() const {
-			return pData ;
+		inline value_type* data() const {
+			return __data ;
 		}
 
 /************************* Operators ******************************/
 		/* Accessor and Assigner */
-		inline T& operator() (size_t i, size_t j) const {
-			return pData[ i * _cols + j ] ;
+		inline value_type& operator() (size_type i, size_type j) const {
+			return __data[ i * __cols + j ] ;
 		}
 
-		template<size_t _index>
-		inline void operator= (T c) {
+		template<size_type _index>
+		inline void operator= (value_type c) {
 			bVerify = true ;
-			pData[_index] = c ;
+			__data[_index] = c ;
 		}
 
 	/*================= Matrix Scalar Operators ================*/
-		inline void operator*= (T c) {
-			for(size_t i=0; i<(_rows*_cols); ++i) {
-				pData[i] *= c ;
+		inline void operator*= (value_type c) {
+			for(size_type i=0; i<(__rows*__cols); ++i) {
+				__data[i] *= c ;
 			}
-			m_det *= pow(c,_rows) ; ;
+			m_det *= pow(c,__rows) ; ;
 		}
 
-		inline void operator/= (T c) {
-			for(size_t i=0; i<(_rows*_cols); ++i) {
-				pData[i] /= c ;
+		inline void operator/= (value_type c) {
+			for(size_type i=0; i<(__rows*__cols); ++i) {
+				__data[i] /= c ;
 			}
-			m_det /= pow(c,_rows) ; ;
+			m_det /= pow(c,__rows) ; ;
 		}
 
-		inline void operator+= (T c) {
-			for(size_t i=0; i<(_rows*_cols); ++i) {
-				pData[i] += c ;
-			}
-			determinant() ;
-		}
-
-		inline void operator-= (T c) {
-			for(size_t i=0; i<(_rows*_cols); ++i) {
-				pData[i] -= c ;
+		inline void operator+= (value_type c) {
+			for(size_type i=0; i<(__rows*__cols); ++i) {
+				__data[i] += c ;
 			}
 			determinant() ;
 		}
 
-		inline void operator%= (T c) {
-			for(size_t i=0; i<(_rows*_cols); ++i) {
-				pData[i] %= c ;
+		inline void operator-= (value_type c) {
+			for(size_type i=0; i<(__rows*__cols); ++i) {
+				__data[i] -= c ;
+			}
+			determinant() ;
+		}
+
+		inline void operator%= (value_type c) {
+			for(size_type i=0; i<(__rows*__cols); ++i) {
+				__data[i] %= c ;
 			}
 			determinant() ;
 		}
@@ -150,17 +157,17 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 	/*================ Matrix Matrix Operators =================*/
 		inline void operator*= (matrix& rhs) {
 			try {
-				if( _cols != rhs._rows ) {
+				if( __cols != rhs.__rows ) {
 					throw 1;
 				} else {
-					matrix<T> temp = *this ;
+					matrix<value_type> temp = *this ;
 					*this = temp * rhs ;
 					this->bVerify = true ;
 					this->bSingular = false ;
 				}
 			} catch (int e) {
-				cout << "matrix::operator*=: A cols(" << _cols
-					 << ") must equal B rows(" << rhs._rows
+				cout << "matrix::operator*=: A _cols(" << __cols
+					 << ") must equal B _rows(" << rhs.__rows
 					 << ")." << endl ;
 				exit(e) ;
 			}
@@ -168,17 +175,17 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		
 		inline void operator+= (matrix& rhs) {
 			try {
-				if( _rows != rhs._rows || _cols != rhs._cols ) {
+				if( __rows != rhs.__rows || __cols != rhs.__cols ) {
 					throw 1 ;
 				} else {
-					matrix<T> temp = *this ;
+					matrix<value_type> temp = *this ;
 					*this = temp + rhs ;
 					bVerify = true ;
 					bSingular = false ;
 				}
 			} catch (int e) {
 				cout << "matrix::operator+=: Only defined for matrices with "
-					 << "the same number of rows and columns." << endl ;
+					 << "the same number of _rows and columns." << endl ;
 				cout << *this << endl ;
 				cout << rhs << endl ;
 				exit(e) ;
@@ -187,17 +194,17 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		
 		inline void operator-= (matrix& rhs) {
 			try {
-				if( _rows != rhs._rows || _cols != rhs._cols ) {
+				if( __rows != rhs.__rows || __cols != rhs.__cols ) {
 					throw 1 ;
 				} else {
-					matrix<T> temp = *this ;
+					matrix<value_type> temp = *this ;
 					*this = temp - rhs ;
 					bVerify = true ;
 					bSingular = false ;
 				}
 			} catch (int e) {
 				cout << "matrix::operator-=: Only defined for matrices with "
-					 << "the same number of rows and columns." << endl ;
+					 << "the same number of _rows and columns." << endl ;
 				cout << *this << endl ;
 				cout << rhs << endl ;
 				exit(e) ;
@@ -220,10 +227,10 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		 * Mutates the matrix into its transpose.
 		 */
 		inline void transpose() {
-			matrix<T>* temp = new matrix<T>(_cols,_rows) ;
-			for(size_t i=0; i<_rows; ++i) {
-				for(size_t j=0; j<_cols; ++j) {
-					temp->pData[j*_rows+i] = pData[i*_rows+j] ;
+			matrix<value_type>* temp = new matrix<value_type>(__cols,__rows) ;
+			for(size_type i=0; i<__rows; ++i) {
+				for(size_type j=0; j<__cols; ++j) {
+					temp->__data[j*__rows+i] = __data[i*__rows+j] ;
 				}
 			}
 			*this = *temp ;
@@ -236,10 +243,10 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		 * remains unaltered.
 		 */
 		inline void transpose(matrix& m_trans) {
-			m_trans.resize(_cols, _rows) ;
-			for(size_t i=0; i<_rows; ++i) {
-				for(size_t j=0; j<_cols; ++j) {
-					m_trans->pData[j*_rows+i] = pData[i*_rows+j] ;
+			m_trans.resize(__cols, __rows) ;
+			for(size_type i=0; i<__rows; ++i) {
+				for(size_type j=0; j<__cols; ++j) {
+					m_trans->__data[j*__rows+i] = __data[i*__rows+j] ;
 				}
 			}
 		}
@@ -254,7 +261,7 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 				if( bSingular || m_det == 0 ) {
 					throw 1 ;
 				} else {
-					matrix<T>* inv_mtx = this ;
+					matrix<value_type>* inv_mtx = this ;
 					cout << "something" << endl ;
 					return inv_mtx ;
 				}
@@ -283,7 +290,7 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		 */
 		inline void operator^ (int exp) {
 			try {
-				if( _cols != _rows ) {
+				if( __cols != __rows ) {
 					throw 1 ;
 				} else {
 					if( exp < 0 ) {
@@ -296,7 +303,7 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 						cout << "return identity matrix" << endl ;
 					} else {
 						int i = 1 ;
-						matrix<T> temp = *this ;
+						matrix<value_type> temp = *this ;
 						while(i < exp) {
 							*this *= temp ;
 							++i ;
@@ -304,7 +311,7 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 					}
 				}
 			} catch(int e) {
-				cout << "matrix<T>::operator^ "
+				cout << "matrix<value_type>::operator^ "
 					<< "only valid for square matrices." << endl ;
 				cout << *this << endl ;
 				exit(e) ;
@@ -317,34 +324,34 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		 */
 		inline void lu_decomp(matrix& upper, matrix& lower) {
 			try {
-				if( _rows != _cols ) {
+				if( __rows != __cols ) {
 					throw -1 ;
 				} else {
-					upper.resize(_rows, _cols) ;
-					lower.resize(_rows, _cols) ;
-					for(size_t i=0; i<_rows; ++i) {
-						for(size_t j=0; j<_cols; ++j) {
-							if( i == 0 ) upper.pData[i*_rows+j] = pData[i*_rows+j] ;
-							if( i == j ) lower.pData[i*_rows+j]= 1 ;
+					upper.resize(__rows, __cols) ;
+					lower.resize(__rows, __cols) ;
+					for(size_type i=0; i<__rows; ++i) {
+						for(size_type j=0; j<__cols; ++j) {
+							if( i == 0 ) upper.__data[i*__rows+j] = __data[i*__rows+j] ;
+							if( i == j ) lower.__data[i*__rows+j]= 1 ;
 							if( (i != 0) && (j == 0) ) {
-								lower.pData[i*_rows+j] = pData[i*_rows] / upper.pData[0] ;
+								lower.__data[i*__rows+j] = __data[i*__rows] / upper.__data[0] ;
 							}
 							if( (j >= i) && (i != 0) ) {
-								T temp = 0 ;
-								for(size_t k=0; k<=i-1; ++k) {
+								value_type temp = 0 ;
+								for(size_type k=0; k<=i-1; ++k) {
 									temp +=
-										lower.pData[i*_rows+k] * upper.pData[k*_rows+j] ;
+										lower.__data[i*__rows+k] * upper.__data[k*__rows+j] ;
 								}
-								upper.pData[i*_rows+j] = pData[i*_rows+j] - temp ;
+								upper.__data[i*__rows+j] = __data[i*__rows+j] - temp ;
 							}
 							if( (j < i) && (j != 0) ) {
-								T temp = 0 ;
-								for(size_t k=0; k<=j-1; ++k) {
+								value_type temp = 0 ;
+								for(size_type k=0; k<=j-1; ++k) {
 									temp +=
-										lower.pData[i*_rows+k] * upper.pData[k*_rows+j] ;
+										lower.__data[i*__rows+k] * upper.__data[k*__rows+j] ;
 								}
-								lower.pData[i*_rows+j] =
-									(pData[i*_rows+j] - temp) / upper.pData[j*_rows+j] ;
+								lower.__data[i*__rows+j] =
+									(__data[i*__rows+j] - temp) / upper.__data[j*__rows+j] ;
 							}
 						}
 					}
@@ -362,30 +369,30 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		}
 
 		/**
-		 * Resizes matrix to have r rows and c columns. Data
+		 * Resizes matrix to have r _rows and c columns. Data
 		 * is then deleted and reallocated to the new size.
 		 * Data is not preserved at resizing a matrix!!
 		 */
-		inline void resize(const size_t& r, const size_t& c) {
-			size_t N = r * c ;
-			_rows = r ;
-			_cols = c ;
+		inline void resize(const size_type& r, const size_type& c) {
+			size_type N = r * c ;
+			__rows = r ;
+			__cols = c ;
 			bVerify = true ;
 			bSingular = false ;
-			delete[] pData ;
-			pData = new T[N] ;
-			memset(pData, 0, N*sizeof(T)) ;
+			delete[] __data ;
+			__data = new value_type[N] ;
+			memset(__data, 0, N*sizeof(value_type)) ;
 		}
 		
 		/**
 		 * Swaps row a with row b.
 		 */
-		inline void swap_row(const size_t& r1, const size_t& r2) {
-			T temp ;
-			for(size_t i=0; i<_cols; ++i) {
-				temp = pData[r1*_rows+i];
-				pData[r1*_rows+i] = pData[r2*_rows+i] ;
-				pData[r2*_rows+i] = temp ;
+		inline void swap_row(const size_type& r1, const size_type& r2) {
+			value_type temp ;
+			for(size_type i=0; i<__cols; ++i) {
+				temp = __data[r1*__rows+i];
+				__data[r1*__rows+i] = __data[r2*__rows+i] ;
+				__data[r2*__rows+i] = temp ;
 			}
 			bVerify = true ;
 			bSingular = false ;
@@ -394,12 +401,12 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		/**
 		 * Swaps column a with column b
 		 */
-		inline void swap_col(const size_t& c1, const size_t& c2) {
-			T temp ;
-			for(size_t i=0; i<_rows; ++i) {
-				temp = pData[i*_rows+c1] ;
-				pData[i*_rows+c1] = pData[i*_rows+c2] ;
-				pData[i*_rows+c2] = temp ;
+		inline void swap_col(const size_type& c1, const size_type& c2) {
+			value_type temp ;
+			for(size_type i=0; i<__rows; ++i) {
+				temp = __data[i*__rows+c1] ;
+				__data[i*__rows+c1] = __data[i*__rows+c2] ;
+				__data[i*__rows+c2] = temp ;
 			}
 			bVerify = true ;
 			bSingular = false ;
@@ -408,49 +415,49 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		/**
 		 * Adds row r1 * x to row r2
 		 */
-		inline void add_row(const size_t& r1, 
-							const size_t& r2, T x=1 )
+		inline void add_row(const size_type& r1, 
+							const size_type& r2, value_type x=1 )
 		{
-			for(size_t i=0; i<_cols; ++i) {
-				pData[r2*_rows+i] += pData[r1*_rows+i] * x ;
+			for(size_type i=0; i<__cols; ++i) {
+				__data[r2*__rows+i] += __data[r1*__rows+i] * x ;
 			}
 		}
 		
 		/**
 		 * Adds column c1 * x to column c2
 		 */
-		inline void add_col(const size_t& c1, 
-							const size_t& c2, T x=1 )
+		inline void add_col(const size_type& c1, 
+							const size_type& c2, value_type x=1 )
 		{
-			for(size_t i=0; i<_rows; ++i) {
-				pData[i*_rows+c2] += pData[i*_rows+c1] * x ;
+			for(size_type i=0; i<__rows; ++i) {
+				__data[i*__rows+c2] += __data[i*__rows+c1] * x ;
 			}
 		}
 		
 		/**
-		 * Multiply a row by x
+		 * Multiply a _row by x
 		 */
-		inline void x_row(const size_t& r, T x) {
-			for(size_t i=0; i<_cols; ++i) {
-				pData[r*_rows+i] *= x ;
+		inline void x__row(const size_type& r, value_type x) {
+			for(size_type i=0; i<__cols; ++i) {
+				__data[r*__rows+i] *= x ;
 			}
 		}
 
 		/**
 		 * Multiply a column by x
 		 */
-		inline void x_col(const size_t& c, T x) {
-			for(size_t i=0; i<_rows; ++i) {
-				pData[i*_rows+c] *= x ;
+		inline void x__col(const size_type& c, value_type x) {
+			for(size_type i=0; i<__rows; ++i) {
+				__data[i*__rows+c] *= x ;
 			}
 		}
 				
 	/*================== Comparison Operators ==================*/
 		inline bool operator== (matrix& rhs) {
-			int n = memcmp( pData, rhs.pData, 
-						    sizeof(T)*sizeof(pData) ) ;
-			return ( _rows == rhs._rows &&
-				 	 _cols == rhs._cols && n == 0 ) ;
+			int n = memcmp( __data, rhs.__data, 
+						    sizeof(value_type)*sizeof(__data) ) ;
+			return ( __rows == rhs.__rows &&
+				 	 __cols == rhs.__cols && n == 0 ) ;
 		}
 
 		inline bool operator!= (matrix& rhs) {
@@ -461,38 +468,38 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		friend std::ostream& operator<< <> (std::ostream& os, matrix& output) ;
 
 	private:
-		T* pData ;
-		size_t _rows ;
-		size_t _cols ;
+		value_type* __data ;
+		size_type __rows ;
+		size_type __cols ;
 		bool bSingular ;
 		bool bVerify ;
-		T m_det ;
+		value_type m_det ;
 
 
 		/**
 		 * Determine if the matrix is singular
 		 * This function is used to determine if a matrix is singular
-		 * by first looking to see if a zero row or column exists.
+		 * by first looking to see if a zero _row or column exists.
 		 * If one exists, the bSingular member variable is set to
 		 * true and m_det is set to zero.
-		 * If a zero row/column is not found, the determinant of the
+		 * If a zero _row/column is not found, the determinant of the
 		 * matrix is then calculated and checked to be non-zero.
 		 */		
 		inline void singularity() {
 			if( bVerify ) {
 
-				if( _rows != _cols ) {
+				if( __rows != __cols ) {
 					m_det = 0 ;
 					bSingular = true ;
 				}
 
-				// check for a zero row
+				// check for a zero _row
 				if( !bSingular ) {
-					for(size_t i=0; i<_rows; ++i) {
+					for(size_type i=0; i<__rows; ++i) {
 						bool _zero = false ;
-						if( pData[i*_rows+0] == 0 ) {
-							for(size_t j=1; j<_cols; ++j) {
-								if( pData[i*_rows+j] != 0 ) {
+						if( __data[i*__rows+0] == 0 ) {
+							for(size_type j=1; j<__cols; ++j) {
+								if( __data[i*__rows+j] != 0 ) {
 									_zero = false ;
 									break ;
 								} else {
@@ -510,11 +517,11 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 
 				// check for a zero column
 				if( !bSingular ) {
-					for(size_t i=0; i<_cols; ++i) {
+					for(size_type i=0; i<__cols; ++i) {
 						bool _zero = false ;
-						if( pData[i] == 0 ) {
-							for(size_t j=1; j<_rows; ++j) {
-								if( pData[j*_rows+i] == 0 ) {
+						if( __data[i] == 0 ) {
+							for(size_type j=1; j<__rows; ++j) {
+								if( __data[j*__rows+i] == 0 ) {
 									_zero = true ;
 								} else {
 									_zero = false ;
@@ -535,11 +542,11 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 				// matrix is singular
 				if( !bSingular ) {
 					determinant() ;
-					T zero = m_det ;
+					value_type zero = m_det ;
 					if( zero == 0 ) {
 						bSingular = true ;
 					} else {
-						if( typeid(T) == typeid(int) ) {
+						if( typeid(value_type) == typeid(int) ) {
 							if( zero == 1 || zero == -1 ) {
 								bSingular = false ;
 							} else {
@@ -562,12 +569,12 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 		 * flag is then set to false.
 		 */
 		inline void determinant() {
-			m_det = determinant(pData, _cols) ;
+			m_det = determinant(__data, __cols) ;
 		}
 		
-		inline T determinant(const T* data, const size_t& n) {
-			T result = 0 ;
-			T* temp = new T[n*n] ;
+		inline value_type determinant(const value_type* data, const size_type& n) {
+			value_type result = 0 ;
+			value_type* temp = new value_type[n*n] ;
 			if( n == 1 ) {
 				delete[] temp ;
 				return data[0] ;
@@ -575,11 +582,11 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 				delete[] temp ;
 				return (data[0]*data[3]-data[1]*data[2]) ;
 			} else {
-				for(size_t p=0; p<n; ++p) {
-					size_t h = 0 ;
-					size_t k = 0 ;
-					for(size_t i=1; i<n; ++i) {
-						for(size_t j=0; j<n; ++j) {
+				for(size_type p=0; p<n; ++p) {
+					size_type h = 0 ;
+					size_type k = 0 ;
+					for(size_type i=1; i<n; ++i) {
+						for(size_type j=0; j<n; ++j) {
 							if( j == p ) continue ;
 							temp[h*n+k] = data[i*n+j] ;
 							++k ;
@@ -595,21 +602,21 @@ template<class T> class matrix : public matrix_expression<matrix, T> {
 
 };
 
-template <class T>
-inline std::ostream& operator<< (std::ostream& os, matrix<T>& output) {
-	os << "\nrows: " << output._rows << "   det:   " << output.det() 
-	   << "\ncols: " << output._cols ;
+template <class _T>
+inline std::ostream& operator<< (std::ostream& os, matrix<_T>& output) {
+	os << "\nrows: " << output.__rows << "   det:   " << output.det() 
+	   << "\ncols: " << output.__cols ;
 	if( output.bSingular ) {
 		os << "   singular" << endl ;
 	} else {
 		os << "   non-singular" << endl ;
 	}
-	for(size_t i=0; i<output._rows; ++i) {
+	for(size_t i=0; i<output.__rows; ++i) {
 		os << "| " ;
-		for(size_t j=0; j<output._cols; ++j) {
+		for(size_t j=0; j<output.__cols; ++j) {
 			char buf[32];
-            T data = output.pData[i*output._rows+j];
-            if( typeid(T) == typeid(int) ) {
+            _T data = output.__data[i*output.__rows+j];
+            if( typeid(_T) == typeid(int) ) {
             	if( data >= 1e5 ) {
             		sprintf(buf, "%1.1e ", (double)data) ;
             	} else {

@@ -21,7 +21,8 @@ class array {
 
 	public:
 	
-		typedef _T						value_type ;
+		typedef array<_T>				self_type ;
+		typedef _T					value_type ;
 		typedef _T *					pointer ;
 		typedef ptrdiff_t				difference_type ;
 		typedef _T &					reference ;
@@ -29,7 +30,7 @@ class array {
 		typedef size_t					size_type ;
 		typedef pointer 				iterator ;
 		typedef const pointer			const_iterator ;
-		typedef pointer					reverse_iterator ;
+		typedef pointer				reverse_iterator ;
 		typedef const pointer			const_reverse_iterator ;
 	
 		/**
