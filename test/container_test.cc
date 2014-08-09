@@ -21,8 +21,7 @@ int main() {
 	array<int> k(5) ;
 	array<int>::reverse_iterator i=k.rbegin() ;
 	for(unsigned j=0; j<k.size(); ++j) {
-		--i ;
-		(*i) = j+10 ;
+		(*i--) = j+10 ;
 	}
 	cout << k << endl ;
 	

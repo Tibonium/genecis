@@ -74,7 +74,7 @@ class array {
 		 * Provides a const pointer to the beginning of the data
 		 * stored in this class 
 		 */
-		const_iterator begin() const {
+		const_iterator cbegin() const {
 			return &__data[0] ;
 		}
 		
@@ -82,7 +82,7 @@ class array {
 		 * Provides a const pointer to the end of the data stored
 		 * in this class 
 		 */
-		const_iterator end() const {
+		const_iterator cend() const {
 			return &__data[__size] ;
 		}
 		
@@ -91,7 +91,7 @@ class array {
 		 * class 
 		 */
 		reverse_iterator rbegin() {
-			return &__data[__size] ;
+			return &__data[__size-1] ;
 		}
 		
 		/**
@@ -99,23 +99,23 @@ class array {
 		 * stored in this class 
 		 */
 		reverse_iterator rend() {
-			return &__data[0] ;
+			return &__data[-1] ;
 		}
 		
 		/**
 		 * Provides a const pointer to the end of the data stored
 		 * in this class 
 		 */
-		const_reverse_iterator rbegin() const {
-			return &__data[__size] ;
+		const_reverse_iterator crbegin() const {
+			return &__data[__size-1] ;
 		}
 		
 		/**
 		 * Provides a const pointer to the beginning of the data
 		 * stored in this class 
 		 */
-		const_reverse_iterator rend() const {
-			return &__data[0] ;
+		const_reverse_iterator crend() const {
+			return &__data[-1] ;
 		}
 
 		/**
