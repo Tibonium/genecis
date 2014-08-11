@@ -7,51 +7,52 @@
 
 #include <iostream>
 #include <cstddef>
+#include "../base/genecis_iterator.h"
+#include "../base/genecis_reverse_iterator.h"
 
 namespace genecis {
 namespace container {
+
+using namespace genecis::base ;
 
 template <class _T> class array ;
 
 template <class _T> std::ostream&
 operator<< (std::ostream& os, array<_T>& a) ;
 
-template <class _T>
-class array {
+template<class _T> class array {
 
 	public:
 	
-		typedef array<_T>				self_type ;
+		typedef array<_T>			self_type ;
+		typedef std::allocator<_T>  allocator_type ;
 		typedef _T					value_type ;
-		typedef _T *					pointer ;
-		typedef ptrdiff_t				difference_type ;
-		typedef _T &					reference ;
-		typedef const _T &				const_reference ;
-		typedef size_t					size_type ;
-		typedef pointer 				iterator ;
-		typedef const pointer			const_iterator ;
-		typedef pointer				reverse_iterator ;
-		typedef const pointer			const_reverse_iterator ;
+		typedef _T *				pointer ;
+		typedef const _T *			const_pointer ;
+		typedef ptrdiff_t			difference_type ;
+		typedef _T &				reference ;
+		typedef const _T &			const_reference ;
+		typedef size_t				size_type ;
+		typedef genecis_iterator<pointer>		iterator ;
+		typedef genecis_iterator<const_pointer>		const_iterator ;
+		typedef genecis_reverse_iterator<iterator>	reverse_iterator ;
+		typedef genecis_reverse_iterator<const_iterator> const_reverse_iterator ;
 	
 		/**
 		 * Constructs an array of type _T with size specificed and
 		 * fills the array with the value c or zeros.
 		 */
-		array(size_type s, const value_type& c=0)
-				: __size(s)
-		{
-			__data = new value_type[__size] ;
-			fill_n(__data, __size, c) ;
+		array(size_type s, const value_type& c=0) {
+			create_storage( s ) ;
+			fill_n(__begin, s, c) ;
 		}
 		
 		/**
 		 * Destructor
 		 */
 		virtual ~array() {
-			if( __data ) {
-				delete[] __data ;
-				__data = NULL ;
-			}
+			allocator_type d ;
+			d.deallocate( __begin, size() ) ;
 		}
 		
 	/**** Iterators ****/
@@ -60,7 +61,7 @@ class array {
 		 * in this class.
 		 */
 		iterator begin() {
-			return &__data[0] ;
+			return iterator( __begin ) ;
 		}
 		
 		/**
@@ -68,7 +69,7 @@ class array {
 		 * class 
 		 */
 		iterator end() {
-			return &__data[__size] ;
+			return iterator( __end ) ;
 		}
 		
 		/**
@@ -76,7 +77,7 @@ class array {
 		 * stored in this class 
 		 */
 		const_iterator cbegin() const {
-			return &__data[0] ;
+			return const_iterator( begin() ) ;
 		}
 		
 		/**
@@ -84,7 +85,7 @@ class array {
 		 * in this class 
 		 */
 		const_iterator cend() const {
-			return &__data[__size] ;
+			return const_iterator( end() ) ;
 		}
 		
 		/**
@@ -92,7 +93,7 @@ class array {
 		 * class 
 		 */
 		reverse_iterator rbegin() {
-			return &__data[__size-1] ;
+			return reverse_iterator( end() ) ;
 		}
 		
 		/**
@@ -100,7 +101,7 @@ class array {
 		 * stored in this class 
 		 */
 		reverse_iterator rend() {
-			return &__data[-1] ;
+			return reverse_iterator( begin() ) ;
 		}
 		
 		/**
@@ -108,7 +109,7 @@ class array {
 		 * in this class 
 		 */
 		const_reverse_iterator crbegin() const {
-			return &__data[__size-1] ;
+			return const_reverse_iterator( end() ) ;
 		}
 		
 		/**
@@ -116,40 +117,41 @@ class array {
 		 * stored in this class 
 		 */
 		const_reverse_iterator crend() const {
-			return &__data[-1] ;
+			return const_reverse_iterator( begin() ) ;
 		}
 
 		/**
 		 * Returns the number of elements in the data array
 		 */
 		size_type size() {
-			return __size ;
+			return size_type( __end - __begin ) ;
 		}
 
 		size_type size() const {
-			return __size ;
+			return size_type( __end - __begin ) ;
 		}
 
 		/**
-		 * Returns a pointer to the data array in the class
+		 * Returns a pointer to the beginning of the stored data
+		 * in the class
 		 */
-		value_type* data() {
-			return __data ;
+		pointer data() {
+			return __begin ;
 		}
 
-		value_type* data() const {
-			return __data ;
+		const_pointer data() const {
+			return __begin ;
 		}
 		
 		/**
 		 * Element accessor
 		 */
-		value_type& operator() (size_type t) {
-			return __data[t] ;
+		reference operator() (size_type t) {
+			return *( __begin + t ) ;
 		}
 		
-		value_type& operator() (size_type t) const {
-			return __data[t] ;
+		const_reference operator() (size_type t) const {
+			return *( __begin + t ) ;
 		}
 		
 		/**
@@ -157,7 +159,7 @@ class array {
 		 */
 		template<int _index>
 		void operator= (value_type c) {
-			__data[_index] = c ;
+			*( __begin + _index ) = c ;
 		}
 		
 		/**
@@ -167,16 +169,20 @@ class array {
 			(std::ostream& os, array& a) ;
 	
 	private:
-		// Data array
-		value_type* __data ;
-		// size of array
-		size_type __size ;
+		// begin and end of the data stored in this class
+		pointer __begin ;
+		pointer __end ;
+		
+		void create_storage(size_type __n) {
+			allocator_type tmp ;
+			__begin = tmp.allocate( __n ) ;
+			__end = __begin + __n ;
+		}
 
 };
 
 template <class _T>
-inline std::ostream& operator<< 
-	(std::ostream& os, array<_T>& a)
+inline std::ostream& operator<< (std::ostream& os, array<_T>& a)
 {
 	os << "[" << a.size() << "]: {" ;
 	for(size_t i=0; i<a.size(); ++i) {
