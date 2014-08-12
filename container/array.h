@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cstddef>
+#include <algorithm>
 #include "../base/genecis_reverse_iterator.h"
 
 namespace genecis {
@@ -36,14 +37,37 @@ template<class _T> class array {
 		typedef const value_type*		const_iterator ;
 		typedef genecis_reverse_iterator<iterator>	reverse_iterator ;
 		typedef genecis_reverse_iterator<const_iterator> const_reverse_iterator ;
-	
+
+		/**
+		 * Empty constructor
+		 */
+		array() {}
+
 		/**
 		 * Constructs an array of type _T with size specificed and
 		 * fills the array with the value c or zeros.
 		 */
 		array(size_type s, const value_type& c=0) {
 			create_storage( s ) ;
-			fill_n(__begin, s, c) ;
+			std::fill_n(__begin, s, c) ;
+		}
+		
+		/**
+		 * Copy constructor
+		 */
+		array(array<value_type>& other) {
+			this->create_storage( other.size() ) ;
+			std::copy( other.begin(), other.end(), __begin ) ;
+		}
+		
+		/**
+		 * Assignment operator
+		 */
+		void operator=(array<value_type>& rhs) {
+			allocator_type d ;
+			d.deallocate( __begin, size() ) ;
+			this->create_storage( rhs.size() ) ;
+			std::copy( rhs.begin(), rhs.end(), __begin ) ;
 		}
 		
 		/**

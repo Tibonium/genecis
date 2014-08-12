@@ -19,7 +19,7 @@ class neural_network {
 		 * Destructor - Deletes all memories in the neural network
 		 */
 		virtual ~neural_network() {
-			for(network::iterator i=__network.begin();
+			for(array<neuron>::iterator i=__network.begin();
 					i!=__network.end(); ++i)
 			{
 				delete i->memory ;

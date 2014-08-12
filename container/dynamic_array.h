@@ -6,91 +6,99 @@
 #define GENECIS_CONTAINER_DYNAMIC_ARRAY_H
 
 #include <iostream>
-#include <cstring>
-#include <sstream>
+#include <algorithm>
+#include <cstddef>
 #include <cstdlib>
+#include "../base/genecis_reverse_iterator.h"
 
 namespace genecis {
 namespace container {
 
-using namespace std ;
+using namespace genecis::base ;
 
-template<class _T>
-class dynamic_array {
+template <class _T> class dynamic_array ;
+
+template <class _T> std::ostream&
+operator<< (std::ostream& os, dynamic_array<_T>& a) ;
+
+template<class _T> class dynamic_array {
 
 	public:
+
+		typedef dynamic_array<_T>							self_type ;
+		typedef std::allocator<_T>  						allocator_type ;
+		typedef _T											value_type ;
+		typedef _T *										pointer ;
+		typedef const _T *									const_pointer ;
+		typedef ptrdiff_t									difference_type ;
+		typedef _T &										reference ;
+		typedef const _T &									const_reference ;
+		typedef size_t										size_type ;
+		typedef value_type*									iterator ;
+		typedef const value_type*							const_iterator ;
+		typedef genecis_reverse_iterator<iterator>			reverse_iterator ;
+		typedef genecis_reverse_iterator<const_iterator> 	const_reverse_iterator ;
+
 		/**
 		 * Constructor with specified size.
 		 * @param size		size of array to be allocated
 		 */
-		dynamic_array(size_t size) : __size(size) {
-			__data = new _T[__size] ;
-			memset( __data, 0, size*sizeof(_T) ) ;
+		dynamic_array(size_type s, value_type c=0) {
+			create_storage( s ) ;
+			fill_n(__begin, s, c) ;
 		}
 		
 		/**
-		 * Default constructor, intializes array size to default_size
+		 * Empty constructor
 		 */
-		dynamic_array() : __size(DEFAULT_SIZE) {
-			__data = new _T[__size] ;
-			memset( __data, 0, __size*sizeof(_T) ) ;
-		}
+		dynamic_array() {}
 		
 		/**
 		 * Copy constructor
 		 */
 		dynamic_array(dynamic_array const& other) {
-			__size = other.size() ;
-			__data = new _T[__size] ;
-			memcpy( __data, other.data(), __size*sizeof(_T) ) ;
+			this->create_storage( other.size() ) ;
+			std::copy( other.begin(), other.end(), __begin ) ;
+		}
+
+		/**
+		 * Class assignment operator
+		 */
+		void operator=(dynamic_array const& rhs) {
+			allocator_type d ;
+			d.deallocate( __begin, size() ) ;
+			this->create_storage( rhs.size() ) ;
+			std::copy( rhs.begin(), rhs.end(), __begin ) ;
 		}
 
 		/**
 		 * Destructor
 		 */
 		virtual ~dynamic_array() {
-			if( __data ) {
-				delete[] __data ;
-				__data = NULL ;
-			}
+			allocator_type d ;
+			d.deallocate( __begin, size() ) ;
 		}
 
 		/**
 		 * Returns the maximum capacity of the data array.
 		 */
-		int size() {
-			return __size ;
+		size_type size() {
+			return size_type( __end - __begin ) ;
 		}
 		
-		int size() const {
-			return __size ;
+		size_type size() const {
+			return size_type( __end - __begin ) ;
 		}
 		
 		/**
 		 * Returns a pointer to the data array of the class.
 		 */
-		_T* data() {
-			return __data ;
+		pointer data() {
+			return __begin ;
 		}
 		
-		_T* data() const {
-			return __data ;
-		}
-		
-		/**
-		 * Returns a string of the array in the format of:
-		 * [ e1, e2, e3, ... ]
-		 */
-		string str() const {
-			string s = "[ " ;
-			for(size_t i=0; i<__size; ++i) {
-				ostringstream o ;
-				if ( i != 0 ) s += ", " ;
-				o << __data[i] ;
-				s += o.str() ;
-			}
-			s += " ]" ;
-			return s ;
+		pointer data() const {
+			return __begin ;
 		}
 
 		/** ===== Array Operators ===== **/
@@ -99,43 +107,21 @@ class dynamic_array {
 		 * Concatenates two dynamic arrays and passes back a new
 		 * dynamic array.
 		 */
-		dynamic_array operator+(dynamic_array& rhs) {
-			int temp_size = __size + rhs.size() ;
-			dynamic_array<_T>* temp = new dynamic_array<_T>(temp_size) ;
-			for(size_t i=0; i<__size; ++i) {
-				(*temp)(i) = (*this)(i) ; 
-			}
-			for(int i=__size; i<temp_size; ++i) {
-				(*temp)(i) = rhs(i-__size) ;
-			}
-			return (*temp) ;
+		dynamic_array* operator+(dynamic_array& rhs) {
+			size_type tmp_size = size() + rhs.size() ;
+			dynamic_array<_T>* tmp = new dynamic_array<_T>(tmp_size) ;
+			std::copy( __begin, __end, tmp->begin() ) ;
+			std::copy( rhs.begin(), rhs.end(), (tmp->begin() + size()) ) ;
+			return tmp ;
 		}
 		
 		/**
 		 * Concatenates this array with the rhs into this array.
 		 */
 		void operator+=(dynamic_array const& rhs) {
-			int temp_size = __size + rhs.size() ;
-			dynamic_array<_T>* temp = new dynamic_array<_T>(temp_size) ;
-			for(size_t i=0; i<__size; ++i) {
-				(*temp)(i) = (*this)(i) ; 
-			}
-			for(int i=__size; i<temp_size; ++i) {
-				(*temp)(i) = rhs(i-__size) ;
-			}
-			delete[] __data ;
-			__size = temp_size ;
-			__data = temp->data() ;
-		}
-		
-		/**
-		 * Class assignment operator
-		 */
-		void operator=(dynamic_array const& rhs) {
-			delete[] __data ;
-			__size = rhs.size() ;
-			__data = new _T[__size] ;
-			memcpy( __data, rhs.data(), __size*sizeof(_T) ) ;
+			size_type tmp_size = size() + rhs.size() ;
+			resize( tmp_size ) ;
+			std::copy( rhs.begin(), rhs.end(), (__begin + size()) ) ;
 		}
 		
 		/**
@@ -146,54 +132,145 @@ class dynamic_array {
 		 *	2. If index is negative, _data will be accessed from the end
 		 *	   in reverse order.
 		 */
-		_T& operator() (size_t index) {
-			if( index > __size-1 ) {
+		reference operator() (size_type index) {
+			if( index > size()-1 ) {
 				resize(index+1) ;
 			} else if ( index < 0 ) {
-				index += __size ;
+				index += size() ;
 			}
-			return __data[index] ;
+			return *( __begin + index ) ;
 		}
 		
 		/**
 		 * Array assignment operator
 		 */
-		template<size_t _index>
-		void operator= (_T c) {
-			__data[_index] = c ;
+		template<size_type _index>
+		void operator= (value_type c) {
+			*( __begin + _index ) = c ;
 		}
 
-	private:
+	/**** Iterators ****/
 		/**
-		 * Default array size for default constructor
+		 * Provides a pointer to the beginning of the data stored
+		 * in this class.
 		 */
-		static const int DEFAULT_SIZE = 5 ;
-
-		/**
-		 * Maximum size of the array
-		 */
-		size_t __size ;
+		iterator begin() {
+			return iterator( __begin ) ;
+		}
 		
 		/**
-		 * Pointer to the data stored in the dynamic_array
+		 * Provides a pointer to the end of the data stored in this
+		 * class 
 		 */
-		_T* __data ;
+		iterator end() {
+			return iterator( __end ) ;
+		}
+		
+		/**
+		 * Provides a const pointer to the beginning of the data
+		 * stored in this class 
+		 */
+		const_iterator cbegin() const {
+			return const_iterator( begin() ) ;
+		}
+		
+		/**
+		 * Provides a const pointer to the end of the data stored
+		 * in this class 
+		 */
+		const_iterator cend() const {
+			return const_iterator( end() ) ;
+		}
+		
+		/**
+		 * Provides a pointer to the end of the data stored in this
+		 * class 
+		 */
+		reverse_iterator rbegin() {
+			return reverse_iterator( end() ) ;
+		}
+		
+		/**
+		 * Provides a pointer to the beginning of the data
+		 * stored in this class 
+		 */
+		reverse_iterator rend() {
+			return reverse_iterator( begin() ) ;
+		}
+		
+		/**
+		 * Provides a const pointer to the end of the data stored
+		 * in this class 
+		 */
+		const_reverse_iterator crbegin() const {
+			return const_reverse_iterator( end() ) ;
+		}
+		
+		/**
+		 * Provides a const pointer to the beginning of the data
+		 * stored in this class 
+		 */
+		const_reverse_iterator crend() const {
+			return const_reverse_iterator( begin() ) ;
+		}
+
+		/**
+		 * Output format
+		 */
+		friend std::ostream& operator<< <>
+			(std::ostream& os, dynamic_array& a) ;
+
+	protected:
+
+		/**
+		 * Pointers to the data stored in the dynamic_array
+		 */
+		iterator __begin ;
+		iterator __end ;
 		
 		/**
 		 * Resizes the data array to prevent the array from going
 		 * out of bounds when the index is larger then the size of
 		 * the array.
 		 */
-		void resize(const int& new_size) {
-			_T* n_data = new _T[new_size] ;
-			memset( n_data, 0, new_size*sizeof(_T) ) ;
-			memcpy( n_data, __data, __size*sizeof(_T) ) ;
-			delete[] __data ;
-			__data = n_data ;
-			__size = new_size ;
+		void resize(size_type new_size) {
+			iterator tmp__begin ;
+			iterator tmp__end ;
+			allocator_type a ;
+			tmp__begin = a.allocate( new_size ) ;
+			tmp__end = tmp__begin + new_size ;
+			std::fill_n( tmp__begin, new_size, 0 ) ;
+			std::copy( __begin, __end, tmp__begin ) ;
+			a.deallocate( __begin, size() ) ;
+			__begin = tmp__begin ;
+			__end = tmp__end ;
+		}
+		
+		/**
+		 * Allocates the storage space for the class and sets up the
+		 * pointers to the beginning and end of the memory.
+		 */
+		void create_storage(size_type __s) {
+			allocator_type a ;
+			__begin = a.allocate( __s ) ;
+			__end = __begin + __s ;
 		}
 
 };
+
+template <class _T>
+inline std::ostream& operator<< (std::ostream& os, dynamic_array<_T>& a)
+{
+	os << "[" << a.size() << "]: {" ;
+	for(typename dynamic_array<_T>::iterator i=a.begin();
+		i!=a.end(); ++i)
+	{
+		os << (*i) ;
+		(i!=(a.end()-1)) ? os << "," :
+			os << "}" ;
+	}
+	return os ;
+}
 
 }	// end of namespace container
 }	// end of namespace genecis

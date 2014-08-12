@@ -26,7 +26,7 @@ template<class _It> class genecis_reverse_iterator :
 	public:
 
 		typedef _It										iterator_type ;
-		typedef std::random_access_iterator_tag				iterator_category ;
+		typedef random_access_iterator_tag				iterator_category ;
 		typedef typename __traits::difference_type		difference_type ;
 		typedef typename __traits::pointer				pointer ;
 		typedef typename __traits::reference			reference ;
