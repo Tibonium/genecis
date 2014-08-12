@@ -26,9 +26,12 @@ template<class _It> class genecis_reverse_iterator :
 	public:
 
 		typedef _It										iterator_type ;
+		typedef std::random_access_iterator_tag				iterator_category ;
 		typedef typename __traits::difference_type		difference_type ;
 		typedef typename __traits::pointer				pointer ;
 		typedef typename __traits::reference			reference ;
+
+		genecis_reverse_iterator() : __rcurrent() {}
 
 		/** Base Constructor **/
 		explicit
@@ -50,7 +53,7 @@ template<class _It> class genecis_reverse_iterator :
 		}
 		
 		reference operator*() {
-			iterator_type __tmp = __rcurrent ;
+			_It __tmp = __rcurrent ;
 			return *--__tmp ;
 		}
 		
@@ -124,21 +127,21 @@ template<class _It>
 inline bool operator<( const genecis_reverse_iterator<_It>& lhs,
 					   const genecis_reverse_iterator<_It>& rhs )
 {
-	return ( lhs.base() < rhs.base() ) ;
+	return ( rhs.base() < lhs.base() ) ;
 }
 
 template<class _It>
 inline bool operator<=( const genecis_reverse_iterator<_It>& lhs,
 					    const genecis_reverse_iterator<_It>& rhs )
 {
-	return !( lhs < rhs ) ;
+	return !( rhs < lhs ) ;
 }
 
 template<class _It>
 inline bool operator>( const genecis_reverse_iterator<_It>& lhs,
 					   const genecis_reverse_iterator<_It>& rhs )
 {
-	return !( lhs < rhs ) ;
+	return ( rhs < lhs ) ;
 }
 
 template<class _It>
@@ -149,7 +152,7 @@ inline bool operator>=( const genecis_reverse_iterator<_It>& lhs,
 }
 
 template<class _It>
-inline typename genecis_reverse_iterator<_It>::difference_type
+inline genecis_reverse_iterator<_It>
 operator+( typename genecis_reverse_iterator<_It>::difference_type __n,
 		   const genecis_reverse_iterator<_It>& lhs )
 {
@@ -161,7 +164,7 @@ inline typename genecis_reverse_iterator<_It>::difference_type
 operator-( const genecis_reverse_iterator<_It>& lhs,
 		   const genecis_reverse_iterator<_It>& rhs )
 {
-	return genecis_reverse_iterator<_It>( rhs.base() - lhs.base() ) ;
+	return ( rhs.base() - lhs.base() ) ;
 }
 
 /** Comparison between different iterator types **/
@@ -183,28 +186,28 @@ template<class _ItL, class _ItR>
 inline bool operator<( const genecis_reverse_iterator<_ItL>& lhs,
 					   const genecis_reverse_iterator<_ItR>& rhs )
 {
-	return ( lhs.base() < rhs.base() ) ;
+	return ( rhs.base() < lhs.base() ) ;
 }
 
 template<class _ItL, class _ItR>
 inline bool operator<=( const genecis_reverse_iterator<_ItL>& lhs,
 					    const genecis_reverse_iterator<_ItR>& rhs )
 {
-	return !( lhs < rhs ) ;
+	return !( rhs < lhs ) ;
 }
 
 template<class _ItL, class _ItR>
 inline bool operator>( const genecis_reverse_iterator<_ItL>& lhs,
 					   const genecis_reverse_iterator<_ItR>& rhs )
 {
-	return !( lhs < rhs ) ;
+	return ( rhs < lhs ) ;
 }
 
 template<class _ItL, class _ItR>
 inline bool operator>=( const genecis_reverse_iterator<_ItL>& lhs,
 					    const genecis_reverse_iterator<_ItR>& rhs )
 {
-	return !( lhs < rhs ) ;
+	return !( rhs < lhs ) ;
 }
 
 template<class _ItL, class _ItR>

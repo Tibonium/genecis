@@ -10,7 +10,13 @@
 namespace genecis {
 namespace base {
 
-template<class _It> class genecis_iterator {
+template<class _It> class genecis_iterator  : 
+	public iterator<typename iterator_traits<_It>::iterator_category,
+				 typename iterator_traits<_It>::value_type,
+				 typename iterator_traits<_It>::difference_type,
+				 typename iterator_traits<_It>::pointer,
+                     typename iterator_traits<_It>::reference>
+{
 
 	protected:
 		_It __current ;
@@ -20,7 +26,7 @@ template<class _It> class genecis_iterator {
 	public:
 
 		typedef _It										iterator_type ;
-		typedef typename __traits::iterator_category	iterator_category ;
+		typedef std::random_access_iterator_tag			iterator_category ;
 		typedef typename __traits::value_type			value_type ;
 		typedef typename __traits::difference_type		difference_type ;
 		typedef typename __traits::pointer				pointer ;
