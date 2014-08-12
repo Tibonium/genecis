@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <cstddef>
-#include "../base/genecis_iterator.h"
 #include "../base/genecis_reverse_iterator.h"
 
 namespace genecis {
@@ -33,8 +32,8 @@ template<class _T> class array {
 		typedef _T &				reference ;
 		typedef const _T &			const_reference ;
 		typedef size_t				size_type ;
-		typedef genecis_iterator<pointer>		iterator ;
-		typedef genecis_iterator<const_pointer>		const_iterator ;
+		typedef value_type*		iterator ;
+		typedef const value_type*		const_iterator ;
 		typedef genecis_reverse_iterator<iterator>	reverse_iterator ;
 		typedef genecis_reverse_iterator<const_iterator> const_reverse_iterator ;
 	
@@ -170,8 +169,8 @@ template<class _T> class array {
 	
 	private:
 		// begin and end of the data stored in this class
-		pointer __begin ;
-		pointer __end ;
+		iterator __begin ;
+		iterator __end ;
 		
 		void create_storage(size_type __n) {
 			allocator_type tmp ;

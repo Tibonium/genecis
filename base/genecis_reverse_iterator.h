@@ -10,7 +10,13 @@
 namespace genecis {
 namespace base {
 
-template<class _It> class genecis_reverse_iterator {
+template<class _It> class genecis_reverse_iterator : 
+	public iterator<typename iterator_traits<_It>::iterator_category,
+				 typename iterator_traits<_It>::value_type,
+				 typename iterator_traits<_It>::difference_type,
+				 typename iterator_traits<_It>::pointer,
+                     typename iterator_traits<_It>::reference>
+{
 
 	protected:
 		_It __rcurrent ;
@@ -20,8 +26,6 @@ template<class _It> class genecis_reverse_iterator {
 	public:
 
 		typedef _It										iterator_type ;
-		typedef typename __traits::iterator_category	iterator_category ;
-		typedef typename __traits::value_type			value_type ;
 		typedef typename __traits::difference_type		difference_type ;
 		typedef typename __traits::pointer				pointer ;
 		typedef typename __traits::reference			reference ;
@@ -66,7 +70,7 @@ template<class _It> class genecis_reverse_iterator {
 		}
 		
 		genecis_reverse_iterator& operator--() {
-			--__rcurrent ;
+			++__rcurrent ;
 			return *this ;
 		}
 		
@@ -149,7 +153,7 @@ inline typename genecis_reverse_iterator<_It>::difference_type
 operator+( typename genecis_reverse_iterator<_It>::difference_type __n,
 		   const genecis_reverse_iterator<_It>& lhs )
 {
-	return genecis_iterator<_It>( lhs.base() - __n ) ;
+	return genecis_reverse_iterator<_It>( lhs.base() - __n ) ;
 }
 
 template<class _It>
@@ -157,7 +161,7 @@ inline typename genecis_reverse_iterator<_It>::difference_type
 operator-( const genecis_reverse_iterator<_It>& lhs,
 		   const genecis_reverse_iterator<_It>& rhs )
 {
-	return genecis_iterator<_It>( rhs.base() - lhs.base() ) ;
+	return genecis_reverse_iterator<_It>( rhs.base() - lhs.base() ) ;
 }
 
 /** Comparison between different iterator types **/
