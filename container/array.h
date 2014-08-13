@@ -41,7 +41,7 @@ template<class _T> class array {
 		/**
 		 * Empty constructor
 		 */
-		array() {}
+		array() : __begin(0), __end(0) {}
 
 		/**
 		 * Constructs an array of type _T with size specificed and
