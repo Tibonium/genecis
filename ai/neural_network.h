@@ -3,7 +3,7 @@
  */
 
 #include "neuron.h"
-#include "../containter/array.h"
+#include "../containter/dynamic_array.h"
 
 namespace genecis {
 namespace ai {
@@ -19,11 +19,12 @@ class neural_network {
 		 * Destructor - Deletes all memories in the neural network
 		 */
 		virtual ~neural_network() {
-			for(array<neuron>::iterator i=__network.begin();
+			for(dynamic_array<neuron>::iterator i=__network.begin();
 					i!=__network.end(); ++i)
 			{
 				delete i->memory ;
 			}
+			delete __network ;
 		}
 		
 	private:
@@ -31,7 +32,7 @@ class neural_network {
 		/**
 		 * Container of the neural network of neurons.
 		 */
-		array<neuron> __network ;
+		dynamic_array<neuron> __network ;
 	
 		
 

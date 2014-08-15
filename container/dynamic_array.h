@@ -97,7 +97,7 @@ template<class _T> class dynamic_array {
 			return __begin ;
 		}
 		
-		pointer data() const {
+		const_pointer data() const {
 			return __begin ;
 		}
 
