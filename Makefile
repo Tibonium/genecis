@@ -13,8 +13,10 @@ TESTS = matrix_test distribution_test tree_test difq_test server_test \
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test
 MATRIX = math/matrix.h math/matrix_expression.h math/matrix_operations.h \
 	math/matrix_io.h
-VECTOR = math/math_vector.h math/bvector.h math/svector.h math/cvector.h
-CONTAINER = container/array.h container/dynamic_array.h
+VECTOR = math/math_vector.h math/bvector.h math/svector.h math/cvector.h \
+	math/vector_expression.h
+CONTAINER = container/array.h container/dynamic_array.h \
+	container/container_io.h container/container_expression.h
 MATH_HDR = ${wildcard math/*.h}
 DIST_HDR = ${wildcard distribution/*.h}
 TREE_HDR = ${wildcard tree/*.h}

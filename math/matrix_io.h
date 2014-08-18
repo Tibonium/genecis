@@ -5,6 +5,7 @@
 #ifndef GENECIS_MATH_MATRIX_IO_H
 #define GENECIS_MATH_MATRIX_IO_H
 
+#include <cstdio>
 #include <iosfwd>
 #include <sstream>
 #include <typeinfo>
