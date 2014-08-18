@@ -2,8 +2,8 @@
  * @file svector.h
  */
  
-#ifndef GENECIS_MATH_SVECTOR_H
-#define GENECIS_MATH_SVECTOR_H
+#ifndef GENECIS_MATH_SVECTOR
+#define GENECIS_MATH_SVECTOR
 
 #include "math_vector.h"
 #define pi2 2.0*M_PI
@@ -37,23 +37,17 @@ class svector : public math_vector<double> {
 		 */
 		inline svector* operator+ (const svector& rhs) {
 				// Convert both vectors to cartesian
-			double x1 = _u1*sin(_u2)*cos(_u3) ;
-			double x2 = rhs._u1*sin(rhs._u2)*cos(rhs._u3) ;
-			double y1 = _u1*sin(_u2)*sin(_u3) ;
-			double y2 = rhs._u1*sin(rhs._u2)*sin(rhs._u3) ;
-			double z1 = _u1*cos(_u2) ;
-			double z2 = rhs._u1*cos(rhs._u2) ;
+			double x1 ; double y1 ; double z1 ;
+			double x2 ; double y2 ; double z2 ;
+			ToCartesianFromSpherical( _u1, _u2, _u3, x1, y1, z1 ) ;
+			ToCartesianFromSpherical( rhs._u1, rhs._u2, rhs._u3 , x2, y2, z2 ) ;
 				// Add both vectors after converting
 			double x_12 = x1+x2 ;
 			double y_12 = y1+y2 ;
 			double z_12 = z1+z2 ;
-			double x_sqr = x_12*x_12 ;
-			double y_sqr = y_12*y_12 ;
-			double z_sqr = z_12*z_12 ;
 				// Convert back into spherical coordinates
-			double _r = sqrt( x_sqr + y_sqr + z_sqr ) ;
-			double _t = atan( sqrt( x_sqr + y_sqr ) / z_12 ) ;
-			double _p = atan( y_12 / x_12 ) ;
+			double _r ; double _t ; double _p ;
+			ToSphericalFromCartesian( x_12, y_12, z_12, _r, _t, _p ) ;
 			svector* s = new svector(_r,_t,_p) ;
 			return s ;
 		}
@@ -74,14 +68,12 @@ class svector : public math_vector<double> {
 		 * 
 		 *  (u2*v3-u3*v2) i - (u1*v3-u3*v1) j + (u1*v2-u2*v1) k
 		 */
-		inline svector* cross(const svector& rhs) const {
+		inline svector* cross(const svector& rhs) {
 				// Convert both vectors to cartesian
-			double x1 = _u1*sin(_u2)*cos(_u3) ;
-			double x2 = rhs._u1*sin(rhs._u2)*cos(rhs._u3) ;
-			double y1 = _u1*sin(_u2)*sin(_u3) ;
-			double y2 = rhs._u1*sin(rhs._u2)*sin(rhs._u3) ;
-			double z1 = _u1*cos(_u2) ;
-			double z2 = rhs._u1*cos(rhs._u2) ;
+			double x1 ; double y1 ; double z1 ;
+			double x2 ; double y2 ; double z2 ;
+			ToCartesianFromSpherical( _u1, _u2, _u3, x1, y1, z1 ) ;
+			ToCartesianFromSpherical( rhs._u1, rhs._u2, rhs._u3, x2, y2, z2 ) ;
 				// Take the cross product
 			double _x = y1 * z2 - z1 * y2 ;
 			double _y = z1 * x2 - x1 * z2 ;
@@ -90,19 +82,9 @@ class svector : public math_vector<double> {
 			if( abs(_x) < 1e-10 ) _x = 0 ;
 			if( abs(_y) < 1e-10 ) _y = 0 ;
 			if( abs(_z) < 1e-10 ) _z = 0 ;
-			double x_sqr = _x*_x ;
-			double y_sqr = _y*_y ;
-			double z_sqr = _z*_z ;
 				// Convert back into spherical coordinates
-			double _r = sqrt( x_sqr + y_sqr + z_sqr ) ;
-			double _t = acos( _z / _r ) ;
-			double _p ;
-				// Guard against dividing by zero
-			if( _x <= 1e-10 ) {
-				_p = 0.0 ;
-			} else {
-				_p = atan( _y / _x ) ;
-			}
+			double _r ; double _t ; double _p ;
+			ToSphericalFromCartesian( _x, _y, _z, _r, _t, _p ) ;
 			svector* s = new svector(_r,_t,_p) ;
 			return s ;
 		}

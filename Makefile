@@ -11,7 +11,9 @@ TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime sort_test vector_test mathfunc_test \
 	container_test graph_array_test pattern_test#	gravity_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test
-MATRIX = math/matrix.h math/matrix_expression.h
+MATRIX = math/matrix.h math/matrix_expression.h math/matrix_operations.h \
+	math/matrix_io.h
+VECTOR = math/math_vector.h math/bvector.h math/svector.h math/cvector.h
 CONTAINER = container/array.h container/dynamic_array.h
 MATH_HDR = ${wildcard math/*.h}
 DIST_HDR = ${wildcard distribution/*.h}
@@ -96,7 +98,7 @@ graph_test: test/graph_test.cc
 	@echo "Building graph_test..."
 	@$(CC) -o graph_test test/graph_test.cc $(CFLAGS)
 	
-vector_test: test/vector_test.cc
+vector_test: test/vector_test.cc $(VECTOR)
 	@echo "Building vector_test..."
 	@$(CC) -o vector_test test/vector_test.cc $(CFLAGS)
 

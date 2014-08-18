@@ -2,8 +2,8 @@
  * @file graph_array.h
  */
 
-#ifndef GENECIS_MATH_GRAPH_ARRAY_H
-#define GENECIS_MATH_GRAPH_ARRAY_H
+#ifndef GENECIS_MATH_GRAPH_ARRAY
+#define GENECIS_MATH_GRAPH_ARRAY
 
 #include "arc_pair_compare.h"
 #include <vector>

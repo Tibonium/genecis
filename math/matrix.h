@@ -2,26 +2,21 @@
  * @file new matrix class
  */
 
-#ifndef GENECIS_MATH_MATRIX_H
-#define GENECIS_MATH_MATRIX_H
+#ifndef GENECIS_MATH_MATRIX
+#define GENECIS_MATH_MATRIX
 
 #include <cstdio>
 #include <cassert>
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
-#include <typeinfo>
-#include "matrix_expression.h"
+#include "matrix_io.h"
+#include "matrix_operations.h"
 
 namespace genecis {
 namespace math {
 
 using namespace std ;
-
-template<class _T> class matrix ;
-
-template<class _T>
-std::ostream& operator<< (std::ostream& os, matrix<_T>& output) ;
 
 template<class _T> class matrix : public matrix_expression<matrix, _T> {
 
@@ -137,21 +132,21 @@ template<class _T> class matrix : public matrix_expression<matrix, _T> {
 			for(size_type i=0; i<(__rows*__cols); ++i) {
 				__data[i] += c ;
 			}
-			determinant() ;
+			m_det = determinant(__data, __cols) ;
 		}
 
 		inline void operator-= (value_type c) {
 			for(size_type i=0; i<(__rows*__cols); ++i) {
 				__data[i] -= c ;
 			}
-			determinant() ;
+			m_det = determinant(__data, __cols) ;
 		}
 
 		inline void operator%= (value_type c) {
 			for(size_type i=0; i<(__rows*__cols); ++i) {
 				__data[i] %= c ;
 			}
-			determinant() ;
+			m_det = determinant(__data, __cols) ;
 		}
 
 	/*================ Matrix Matrix Operators =================*/
@@ -324,44 +319,17 @@ template<class _T> class matrix : public matrix_expression<matrix, _T> {
 		 */
 		inline void lu_decomp(matrix& upper, matrix& lower) {
 			try {
-				if( __rows != __cols ) {
+				if(  bSingular || (__rows != __cols) ) {
 					throw -1 ;
 				} else {
-					upper.resize(__rows, __cols) ;
-					lower.resize(__rows, __cols) ;
-					for(size_type i=0; i<__rows; ++i) {
-						for(size_type j=0; j<__cols; ++j) {
-							if( i == 0 ) upper.__data[i*__rows+j] = __data[i*__rows+j] ;
-							if( i == j ) lower.__data[i*__rows+j]= 1 ;
-							if( (i != 0) && (j == 0) ) {
-								lower.__data[i*__rows+j] = __data[i*__rows] / upper.__data[0] ;
-							}
-							if( (j >= i) && (i != 0) ) {
-								value_type temp = 0 ;
-								for(size_type k=0; k<=i-1; ++k) {
-									temp +=
-										lower.__data[i*__rows+k] * upper.__data[k*__rows+j] ;
-								}
-								upper.__data[i*__rows+j] = __data[i*__rows+j] - temp ;
-							}
-							if( (j < i) && (j != 0) ) {
-								value_type temp = 0 ;
-								for(size_type k=0; k<=j-1; ++k) {
-									temp +=
-										lower.__data[i*__rows+k] * upper.__data[k*__rows+j] ;
-								}
-								lower.__data[i*__rows+j] =
-									(__data[i*__rows+j] - temp) / upper.__data[j*__rows+j] ;
-							}
-						}
-					}
+					lu_factorize( upper, lower, __data, __rows, __cols ) ;
 				}
 			} catch (int e) {
-				cout << "matrix::lu_decomp: Only square, non-singular "
-					 << "matrices may be decompesed into upper/lower "
-					 << "triangular matrices. Setting determinant to "
-					 << "zero and singularness to true."
-					 << endl ;
+//				cout << "matrix::lu_decomp: Only square, non-singular "
+//					 << "matrices may be decompesed into upper/lower "
+//					 << "triangular matrices. Setting determinant to "
+//					 << "zero and singularness to true."
+//					 << endl ;
 				m_det = 0 ;
 				bSingular = true ;
 				bVerify = false ;
@@ -435,7 +403,7 @@ template<class _T> class matrix : public matrix_expression<matrix, _T> {
 		}
 		
 		/**
-		 * Multiply a _row by x
+		 * Multiply a row by x
 		 */
 		inline void x__row(const size_type& r, value_type x) {
 			for(size_type i=0; i<__cols; ++i) {
@@ -465,7 +433,7 @@ template<class _T> class matrix : public matrix_expression<matrix, _T> {
 		}
 
 /********************** IO Stream overloads ***********************/
-		friend std::ostream& operator<< <> (std::ostream& os, matrix& output) ;
+//		friend std::ostream& operator<< <> (std::ostream& os, matrix& output) ;
 
 	private:
 		value_type* __data ;
@@ -488,6 +456,7 @@ template<class _T> class matrix : public matrix_expression<matrix, _T> {
 		inline void singularity() {
 			if( bVerify ) {
 
+				// Only square matricies can be non-singular
 				if( __rows != __cols ) {
 					m_det = 0 ;
 					bSingular = true ;
@@ -495,45 +464,17 @@ template<class _T> class matrix : public matrix_expression<matrix, _T> {
 
 				// check for a zero _row
 				if( !bSingular ) {
-					for(size_type i=0; i<__rows; ++i) {
-						bool _zero = false ;
-						if( __data[i*__rows+0] == 0 ) {
-							for(size_type j=1; j<__cols; ++j) {
-								if( __data[i*__rows+j] != 0 ) {
-									_zero = false ;
-									break ;
-								} else {
-									_zero = true ;
-								}
-							}
-						}
-						if( _zero ) {
-							bSingular = true ;
-							m_det = 0 ;
-							break ;
-						}
+					if( check_zero_row(__data, __rows, __cols) ) {
+						bSingular = true ;
+						m_det = 0 ;
 					}
 				}
 
 				// check for a zero column
 				if( !bSingular ) {
-					for(size_type i=0; i<__cols; ++i) {
-						bool _zero = false ;
-						if( __data[i] == 0 ) {
-							for(size_type j=1; j<__rows; ++j) {
-								if( __data[j*__rows+i] == 0 ) {
-									_zero = true ;
-								} else {
-									_zero = false ;
-									break ;
-								}
-							}
-						}
-						if( _zero ) {
-							bSingular = true ;
-							m_det = 0 ;
-							break ;
-						}
+					if( check_zero_column(__data, __rows, __cols) ) {
+						bSingular = true ;
+						m_det = 0 ;
 					}
 				}
 
@@ -541,13 +482,12 @@ template<class _T> class matrix : public matrix_expression<matrix, _T> {
 				// of int types, determinant must be 1 or -1 otherwise
 				// matrix is singular
 				if( !bSingular ) {
-					determinant() ;
-					value_type zero = m_det ;
-					if( zero == 0 ) {
+					m_det = determinant(__data, __cols) ;
+					if( !m_det ) {
 						bSingular = true ;
 					} else {
 						if( typeid(value_type) == typeid(int) ) {
-							if( zero == 1 || zero == -1 ) {
+							if( m_det == 1 || m_det == -1 ) {
 								bSingular = false ;
 							} else {
 								bSingular = true ;
@@ -562,83 +502,7 @@ template<class _T> class matrix : public matrix_expression<matrix, _T> {
 			}
 		}
 
-		/**
-		 * Calculates the determinant of the matrix. If the determinant
-		 * is returned as zero, bSingular flag is set to true. 
-		 * Otherwise it is set to true. In both cases the bVerify
-		 * flag is then set to false.
-		 */
-		inline void determinant() {
-			m_det = determinant(__data, __cols) ;
-		}
-		
-		inline value_type determinant(const value_type* data, const size_type& n) {
-			value_type result = 0 ;
-			value_type* temp = new value_type[n*n] ;
-			if( n == 1 ) {
-				delete[] temp ;
-				return data[0] ;
-			} else if( n == 2 ) {
-				delete[] temp ;
-				return (data[0]*data[3]-data[1]*data[2]) ;
-			} else {
-				for(size_type p=0; p<n; ++p) {
-					size_type h = 0 ;
-					size_type k = 0 ;
-					for(size_type i=1; i<n; ++i) {
-						for(size_type j=0; j<n; ++j) {
-							if( j == p ) continue ;
-							temp[h*n+k] = data[i*n+j] ;
-							++k ;
-							if( k == n ) { ++h ; k = 0 ;}
-						}
-					}
-					result += data[0+p]*pow(-1,p)*determinant(temp, n-1) ;
-				}
-				delete[] temp ;
-				return result ;
-			}
-		}
-
 };
-
-template <class _T>
-inline std::ostream& operator<< (std::ostream& os, matrix<_T>& output) {
-	os << "\nrows: " << output.__rows << "   det:   " << output.det() 
-	   << "\ncols: " << output.__cols ;
-	if( output.bSingular ) {
-		os << "   singular" << endl ;
-	} else {
-		os << "   non-singular" << endl ;
-	}
-	for(size_t i=0; i<output.__rows; ++i) {
-		os << "| " ;
-		for(size_t j=0; j<output.__cols; ++j) {
-			char buf[32];
-            _T data = output.__data[i*output.__rows+j];
-            if( typeid(_T) == typeid(int) ) {
-            	if( data >= 1e5 ) {
-            		sprintf(buf, "%1.1e ", (double)data) ;
-            	} else {
-        			sprintf(buf, "%7d ", (int)data) ;
-        		}
-            } else {
-            	if( (abs(data) >= 1e10) || (abs(data) <= 1e-4) ) {
-            		if( abs(data) <= 1e-40 ) {
-            			sprintf(buf, "%10.0f ", (double)data) ;
-            		} else {
-            			sprintf(buf, "%10.3e ", (double)data) ;
-            		}
-            	} else {
-        			sprintf(buf, "%10.3f ", (double)data) ;
-        		}
-            }
-            os <<  buf ;
-		}
-		os << " |" << endl ;
-	}
-	return os ;
-}
 
 /*********************** MATRIX OPERATIONS *************************
 **
