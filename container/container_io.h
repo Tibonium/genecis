@@ -14,17 +14,20 @@
 namespace genecis {
 namespace container {
 
-template<template<typename> class T, typename E>
-std::ostream& operator<< (std::ostream& os, container_expression<T, E>& c)
+template<class E>
+std::ostream& operator<< (std::ostream& os, container_expression<E>& c)
 {
-	typedef E		value_type ;
-	typedef size_t	size_type ;	
+	typedef E							expression_type ;
+	typedef typename E::value_type		value_type ;
+	typedef typename E::size_type		size_type ;	
 
+	expression_type e = c() ;
+	size_type size = e.size() ;
     std::stringstream s ;	
-	s << "[" << c.size() << "]: {" ;
-	for(size_t i=0; i<c.size(); ++i) {
-		s << c(i) ;
-		(i!=(c.size()-1)) ? s << "," :
+	s << "[" << size << "]: {" ;
+	for(size_t i=0; i<size; ++i) {
+		s << e (i) ;
+		(i!=(size-1)) ? s << "," :
 			s << "}" ;
 	}
 	os << s.str().c_str() ;

@@ -10,24 +10,26 @@
 namespace genecis {
 namespace container {
 
-	template<class _T>
-	class array : public container_expression<array, _T> {
+	template<class T>
+	class array : public container_expression<array<T> > {
 
 		public:
 	
-			typedef array<_T>								 					self_type ;
-			typedef std::allocator<_T>  					 					allocator_type ;
-			typedef typename container_expression<array,_T>::value_type			value_type ;
-			typedef typename container_expression<array,_T>::pointer			pointer ;
-			typedef typename container_expression<array,_T>::const_pointer		const_pointer ;
-			typedef typename container_expression<array,_T>::difference_type	difference_type ;
-			typedef typename container_expression<array,_T>::reference			reference ;
-			typedef typename container_expression<array,_T>::const_reference	const_reference ;
-			typedef typename container_expression<array,_T>::size_type  		size_type ;
-			typedef typename container_expression<array,_T>::iterator			iterator ;
-			typedef typename container_expression<array,_T>::const_iterator		const_iterator ;
-			typedef typename container_expression<array,_T>::reverse_iterator	reverse_iterator ;
-			typedef typename container_expression<array,_T>::reverse_iterator 	const_reverse_iterator ;
+			typedef array<T>			self_type ;
+			typedef std::allocator<T>	allocator_type ;
+			typedef T			 		value_type ;
+			typedef T*				  	pointer ;
+			typedef const T*		  	const_pointer ;
+			typedef ptrdiff_t		  	difference_type ;
+			typedef value_type&			reference ;
+			typedef const value_type&	const_reference ;
+			typedef size_t  			size_type ;
+			typedef pointer			  	iterator ;
+			typedef const_pointer		const_iterator ;
+			typedef genecis_reverse_iterator<iterator>
+				reverse_iterator ;
+			typedef genecis_reverse_iterator<const_iterator>
+				const_reverse_iterator ;
 
 			/**
 			 * Empty constructor
@@ -46,19 +48,33 @@ namespace container {
 			/**
 			 * Copy constructor
 			 */
-			array(array<value_type>& other) {
-				this->create_storage( other.size() ) ;
-				std::copy( other.begin(), other.end(), __begin ) ;
+			array(self_type& a) {
+				this->create_storage( a.size() ) ;
+				std::copy( a.begin(), a.end(), __begin ) ;
+			}
+			
+			template<typename A>
+			array(const container_expression<A>& a) {
+				create_storage( a().size() ) ;
+				array_assign<scalar_assign>(*this, a) ;
 			}
 		
 			/**
 			 * Assignment operator
 			 */
-			void operator=(array<value_type>& rhs) {
+			void operator=(const self_type& a) {
 				allocator_type d ;
 				d.deallocate( __begin, size() ) ;
-				this->create_storage( rhs.size() ) ;
-				std::copy( rhs.begin(), rhs.end(), __begin ) ;
+				this->create_storage( a.size() ) ;
+				std::copy( a.begin(), a.end(), __begin ) ;
+			}
+			 
+			template<typename A>
+			void operator=(const container_expression<A>& a) {
+				allocator_type d ;
+				d.deallocate( __begin, size() ) ;
+				this->create_storage( a().size() ) ;
+				std::copy( a().begin(), a().end(), __begin ) ;
 			}
 		
 			/**
@@ -67,6 +83,8 @@ namespace container {
 			virtual ~array() {
 				allocator_type d ;
 				d.deallocate( __begin, size() ) ;
+				__begin = NULL ;
+				__end = NULL ;
 			}
 		
 		/**** Iterators ****/
@@ -75,7 +93,7 @@ namespace container {
 			 * in this class.
 			 */
 			iterator begin() {
-				return iterator( __begin ) ;
+				return __begin ;
 			}
 		
 			/**
@@ -83,23 +101,23 @@ namespace container {
 			 * class 
 			 */
 			iterator end() {
-				return iterator( __end ) ;
+				return __end ;
 			}
 		
 			/**
 			 * Provides a const pointer to the beginning of the data
 			 * stored in this class 
 			 */
-			const_iterator cbegin() const {
-				return const_iterator( begin() ) ;
+			const_iterator begin() const {
+				return __begin ;
 			}
 		
 			/**
 			 * Provides a const pointer to the end of the data stored
 			 * in this class 
 			 */
-			const_iterator cend() const {
-				return const_iterator( end() ) ;
+			const_iterator end() const {
+				return __end ;
 			}
 		
 			/**
@@ -122,7 +140,7 @@ namespace container {
 			 * Provides a const pointer to the end of the data stored
 			 * in this class 
 			 */
-			const_reverse_iterator crbegin() const {
+			const_reverse_iterator rbegin() const {
 				return const_reverse_iterator( end() ) ;
 			}
 		
@@ -130,7 +148,7 @@ namespace container {
 			 * Provides a const pointer to the beginning of the data
 			 * stored in this class 
 			 */
-			const_reverse_iterator crend() const {
+			const_reverse_iterator rend() const {
 				return const_reverse_iterator( begin() ) ;
 			}
 
@@ -173,13 +191,28 @@ namespace container {
 			 */
 			template<int _index>
 			void operator= (value_type c) {
-				*( __begin + _index ) = c ;
+				operator() (_index) = c ;
 			}
-		
-			/**
-			 * Output format
-			 */
-	
+			
+			array& operator+= (const value_type& c) {
+				array_assign<scalar_add_assign> (*this, c) ;
+				return (*this) ;
+			}
+
+			array& operator-= (const value_type& c) {
+				return operator+=(-c) ;
+			}
+
+			array& operator*= (const value_type& c) {
+				array_assign<scalar_multiply_assign> (*this, c) ;
+				return (*this) ;
+			}
+			
+			array& operator/= (const value_type& c) {
+				array_assign<scalar_divide_assign> (*this, c) ;
+				return (*this) ;
+			}
+
 		private:
 			// begin and end of the data stored in this class
 			iterator __begin ;

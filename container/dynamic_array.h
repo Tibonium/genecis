@@ -10,25 +10,27 @@
 namespace genecis {
 namespace container {
 
-	template<class _T> class dynamic_array :
-			public container_expression<dynamic_array, _T>
-	{
+	template<class T> class dynamic_array :
+			public container_expression<dynamic_array<T> > {
 
 		public:
 
-			typedef dynamic_array<_T>													self_type ;
-			typedef std::allocator<_T>  												allocator_type ;
-			typedef typename container_expression<dynamic_array,_T>::value_type			value_type ;
-			typedef typename container_expression<dynamic_array,_T>::pointer			pointer ;
-			typedef typename container_expression<dynamic_array,_T>::const_pointer		const_pointer ;
-			typedef typename container_expression<dynamic_array,_T>::difference_type	difference_type ;
-			typedef typename container_expression<dynamic_array,_T>::reference			reference ;
-			typedef typename container_expression<dynamic_array,_T>::const_reference	const_reference ;
-			typedef typename container_expression<dynamic_array,_T>::size_type  		size_type ;
-			typedef typename container_expression<dynamic_array,_T>::iterator			iterator ;
-			typedef typename container_expression<dynamic_array,_T>::const_iterator		const_iterator ;
-			typedef typename container_expression<dynamic_array,_T>::reverse_iterator	reverse_iterator ;
-			typedef typename container_expression<dynamic_array,_T>::reverse_iterator 	const_reverse_iterator ;
+			typedef dynamic_array<T>	self_type ;
+			typedef std::allocator<T>	allocator_type ;
+			typedef T			 		value_type ;
+			typedef T*				  	pointer ;
+			typedef const T*		  	const_pointer ;
+			typedef ptrdiff_t		  	difference_type ;
+			typedef value_type&			reference ;
+			typedef const value_type&	const_reference ;
+			typedef size_t  			size_type ;
+			typedef pointer			  	iterator ;
+			typedef const_pointer		const_iterator ;
+			typedef genecis_reverse_iterator<iterator>
+				reverse_iterator ;
+			typedef genecis_reverse_iterator<const_iterator>
+				const_reverse_iterator ;
+
 
 			/**
 			 * Constructor with specified size.
@@ -47,19 +49,19 @@ namespace container {
 			/**
 			 * Copy constructor
 			 */
-			dynamic_array(dynamic_array const& other) {
-				this->create_storage( other.size() ) ;
-				std::copy( other.begin(), other.end(), __begin ) ;
+			dynamic_array(const self_type& other) {
+				create_storage( other.size() ) ;
+				std::copy( other.__begin, other.__end, __begin ) ;
 			}
 
 			/**
 			 * Class assignment operator
 			 */
-			void operator=(dynamic_array const& rhs) {
+			void operator=(const self_type& rhs) {
 				allocator_type d ;
 				d.deallocate( __begin, size() ) ;
-				this->create_storage( rhs.size() ) ;
-				std::copy( rhs.begin(), rhs.end(), __begin ) ;
+				create_storage( rhs.size() ) ;
+				std::copy( rhs.__begin, rhs.__end, __begin ) ;
 			}
 
 			/**
@@ -98,11 +100,11 @@ namespace container {
 			 * Concatenates two dynamic arrays and passes back a new
 			 * dynamic array.
 			 */
-			dynamic_array* operator+(dynamic_array& rhs) {
+			self_type operator+(dynamic_array& rhs) {
 				size_type tmp_size = size() + rhs.size() ;
-				dynamic_array<_T>* tmp = new dynamic_array<_T>(tmp_size) ;
-				std::copy( __begin, __end, tmp->begin() ) ;
-				std::copy( rhs.begin(), rhs.end(), (tmp->begin() + size()) ) ;
+				self_type tmp(tmp_size) ;
+				std::copy( __begin, __end, tmp.begin() ) ;
+				std::copy( rhs.begin(), rhs.end(), (tmp.begin() + size()) ) ;
 				return tmp ;
 			}
 		
@@ -137,7 +139,7 @@ namespace container {
 			 */
 			template<size_type _index>
 			void operator= (value_type c) {
-				*( __begin + _index ) = c ;
+				operator() (_index) = c ;
 			}
 
 		/**** Iterators ****/
@@ -205,14 +207,14 @@ namespace container {
 				return const_reverse_iterator( begin() ) ;
 			}
 
-		protected:
+		private:
 
 			/**
 			 * Pointers to the data stored in the dynamic_array
 			 */
 			iterator __begin ;
 			iterator __end ;
-		
+
 			/**
 			 * Resizes the data array to prevent the array from going
 			 * out of bounds when the index is larger then the size of

@@ -14,11 +14,10 @@ int main() {
 	}
 	cout << "a: " << a << endl ;
 	cout << "b: " << b << endl ;
-	dynamic_array<int>* c = a + b ;
-	cout << "c: " << (*c) << endl ;
+	dynamic_array<int> c = a + b ;
+	cout << "c: " << c << endl ;
 	a(10) = 10 ;
 	cout << "a: " << a << endl ;
-	delete c ;
 	
 	array<int> k(5) ;
 	array<int>::reverse_iterator i ;
@@ -36,6 +35,19 @@ int main() {
 		(*i) = j ;
 		++j ;
 	}
+	cout << "m:" << m << endl ;
 	k = m ;
 	cout << "k: " << k << endl ;
+	
+	k += 5 ;
+	cout << "k+5:" << k << endl ;
+	k -= 10 ;
+	cout << "k-10:" << k << endl ;
+	k *= 10 ;
+	cout << "k*7:" << k << endl ;
+	k /= 2 ;
+	cout << "k/2:" << k << endl ;
+	
+	array<int> t = k + m ;
+	cout << "k+m:" << t << endl ;
 }

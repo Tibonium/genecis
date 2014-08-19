@@ -16,7 +16,8 @@ MATRIX = math/matrix.h math/matrix_expression.h math/matrix_operations.h \
 VECTOR = math/math_vector.h math/bvector.h math/svector.h math/cvector.h \
 	math/vector_expression.h
 CONTAINER = container/array.h container/dynamic_array.h \
-	container/container_io.h container/container_expression.h
+	container/container_io.h container/container_expression.h \
+	container/container_functions.h
 MATH_HDR = ${wildcard math/*.h}
 DIST_HDR = ${wildcard distribution/*.h}
 TREE_HDR = ${wildcard tree/*.h}
