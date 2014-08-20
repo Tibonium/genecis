@@ -7,8 +7,8 @@
 CC = g++ -g -O0 -Wall -std=c++98
 IDIR = /usr/local/include
 INSTALL_PATH = $(IDIR)/genecis
-BUILD_PATH = ~/genecis-build
-SRC_PATH = ~/GENeCIS
+BUILD_PATH = $(shell echo $(GENECIS_BUILD))
+SRC_PATH = $(shell echo $(GENECIS_SRC))
 GENECIS_FOLDERS = ai algorithm base container distribution tree \
 	physics net math
 CFLAGS = -I $(IDIR)
