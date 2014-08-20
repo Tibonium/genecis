@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "creating symoblic link for graph.txt"
+ln -fs $GENECIS_SRC/graph.txt $GENECIS_BUILD
+echo "creating symoblic link for prime_list.txt"
+ln -fs $GENECIS_SRC/prime_list.txt $GENECIS_BUILD
+echo "creating symoblic link for rome99.gr"
+ln -fs $GENECIS_SRC/rome99.gr $GENECIS_BUILD
+echo "creating symoblic link for Makefile"
+ln -fs $GENECIS_SRC/Makefile $GENECIS_BUILD
+date

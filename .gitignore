@@ -8,3 +8,4 @@
 !*.gr
 !compile_c++_file
 !genecis_test
+!link_genecis_files
