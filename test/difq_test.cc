@@ -1,4 +1,4 @@
-#include "../math/ode.h"
+#include <genecis/math/ode.h>
 #include <iostream>
 #include <cstdio>
 

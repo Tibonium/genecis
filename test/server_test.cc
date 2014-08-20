@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include "../net/genecis_server.h"
+#include <genecis/net/genecis_server.h>
 
 using namespace std ;
 using namespace genecis::net ;

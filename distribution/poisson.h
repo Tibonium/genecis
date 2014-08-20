@@ -5,6 +5,8 @@
 #ifndef GENECIS_DISTRIBUTION_POISSON_H
 #define GENECIS_DISTRIBUTION_POISSON_H
 
+#include <genecis/distribution/probability_mass_function.h>
+
 /**
  * The Poisson distribution named after French
  * mathematician Siméon Denis Poisson, is a discrete
@@ -18,38 +20,38 @@
 namespace genecis {
 namespace distribution {
 
-class poisson : public probability_mass_function<int, double>
-{
+	class poisson :
+		public probability_mass_function<int, double> {
 
-	private :
+		private :
 	
-		double _lambda  ;
+			double _lambda  ;
 	
-	public :
+		public :
 
-		virtual double probability(int k) {
-			unsigned k_fact = 1;
-			if (k > 0.0) {
-				for(int i=2; i<k+1; ++i) {
-					k_fact *= i ;
+			virtual double probability(int k) {
+				unsigned k_fact = 1;
+				if (k > 0.0) {
+					for(int i=2; i<k+1; ++i) {
+						k_fact *= i ;
+					}
 				}
+				double _result = ( pow(_lambda, k) * exp(-_lambda) ) / k_fact ;
+				return _result ;
 			}
-			double _result = ( pow(_lambda, k) * exp(-_lambda) ) / k_fact ;
-			return _result ;
-		}
 	
-		// Constructor
-		poisson(double lambda) {
-			if(lambda <= 0.0) {
-				cout << "lambda must be greater then zero, lambda: "
-					<< lambda << endl;
-			} else { _lambda = lambda ;}
-		}
+			// Constructor
+			poisson(double lambda) {
+				if(lambda <= 0.0) {
+					cout << "lambda must be greater then zero, lambda: "
+						<< lambda << endl;
+				} else { _lambda = lambda ;}
+			}
 		
-		// Destructor
-		virtual ~poisson() {}
+			// Destructor
+			virtual ~poisson() {}
 
-};
+	};
 
 }	// end of namespace distribution
 }	// end of namespace genecis

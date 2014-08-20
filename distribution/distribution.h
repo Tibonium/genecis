@@ -8,15 +8,15 @@
 #include <iostream>
 #include <iomanip>
 
-#include "probability_density_function.h"
-#include "probability_mass_function.h"
-#include "cumulative_distribution_function.h"
+#include <genecis/distribution/probability_density_function.h>
+#include <genecis/distribution/probability_mass_function.h>
+#include <genecis/distribution/cumulative_distribution_function.h>
 
-#include "gaussian.h"
-#include "uniform.h"
+#include <genecis/distribution/gaussian.h>
+#include <genecis/distribution/uniform.h>
 
-#include "discrete_distribution.h"
-#include "poisson.h"
-#include "bernoulli.h"
+#include <genecis/distribution/discrete_distribution.h>
+#include <genecis/distribution/poisson.h>
+#include <genecis/distribution/bernoulli.h>
 
 #endif

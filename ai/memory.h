@@ -2,7 +2,10 @@
  * @file memory.h
  */
 
-#include "action.h"
+#ifndef GENECIS_AI_MEMORY_H
+#define GENECIS_AI_MEMORY_H
+
+#include <genecis/ai/action.h>
 
 namespace genecis {
 namespace ai {
@@ -38,5 +41,6 @@ class memory {
 		
 };
 
-}
-}
+}	// end of namespace ai
+}	// end of namespace genecis
+#endif

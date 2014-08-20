@@ -6,6 +6,7 @@
 
 CC = g++ -g -O0 -Wall -std=c++98
 IDIR = /usr/local/include
+INSTALL_PATH = $(IDIR)/genecis
 CFLAGS = -I $(IDIR)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime sort_test vector_test mathfunc_test \
@@ -17,11 +18,16 @@ VECTOR = math/math_vector.h math/bvector.h math/svector.h math/cvector.h \
 	math/vector_expression.h
 CONTAINER = container/array.h container/dynamic_array.h \
 	container/container_io.h container/container_expression.h \
-	container/container_functions.h
+	base/genecis_functions.h
 MATH_HDR = ${wildcard math/*.h}
+AI_HDR = ${wildcard ai/*.h}
+ALGO_HDR = ${wildcard algorithm/*.h}
+BASE_HDR = ${wildcard base/*.h}
+CONT_HDR = ${wildcard container/*.h}
 DIST_HDR = ${wildcard distribution/*.h}
 TREE_HDR = ${wildcard tree/*.h}
 PHYS_HDR = ${wildcard physics/*.h}
+SRVR_HDR = ${wildcard net/*.h}
 SRVR_FILES = ${wildcard net/*.cc}
 
 MATH_OBJ = ${wildcard math/*.o}
@@ -32,6 +38,35 @@ SRVR_OBJ = $(wildcard net/*.o)
 all: regression_test misc_test
 	@date
 
+install:
+	@for file in $(AI_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/ai/ ; \
+	done
+	@for file in $(ALGO_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/algorithm/ ; \
+	done
+	@for file in $(BASE_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/base/ ; \
+	done
+	@for file in $(CONT_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/container/ ; \
+	done
+	@for file in $(DIST_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/distribution/ ; \
+	done
+	@for file in $(TREE_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/tree/ ; \
+	done
+	@for file in $(MATH_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/math/ ; \
+	done
+	@for file in $(PHYS_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/physics/ ; \
+	done
+	@for file in $(SRVR_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/net/ ; \
+	done
+	
 clean:
 	@echo "The following tests have been removed: "
 	@for test in $(TESTS) ; do \

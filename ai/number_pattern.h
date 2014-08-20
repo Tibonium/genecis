@@ -2,6 +2,9 @@
  * @file number_pattern.h
  */
 
+#ifndef GENECSI_AI_NUMBER_PATTERN_H
+#define GENECIS_AI_NUMBER_PATTERN_H
+
 #include <iostream>
 #include <cmath>
 
@@ -74,3 +77,4 @@ class number_pattern {
 
 }	// end of namespace ai
 }	// end of namespace genecis
+#endif

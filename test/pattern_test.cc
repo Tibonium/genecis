@@ -1,5 +1,5 @@
-#include "../ai/number_pattern.h"
-#include "../container/array.h"
+#include <genecis/ai/number_pattern.h>
+#include <genecis/container/array.h>
 
 using namespace genecis::ai ;
 using namespace genecis::container ;

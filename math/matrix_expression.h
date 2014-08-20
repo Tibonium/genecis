@@ -50,5 +50,4 @@ namespace math {
 
 }	// end of namespace math
 }	// end of namespace genecis
-
 #endif

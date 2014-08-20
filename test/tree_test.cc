@@ -1,4 +1,4 @@
-#include "../tree/trees.h"
+#include <genecis/tree/trees.h>
 #include <ctime>
 
 using namespace genecis::tree ;

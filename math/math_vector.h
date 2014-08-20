@@ -5,8 +5,8 @@
 #ifndef GENECIS_MATH_MATH_VECTOR_H
 #define GENECIS_MATH_MATH_VECTOR_H
 
-#include "svector.h"
-#include "cvector.h"
-#include "bvector.h"
+#include <genecis/math/svector.h>
+#include <genecis/math/cvector.h>
+#include <genecis/math/bvector.h>
 
 #endif

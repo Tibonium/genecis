@@ -8,9 +8,9 @@
 #include <cstddef>
 #include <cstdlib>
 #include <algorithm>
-#include "../base/genecis_expression.h"
-#include "../base/genecis_reverse_iterator.h"
-#include "../base/genecis_functions.h"
+#include <genecis/base/genecis_expression.h>
+#include <genecis/base/genecis_reverse_iterator.h>
+#include <genecis/base/genecis_functions.h>
 
 using namespace genecis::base ;
 

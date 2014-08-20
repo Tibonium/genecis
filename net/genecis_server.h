@@ -5,30 +5,30 @@
 #ifndef GENECIS_NET_GENECIS_SERVER_H
 #define GENECIS_NET_GENECIS_SERVER_H
 
-#include "isocket.h"
+#include <genecis/net/isocket.h>
 
 namespace genecis {
 namespace net {
 
-class genecis_server : public isocket {
+	class genecis_server : public isocket {
 
-	public:
+		public:
 		
-		// Constructor
-		genecis_server( const int ) ;
+			// Constructor
+			genecis_server( const int ) ;
 		
-		genecis_server() {} ;
+			genecis_server() {} ;
 		
-		// Destructor
-		virtual ~genecis_server() ;
+			// Destructor
+			virtual ~genecis_server() ;
 		
-		const genecis_server& operator<< ( const std::string& ) ;
+			const genecis_server& operator<< ( const std::string& ) ;
 		
-		const genecis_server& operator>> ( std::string& ) ;
+			const genecis_server& operator>> ( std::string& ) ;
 		
-		void accept( genecis_server& ) ;
+			void accept( genecis_server& ) ;
 
-};
+	};
 
 }	// end of namespace net
 }	// end of namespace genecis

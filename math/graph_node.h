@@ -11,50 +11,51 @@
 namespace genecis {
 namespace math {
 
-#define INF 1048576 	// 2^20
+	#define INF 1048576 	// 2^20
 
-using namespace std ;
+	using namespace std ;
 
-class graph_node {
+	class graph_node {
 
-	public:
+		public:
 		
-		int _id ;
-		int _num_vertices ;
-		int* _vertex ;
-		int* _edge ;
-		int _distance ;
-		bool _visited ;
-		vector<int> _path ;
+			int _id ;
+			int _num_vertices ;
+			int* _vertex ;
+			int* _edge ;
+			int _distance ;
+			bool _visited ;
+			vector<int> _path ;
 		
-		void clear() {
-			_distance = INF ;
-			_visited = false ;
-		}
-		
-		graph_node(int id, int n, int* v, int* d) :
-			_id(id), _num_vertices(n)
-		{
-			if( _num_vertices == 0 ) {
-				_vertex = NULL ;
-				_edge = NULL ;
-			} else {
-				_vertex = v ;
-				_edge = d ;
+			void clear() {
+				_distance = INF ;
+				_visited = false ;
 			}
-		}
 		
-		graph_node() {
-			if( _vertex ) {
-				delete[] _vertex ;
+			graph_node(int id, int n, int* v, int* d) :
+				_id(id), _num_vertices(n)
+			{
+				if( _num_vertices == 0 ) {
+					_vertex = NULL ;
+					_edge = NULL ;
+				} else {
+					_vertex = v ;
+					_edge = d ;
+				}
 			}
-			if( _edge ) {
-				delete[] _edge ;
+		
+			graph_node() {
+				if( _vertex ) {
+					delete[] _vertex ;
+				}
+				if( _edge ) {
+					delete[] _edge ;
+				}
 			}
-		}
 
-};
+	};
 
 }	// end of namespace math
 }	// end of namespace genecis
+
 #endif

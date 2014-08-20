@@ -30,5 +30,4 @@ inline std::ostream& operator<< (std::ostream& os, const goal& other) {
 
 }	// end of namespace ai
 }	// end of namespace genecis
-
 #endif

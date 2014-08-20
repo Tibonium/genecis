@@ -11,25 +11,27 @@
 namespace genecis {
 namespace distribution {
 
-#define TWO_PI (2.0*M_PI)
+	#define TWO_PI (2.0*M_PI)
 
-using namespace std ;
+	using namespace std ;
 
-template <class _TYPE> class probability_density_function {
+	template <class T> class probability_density_function {
 
-	public:
+		public:
+		
+			typedef T		value_type ;
 
-		/**
-		 * Function call that takes an interval of [a,b)
-		 * and returns the probability/integral on that
-		 * interval.
-		 */
-		virtual _TYPE probability(double a, double b) = 0 ;
+			/**
+			 * Function call that takes an interval of [a,b)
+			 * and returns the probability/integral on that
+			 * interval.
+			 */
+			virtual value_type
+			probability(value_type a, value_type b) = 0 ;
 
-		//virtual ~distribution() {}	
-};
+			//virtual ~distribution() {}	
+	};
 
 }	// end of namespace distribution
 }	// end of namespace genecis
-
 #endif

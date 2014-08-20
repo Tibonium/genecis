@@ -2,10 +2,10 @@
  * @file dynamic_array.h
  */
 
-#ifndef GENECIS_CONTAINER_DYNAMIC_ARRAY
-#define GENECIS_CONTAINER_DYNAMIC_ARRAY
+#ifndef GENECIS_CONTAINER_DYNAMIC_ARRAY_H
+#define GENECIS_CONTAINER_DYNAMIC_ARRAY_H
 
-#include "container_io.h"
+#include <genecis/container/container_io.h>
 
 namespace genecis {
 namespace container {
@@ -54,6 +54,12 @@ namespace container {
 				std::copy( other.__begin, other.__end, __begin ) ;
 			}
 
+			template<typename A>
+			dynamic_array(const container_expression<A>& a) {
+				create_storage( a().size() ) ;
+				genecis_assign<scalar_assign>(*this, a) ;
+			}
+
 			/**
 			 * Class assignment operator
 			 */
@@ -62,6 +68,14 @@ namespace container {
 				d.deallocate( __begin, size() ) ;
 				create_storage( rhs.size() ) ;
 				std::copy( rhs.__begin, rhs.__end, __begin ) ;
+			}
+
+			template<typename A>
+			void operator=(const container_expression<A>& a) {
+				allocator_type d ;
+				d.deallocate( __begin, size() ) ;
+				create_storage( a().size() ) ;
+				genecis_assign<scalar_assign>(*this, a) ;
 			}
 
 			/**
@@ -115,6 +129,23 @@ namespace container {
 				size_type tmp_size = size() + rhs.size() ;
 				resize( tmp_size ) ;
 				std::copy( rhs.begin(), rhs.end(), (__begin + size()) ) ;
+			}
+
+			/** ========== Operator overloads ========== **/
+			void operator+= (const value_type& c) {
+				genecis_assign<scalar_add_assign> (*this, c) ;
+			}
+
+			void operator-= (const value_type& c) {
+				operator+=(-c) ;
+			}
+
+			void operator*= (const value_type& c) {
+				genecis_assign<scalar_multiply_assign> (*this, c) ;
+			}
+			
+			void operator/= (const value_type& c) {
+				genecis_assign<scalar_divide_assign> (*this, c) ;
 			}
 		
 			/**

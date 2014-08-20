@@ -5,7 +5,7 @@
 #ifndef GENECIS_MATH_SVECTOR
 #define GENECIS_MATH_SVECTOR
 
-#include "vector_io.h"
+#include <genecis/math/vector_io.h>
 
 namespace genecis {
 namespace math {
@@ -201,5 +201,4 @@ namespace math {
 
 }	// end of namespace math
 }	// end of namespace genecis
-
 #endif

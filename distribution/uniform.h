@@ -5,6 +5,8 @@
 #ifndef GENECIS_DISTRIBUTION_UNIFORM_H
 #define GENECIS_DISTRIBUTION_UNIFORM_H
 
+#include <genecis/distribution/probability_density_function.h>
+
 /**
  * The continuous uniform distribution or rectangular
  * distribution is a family of symmetric probability
@@ -18,33 +20,33 @@
 namespace genecis {
 namespace distribution {
 
-class uniform : public probability_density_function<double>
-{
+	class uniform :
+		public probability_density_function<double> {
 
-	private:
+		private:
 	
-		double _lower ;
-		double _upper ;
-		double _norm ;
-		double _a, _b ;
-		double _result ;
+			double _lower ;
+			double _upper ;
+			double _norm ;
+			double _a, _b ;
+			double _result ;
 
-	public:
+		public:
 	
-		virtual double probability(double a, double b) {
-			_a = min( _upper, max(a, _lower) ) ;
-			_b = max( _lower, min(b, _upper) ) ;
-			_result = ( _b - _a ) * _norm ;
-			return _result ;
-		}
+			virtual double probability(double a, double b) {
+				_a = min( _upper, max(a, _lower) ) ;
+				_b = max( _lower, min(b, _upper) ) ;
+				_result = ( _b - _a ) * _norm ;
+				return _result ;
+			}
 
-		///constructor
-		uniform( double lower, double upper ) :
-		_lower(lower), _upper(upper) {
-			_norm = 1.0 / ( _upper - _lower ) ;
-		}
+			///constructor
+			uniform( double lower, double upper ) :
+			_lower(lower), _upper(upper) {
+				_norm = 1.0 / ( _upper - _lower ) ;
+			}
 
-};
+	};
 
 }	// end of namespace distribution
 }	// end of namespace genecis

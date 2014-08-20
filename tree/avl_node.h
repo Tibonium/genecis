@@ -8,17 +8,17 @@
 namespace genecis {
 namespace tree {
 
-template <class _type> class avl_node {
+	template <class _type> class avl_node {
 
-	public:
+		public:
 	
-		_type key ;
-		char balance ;
-		avl_node<_type>* left ;
-		avl_node<_type>* right ;
-		avl_node<_type>* parent ;
+			_type key ;
+			char balance ;
+			avl_node<_type>* left ;
+			avl_node<_type>* right ;
+			avl_node<_type>* parent ;
 
-};
+	};
 
 }	// end of namespace tree
 }	// end of namespace genecis

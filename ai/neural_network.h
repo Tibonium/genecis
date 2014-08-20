@@ -2,8 +2,11 @@
  * @file neural_network.h
  */
 
-#include "neuron.h"
-#include "../containter/dynamic_array.h"
+#ifndef GENECIS_AI_NEURAL_NETWORK_H
+#define GENECIS_AI_NEURAL_NETWORK_H
+
+#include <genecis/ai/neuron.h>
+#include <genecis/containter/dynamic_array.h>
 
 namespace genecis {
 namespace ai {
@@ -38,5 +41,6 @@ class neural_network {
 
 };
 
-}
-}
+}	// end of namespace ai
+}	// end of namespace genecis
+#endif

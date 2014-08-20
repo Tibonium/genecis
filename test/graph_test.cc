@@ -1,4 +1,4 @@
-#include "../math/graph.h"
+#include <genecis/math/graph.h>
 #include <fstream>
 #include <sstream>
 

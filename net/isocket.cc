@@ -2,7 +2,7 @@
  *	@file isocket.cc
  */
  
-#include "isocket.h"
+#include <genecis/net/isocket.h>
 #include <cerrno>
 #include <fcntl.h>
 #include <iostream>

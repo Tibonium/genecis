@@ -3,7 +3,7 @@
 #include <sys/time.h>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
-#include "../math/matrix.h"
+#include <genecis/math/matrix.h>
 
 using namespace std ;
 using namespace genecis::math ;

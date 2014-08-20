@@ -11,20 +11,19 @@
 namespace genecis {
 namespace distribution {
 
-#define TWO_PI (2.0*M_PI)
+	#define TWO_PI (2.0*M_PI)
 
-using namespace std ;
+	using namespace std ;
 
-class cumulative_distribution_function {
+	class cumulative_distribution_function {
 
-	public:
+		public:
 
-		virtual double probability(double x) = 0 ;
+			virtual double probability(double x) = 0 ;
 
-		//virtual ~distribution() {}	
-};
+			//virtual ~distribution() {}	
+	};
 
 }	// end of namespace distribution
 }	// end of namespace genecis
-
 #endif

@@ -2,7 +2,7 @@
  * @file gravity_netcdf.cc
  */
 
-#include "gravity.h"
+#include <genecis/phsyics/gravity.h>
 
 using namespace genecis::physics ;
 

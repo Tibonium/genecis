@@ -2,7 +2,10 @@
  * @file neuron.h
  */
 
-#include "memory.h"
+#ifndef GENECIS_AI_NEURON_H
+#define GENECIS_AI_NEURON_H
+
+#include <genecis/ai/memory.h>
 
 namespace genecis {
 namespace ai {
@@ -35,5 +38,4 @@ struct neuron {
 
 }	// end of namespace ai
 }	// end of namesapce genecis
-
-
+#endif

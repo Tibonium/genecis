@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <cstdlib>
-#include "../math/set.h"
-#include "../math/matrix.h"
+#include <genecis/math/set.h>
+#include <genecis/math/matrix.h>
 
 using namespace std ;
 using namespace genecis::math ;

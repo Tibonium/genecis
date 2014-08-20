@@ -2,7 +2,7 @@
  * @file gravity.cc
  */
  
-#include "gravity.h"
+#include <genecis/physics/gravity.h>
 
 using namespace genecis::physics ;
 

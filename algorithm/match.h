@@ -1,3 +1,7 @@
+/**
+ * @file match.h
+ */
+
 #ifndef GENECIS_ALGORITHM_MATCH_H
 #define GENECIS_ALGORITHM_MATCH_H
 
@@ -6,10 +10,11 @@
 namespace genecis {
 namespace algorithm {
 
-template <typename _T>
-class match {
+template <typename T> class match {
 
 	public:
+	
+		typedef T		value_type ;
 	
 		/**
 		 * Uses the 
@@ -19,7 +24,7 @@ class match {
 		}
 		
 		// Constructor
-		match(_T* s1, _T* s2) {
+		match(value_type* s1, value_type* s2) {
 		
 		}
 		
@@ -34,5 +39,4 @@ class match {
 
 }	// end of namespace algorithm
 }	// end of namespace genecis
-
 #endif

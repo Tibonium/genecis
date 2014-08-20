@@ -9,15 +9,15 @@
 namespace genecis {
 namespace tree {
 
-template <typename _T> class binary_node {
+	template <typename _T> class binary_node {
 
-	public:
+		public:
 	
-		_T key_value ;
-		binary_node<_T>* left ;
-		binary_node<_T>* right ;
+			_T key_value ;
+			binary_node<_T>* left ;
+			binary_node<_T>* right ;
 
-};
+	};
 
 }	// end of namespace tree
 }	// end of namespace genecis

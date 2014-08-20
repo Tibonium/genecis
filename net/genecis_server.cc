@@ -2,7 +2,7 @@
  *	@file genecis_server.cc
  */
 
-#include "genecis_server.h"
+#include <genecis/net/genecis_server.h>
 
 using namespace genecis::net ;
 

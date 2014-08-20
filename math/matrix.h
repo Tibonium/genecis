@@ -5,8 +5,8 @@
 #ifndef GENECIS_MATH_MATRIX
 #define GENECIS_MATH_MATRIX
 
-#include "matrix_io.h"
-#include "matrix_operations.h"
+#include <genecis/math/matrix_io.h>
+#include <genecis/math/matrix_operations.h>
 
 namespace genecis {
 namespace math {
@@ -723,5 +723,4 @@ namespace math {
 
 }	// end of namespace math
 }	// end of namespace genecis
-
 #endif

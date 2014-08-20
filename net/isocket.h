@@ -22,50 +22,50 @@ const int MAXBUFF = 500 ;
 namespace genecis {
 namespace net {
 
-class isocket {
+	class isocket {
 
-	public:
+		public:
 		
-		void hook() ;
+			void hook() ;
 				
-		void ready() ;
+			void ready() ;
 		
-		void take( isocket& ) const ;
+			void take( isocket& ) const ;
 		
-		void call() ;
+			void call() ;
 		
-		void chat( const std::string ) ;
+			void chat( const std::string ) ;
 		
-		void read( std::string& ) ;
+			void read( std::string& ) ;
 		
-		void set_non_blocking( const bool ) ;
+			void set_non_blocking( const bool ) ;
 		
-//		void change_port( const int ) ;
+	//		void change_port( const int ) ;
 
-		// Constructor
-		isocket( const std::string&, const int ) ;
+			// Constructor
+			isocket( const std::string&, const int ) ;
 		
-		isocket() ;
+			isocket() ;
 		
-		// Destructor
-		virtual ~isocket() ;
+			// Destructor
+			virtual ~isocket() ;
 		
-	private:
+		private:
 	
-		struct addrinfo host_info ;
-		struct addrinfo* host_info_list ;
-		struct sockaddr_in s_addr ;
-		int _socket ;
-		int _socketfd ;
-		ssize_t bytes_sent ;
-		ssize_t bytes_recv ;
+			struct addrinfo host_info ;
+			struct addrinfo* host_info_list ;
+			struct sockaddr_in s_addr ;
+			int _socket ;
+			int _socketfd ;
+			ssize_t bytes_sent ;
+			ssize_t bytes_recv ;
 		
-		std::string _host_name ;
-		int _port ;
+			std::string _host_name ;
+			int _port ;
 
-		void create() ;
+			void create() ;
 
-};
+	};
 
 }	// end of namespace net
 }	// end of namespace genecis

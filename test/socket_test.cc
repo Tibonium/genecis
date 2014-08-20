@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include "../net/isocket.h"
+#include <genecis/net/isocket.h>
 
 using namespace std ;
 using namespace genecis::net ;

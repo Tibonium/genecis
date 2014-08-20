@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include "../distribution/distribution.h"
+#include <genecis/distribution/distribution.h>
 
 using namespace genecis::distribution ;
 

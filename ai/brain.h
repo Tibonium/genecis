@@ -8,8 +8,8 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include "decision.h"
-#include "goal.h"
+#include <genecis/ai/decision.h>
+#include <genecis/ai/goal.h>
 
 namespace genecis {
 namespace ai {

@@ -5,7 +5,7 @@
 #ifndef GENECIS_MATH_BVECTOR
 #define GENECIS_MATH_BVECTOR
 
-#include "vector_io.h"
+#include <genecis/math/vector_io.h>
 
 namespace genecis {
 namespace math {
@@ -145,15 +145,7 @@ namespace math {
 
 	};
 
-// std::output override for bvector
-//inline std::ostream& operator<< (std::ostream& os, const bvector& other) {
-//	os << "(x,y,z): ["
-//	   << other.u1() << ", "
-//	   << other.u2() << ", "
-//	   << other.u3() << "]" ;
-//	return os ;
-//};
-
 }	// end of namespace math
 }	// end of namespace genecis
+
 #endif

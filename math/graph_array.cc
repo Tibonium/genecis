@@ -2,7 +2,7 @@
  * @file graph_array.cc
  */
 
-#include "graph_array.h"
+#include <genecis/math/graph_array.h>
 
 using namespace genecis::math ;
  

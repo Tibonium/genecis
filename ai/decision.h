@@ -17,5 +17,4 @@ class decision {
 
 }	// end of namespace ai
 }	// end of namespace genecis
-
 #endif

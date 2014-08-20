@@ -1,4 +1,4 @@
-#include "../math/math_vector.h"
+#include <genecis/math/math_vector.h>
 
 using namespace std ;
 using namespace genecis::math ;

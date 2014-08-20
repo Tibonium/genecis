@@ -2,7 +2,7 @@
  * @file number_pattern.cc
  */
 
-#include "number_pattern.h"
+#include <genecis/ai/number_pattern.h>
 
 using namespace genecis::ai ;
 

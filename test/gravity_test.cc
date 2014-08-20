@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../physics/gravity.h"
-#include "../math/mathematics.h"
+#include <genecis/physics/gravity.h>
+#include <genecis/math/mathematics.h>
 
 using namespace std ;
 using namespace genecis::math ;

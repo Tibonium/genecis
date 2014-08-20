@@ -5,7 +5,7 @@
 #ifndef GENECIS_BASE_GENECIS_FUNCTIONS_H
 #define GENECIS_BASE_GENECIS_FUNCTIONS_H
 
-#include "genecis_expression.h"
+#include <genecis/base/genecis_expression.h>
 #include <cmath>
 
 namespace genecis {
@@ -75,7 +75,7 @@ template<typename E> class genecis_expression ;
 
 	// Assign with expression and scalar
 	template<template<class G> class F, class G, class T>
-	void array_assign( G& g, const T& t ) {
+	void genecis_assign( G& g, const T& t ) {
         typedef F<G> function_type ;
         typedef typename G::size_type size_type ;
         size_type size ( g.size () ) ;
@@ -121,7 +121,7 @@ template<typename E> class genecis_expression ;
 
 /** ==================== Binary function calls ==================== **/
 	template<template<class T1, class T2> class F, class G, class E>
-	void array_assign( G& g, const genecis_expression<E>& e ) {
+	void genecis_assign( G& g, const genecis_expression<E>& e ) {
         typedef F<typename G::reference, typename E::const_reference> function_type ;
         typedef typename G::size_type size_type ;
         size_type size ( g.size () ) ;

@@ -3,7 +3,7 @@
  *  main class for solving ordinary differential equations
  */
 
-#include "ode.h"
+#include <genecis/math/ode.h>
 #include <iostream>
 
 using namespace genecis::math ;

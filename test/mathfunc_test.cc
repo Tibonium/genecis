@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
-#include "../math/math_functions.h"
-#include "../container/array.h"
+#include <genecis/math/math_functions.h>
+#include <genecis/container/array.h>
 
 using namespace std ;
 using namespace genecis::container ;

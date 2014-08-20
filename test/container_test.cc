@@ -1,5 +1,5 @@
-#include "../container/dynamic_array.h"
-#include "../container/array.h"
+#include <genecis/container/dynamic_array.h>
+#include <genecis/container/array.h>
 
 using namespace genecis::container ;
 using namespace std ;
@@ -39,14 +39,14 @@ int main() {
 	k = m ;
 	cout << "k: " << k << endl ;
 	
-//	k += 5 ;
-//	cout << "k+5:" << k << endl ;
-//	k -= 10 ;
-//	cout << "k-10:" << k << endl ;
-//	k *= 10 ;
-//	cout << "k*7:" << k << endl ;
-//	k /= 2 ;
-//	cout << "k/2:" << k << endl ;
+	k += 5 ;
+	cout << "k+5:" << k << endl ;
+	k -= 10 ;
+	cout << "k-10:" << k << endl ;
+	k *= 10 ;
+	cout << "k*7:" << k << endl ;
+	k /= 2 ;
+	cout << "k/2:" << k << endl ;
 	
 	array<double> t = k - 5 ;
 	cout << "t:" << t << endl ;

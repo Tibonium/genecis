@@ -1,4 +1,4 @@
-#include "../math/graph_array.h"
+#include <genecis/math/graph_array.h>
 #ifdef WIN32
 #include "sys_time_win32.h"
 #else

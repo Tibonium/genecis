@@ -2,10 +2,10 @@
  * @file array.h
  */
 
-#ifndef GENECIS_CONTAINER_ARRAY
-#define GENECIS_CONTAINER_ARRAY
+#ifndef GENECIS_CONTAINER_ARRAY_H
+#define GENECIS_CONTAINER_ARRAY_H
 
-#include "container_io.h"
+#include <genecis/container/container_io.h>
 
 namespace genecis {
 namespace container {
@@ -56,7 +56,7 @@ namespace container {
 			template<typename A>
 			array(const container_expression<A>& a) {
 				create_storage( a().size() ) ;
-				array_assign<scalar_assign>(*this, a) ;
+				genecis_assign<scalar_assign>(*this, a) ;
 			}
 		
 			/**
@@ -73,8 +73,8 @@ namespace container {
 			void operator=(const container_expression<A>& a) {
 				allocator_type d ;
 				d.deallocate( __begin, size() ) ;
-				this->create_storage( a().size() ) ;
-				std::copy( a().begin(), a().end(), __begin ) ;
+				create_storage( a().size() ) ;
+				genecis_assign<scalar_assign>(*this, a) ;
 			}
 		
 			/**
@@ -92,7 +92,7 @@ namespace container {
 			 * Provides a pointer to the beginning of the data stored
 			 * in this class.
 			 */
-			iterator begin() {
+			inline iterator begin() {
 				return __begin ;
 			}
 		
@@ -100,7 +100,7 @@ namespace container {
 			 * Provides a pointer to the end of the data stored in this
 			 * class 
 			 */
-			iterator end() {
+			inline iterator end() {
 				return __end ;
 			}
 		
@@ -108,7 +108,7 @@ namespace container {
 			 * Provides a const pointer to the beginning of the data
 			 * stored in this class 
 			 */
-			const_iterator begin() const {
+			inline const_iterator begin() const {
 				return __begin ;
 			}
 		
@@ -116,7 +116,7 @@ namespace container {
 			 * Provides a const pointer to the end of the data stored
 			 * in this class 
 			 */
-			const_iterator end() const {
+			inline const_iterator end() const {
 				return __end ;
 			}
 		
@@ -124,7 +124,7 @@ namespace container {
 			 * Provides a pointer to the end of the data stored in this
 			 * class 
 			 */
-			reverse_iterator rbegin() {
+			inline reverse_iterator rbegin() {
 				return reverse_iterator( end() ) ;
 			}
 		
@@ -132,7 +132,7 @@ namespace container {
 			 * Provides a pointer to the beginning of the data
 			 * stored in this class 
 			 */
-			reverse_iterator rend() {
+			inline reverse_iterator rend() {
 				return reverse_iterator( begin() ) ;
 			}
 		
@@ -140,7 +140,7 @@ namespace container {
 			 * Provides a const pointer to the end of the data stored
 			 * in this class 
 			 */
-			const_reverse_iterator rbegin() const {
+			inline const_reverse_iterator rbegin() const {
 				return const_reverse_iterator( end() ) ;
 			}
 		
@@ -148,18 +148,18 @@ namespace container {
 			 * Provides a const pointer to the beginning of the data
 			 * stored in this class 
 			 */
-			const_reverse_iterator rend() const {
+			inline const_reverse_iterator rend() const {
 				return const_reverse_iterator( begin() ) ;
 			}
 
 			/**
 			 * Returns the number of elements in the data array
 			 */
-			size_type size() {
+			inline size_type size() {
 				return size_type( __end - __begin ) ;
 			}
 
-			size_type size() const {
+			inline size_type size() const {
 				return size_type( __end - __begin ) ;
 			}
 
@@ -167,22 +167,22 @@ namespace container {
 			 * Returns a pointer to the beginning of the stored data
 			 * in the class
 			 */
-			pointer data() {
+			inline pointer data() {
 				return __begin ;
 			}
 
-			const_pointer data() const {
+			inline const_pointer data() const {
 				return __begin ;
 			}
 		
 			/**
 			 * Element accessor
 			 */
-			reference operator() (size_type t) {
+			inline reference operator() (size_type t) {
 				return *( __begin + t ) ;
 			}
 		
-			const_reference operator() (size_type t) const {
+			inline const_reference operator() (size_type t) const {
 				return *( __begin + t ) ;
 			}
 		
@@ -194,23 +194,21 @@ namespace container {
 				operator() (_index) = c ;
 			}
 			
-			array& operator+= (const value_type& c) {
-				array_assign<scalar_add_assign> (*this, c) ;
-				return (*this) ;
+			/** ========== Operator overloads ========== **/
+			void operator+= (const value_type& c) {
+				genecis_assign<scalar_add_assign> (*this, c) ;
 			}
 
-			array& operator-= (const value_type& c) {
-				return operator+=(-c) ;
+			void operator-= (const value_type& c) {
+				operator+=(-c) ;
 			}
 
-			array& operator*= (const value_type& c) {
-				array_assign<scalar_multiply_assign> (*this, c) ;
-				return (*this) ;
+			void operator*= (const value_type& c) {
+				genecis_assign<scalar_multiply_assign> (*this, c) ;
 			}
 			
-			array& operator/= (const value_type& c) {
-				array_assign<scalar_divide_assign> (*this, c) ;
-				return (*this) ;
+			void operator/= (const value_type& c) {
+				genecis_assign<scalar_divide_assign> (*this, c) ;
 			}
 
 		private:

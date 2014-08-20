@@ -5,6 +5,8 @@
 #ifndef GENECIS_DISTRIBUTION_BERNOULLI_H
 #define GENECIS_DISTRIBUTION_BERNOULLI_H
 
+#include <genecis/distribution/probability_mass_function.h>
+
 /**
  * The Bernoulli distribution is a discrete
  * probability distribution, which takes a value
@@ -15,25 +17,24 @@
 namespace genecis {
 namespace distribution {
 
-class bernoulli : public probability_mass_function<double, bool>
-{
+	class bernoulli :
+		public probability_mass_function<double, bool> {
 
-	private:
+		private:
 		
-		double _success ;
+			double _success ;
 	
-	public:
+		public:
 	
-		virtual bool probability(double chance) {
-			if (chance <= _success) {return true ;}
-			else {return false ;}
-		}
+			virtual bool probability(double chance) {
+				if (chance <= _success) {return true ;}
+				else {return false ;}
+			}
 		
-		bernoulli(double success) : _success(success) {}
+			bernoulli(double success) : _success(success) {}
 
-};
+	};
 
 }	// end of namespace distribution
 }	// end of namespace genecis
-
 #endif
