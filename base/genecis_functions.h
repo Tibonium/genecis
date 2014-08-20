@@ -11,7 +11,7 @@
 namespace genecis {
 namespace base {
 
-template<typename E> class genecis_expression ;
+	template<typename E> class genecis_expression ;
 
 /** ==================== Unary function calls ==================== **/
 //	template<template<class T> class F>

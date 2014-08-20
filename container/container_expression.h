@@ -296,7 +296,7 @@ namespace container {
 	template<class E1, class E2>
 	typename array_binary_traits<E1, E2,
 			scalar_multiply<typename E1::value_type,typename E2::value_type> >::result_type
-	operator* (const container_expression<E1>& e1, const container_expression<E2>& e2) {
+	multiply (const container_expression<E1>& e1, const container_expression<E2>& e2) {
 	typedef typename array_binary_traits<E1, E2,
 			scalar_multiply<typename E1::value_type,typename E2::value_type> >::expression_type expression_type ;
 		return expression_type( e1(), e2() ) ;
@@ -306,7 +306,7 @@ namespace container {
 	template<class E1, class E2>
 	typename array_binary_traits<E1, E2,
 			scalar_divide<typename E1::value_type,typename E2::value_type> >::result_type
-	operator/ (const container_expression<E1>& e1, const container_expression<E2>& e2) {
+	divide (const container_expression<E1>& e1, const container_expression<E2>& e2) {
 	typedef typename array_binary_traits<E1, E2,
 			scalar_divide<typename E1::value_type,typename E2::value_type> >::expression_type expression_type ;
 		return expression_type( e1(), e2() ) ;

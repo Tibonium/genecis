@@ -4,3 +4,7 @@
 !*/
 !*.cc
 !*.h
+!*.txt
+!*.gr
+!compile_c++_file
+!genecis_test

@@ -1,0 +1,13 @@
+#!/bin/bash
+BUILD_PATH="/home/david/genecis-build/"
+tests=$(find $BUILD_PATH -executable -type f)
+if [ "$1" = "" ]
+then
+	for test in $tests
+	do
+		$test
+	done
+else
+	$1
+fi
+date

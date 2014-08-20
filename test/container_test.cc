@@ -1,3 +1,4 @@
+#include <sys/time.h>
 #include <genecis/container/dynamic_array.h>
 #include <genecis/container/array.h>
 
@@ -53,4 +54,19 @@ int main() {
 	cout << "k:" << k << endl ;
 	k = abs(-k) ;
 	cout << "abs(-k):" << k << endl ;
+	
+	int size = 100000 ;
+	array<double> r(size) ;
+	array<double> s(size) ;
+	struct timeval time ;
+    struct timezone zone ;
+    int N = 10 ;
+    gettimeofday( &time, &zone ) ;
+	double start = time.tv_sec + time.tv_usec * 1e-6 ;
+	for(int i=0; i<N; ++i) {
+		t = multiply(r, s) ;
+	}
+	gettimeofday( &time, &zone ) ;
+	double complete = time.tv_sec + time.tv_usec * 1e-6 ;
+	cout << "Total time: " << (complete-start) << endl ;
 }
