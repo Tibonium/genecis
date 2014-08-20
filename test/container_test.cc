@@ -19,8 +19,8 @@ int main() {
 	a(10) = 10 ;
 	cout << "a: " << a << endl ;
 	
-	array<int> k(5) ;
-	array<int>::reverse_iterator i ;
+	array<double> k(5) ;
+	array<double>::reverse_iterator i ;
 	int j = 10 ;
 	for(i=k.rbegin(); i!=k.rend(); ++i) {
 		(*i) = j ;
@@ -28,9 +28,9 @@ int main() {
 	}
 	cout << "k: " << k << endl ;
 	
-	array<int> m(k) ;
+	array<double> m(k) ;
 	cout << "m: " << m << endl ;
-	j = 50 ;
+	j = 1 ;
 	for(i=m.rbegin(); i!=m.rend(); ++i) {
 		(*i) = j ;
 		++j ;
@@ -39,15 +39,18 @@ int main() {
 	k = m ;
 	cout << "k: " << k << endl ;
 	
-	k += 5 ;
-	cout << "k+5:" << k << endl ;
-	k -= 10 ;
-	cout << "k-10:" << k << endl ;
-	k *= 10 ;
-	cout << "k*7:" << k << endl ;
-	k /= 2 ;
-	cout << "k/2:" << k << endl ;
+//	k += 5 ;
+//	cout << "k+5:" << k << endl ;
+//	k -= 10 ;
+//	cout << "k-10:" << k << endl ;
+//	k *= 10 ;
+//	cout << "k*7:" << k << endl ;
+//	k /= 2 ;
+//	cout << "k/2:" << k << endl ;
 	
-	array<int> t = k + m ;
-	cout << "k+m:" << t << endl ;
+	array<double> t = k - 5 ;
+	cout << "t:" << t << endl ;
+	cout << "k:" << k << endl ;
+	k = abs(-k) ;
+	cout << "abs(-k):" << k << endl ;
 }
