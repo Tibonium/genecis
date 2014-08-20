@@ -2,6 +2,10 @@
 #
 #        Makefile for the GENeCIS test routines
 #
+#		 The user needs to have the environment variables
+#		 GENECIS_BUILD and GENECIS_SRC set to the the source and
+#		 build directories, respectively, on their system.
+#
 #*******************************************************************
 
 CC = g++ -g -O0 -Wall -std=c++98
