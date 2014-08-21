@@ -9,3 +9,4 @@
 !compile_c++_file
 !genecis_test
 !link_genecis_files
+!genecis_config.mk
