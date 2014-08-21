@@ -9,6 +9,7 @@
 #*******************************************************************
 
 CC = g++ -g -O0 -Wall -std=c++98
+ROWS = $(shell tput lines)
 IDIR = /usr/local/include
 INSTALL_PATH = $(IDIR)/genecis
 BUILD_PATH = $(shell echo $(GENECIS_BUILD))
@@ -86,23 +87,23 @@ install:
 	@for file in $(SRVR_HDR) ; do \
 		cp $$file $(INSTALL_PATH)/net/ ; \
 	done
-	
+
 clean:
-	@echo "The following tests have been removed: "
+	@echo "Cleaning build..."
 	@for test in $(TESTS) ; do \
-		if [ -a $$test ] ; \
+		if [ -f $$test ] ; \
 		then \
 			rm $(BUILD_PATH)/$$test ; \
-			echo "  " $$test ; \
 		fi ; \
 	done
 	@for test in $(MISC_TESTS) ; do \
-		if [ -a $$test ] ; \
+		if [ -f $$test ] ; \
 		then \
 			rm $(BUILD_PATH)/$$test ; \
-			echo "  " $$test ; \
 		fi ; \
 	done
+	@tput cup 22 17
+	@echo "Build cleaned."
 
 # Various miscellaneous test
 misc_test: $(MISC_TESTS)
@@ -176,7 +177,7 @@ mathfunc_test:  $(SRC_PATH)/test/mathfunc_test.cc
 	@echo "Building mathfunc_test..."
 	@$(CC) -o $(BUILD_PATH)/mathfunc_test $(SRC_PATH)/test/mathfunc_test.cc $(CFLAGS)
 	
-math/graph_array.o: $(SRC_PATH)/math/graph_array.cc math/graph_array.h
+math/graph_array.o: $(SRC_PATH)/math/graph_array.cc $(SRC_PATH)/math/graph_array.h
 	@echo "Creating obj file graph_array.o..."
 	@$(CC) -c $(SRC_PATH)/math/graph_array.cc -o $(SRC_PATH)/math/graph_array.o
 	
@@ -216,11 +217,11 @@ server_test: $(SRC_PATH)/test/server_test.cc $(SRVR_OBJ)
 	@$(CC) -o $(BUILD_PATH)/server_test $(SRC_PATH)/test/server_test.cc $(SRVR_OBJ) $(CFLAGS)
 	
 # Physics Tests
-gravity_test: $(SRC_PATH)/test/gravity_test.cc $(SRC_PATH)/physics/gravity.o physics/gravity.h
+gravity_test: $(SRC_PATH)/test/gravity_test.cc physics/gravity.o $(SRC_PATH)/physics/gravity.h
 	@echo "Building gravity_test..."
 	@$(CC) -o $(BUILD_PATH)/gravity_test $(SRC_PATH)/test/gravity_test.cc $(SRC_PATH)/physics/gravity.o $(CFLAGS)
 		
-physics/gravity.o: $(SRC_PATH)/physics/gravity.cc
+physics/gravity.o: $(SRC_PATH)/physics/gravity.cc $(SRC_PATH)/physics/gravity.h
 	@echo "Creating obj file gravity.o..."
 	@$(CC) -c $(SRC_PATH)/physics/gravity.cc -o $(SRC_PATH)/physics/gravity.o
 	
