@@ -8,14 +8,12 @@
 #
 #*******************************************************************
 
-CC = g++ -g -O0 -Wall -std=c++98
-IDIR = /usr/local/include
-INSTALL_PATH = $(IDIR)/genecis
-BUILD_PATH = $(shell echo $(GENECIS_BUILD))
-SRC_PATH = $(shell echo $(GENECIS_SRC))
+IDIR = ..
+INSTALL_PATH = /usr/local/include/genecis
 GENECIS_FOLDERS = ai algorithm base container distribution tree \
 	physics net math
 CFLAGS = -I $(IDIR)
+CC = g++ -g -O0 -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime sort_test vector_test mathfunc_test \
 	container_test graph_array_test pattern_test#	gravity_test
@@ -38,13 +36,23 @@ PHYS_HDR = ${wildcard $(SRC_PATH)/physics/*.h}
 SRVR_HDR = ${wildcard $(SRC_PATH)/net/*.h}
 SRVR_FILES = ${wildcard $(SRC_PATH)/net/*.cc}
 
-MATH_OBJ = ${wildcard $(SRC_PATH)/math/*.o}
-AI_OBJ = ${wildcard $(SRC_PATH)/ai/*.o}
-PHYS_OBJ = ${wildcard $(SRC_PATH)/physics/*.o}
-SRVR_OBJ = $(wildcard $(SRC_PATH)/net/*.o)
+MATH_O = graph_array.o ode.o
+MATH_OBJ = $(addprefix $(BUILD_PATH)/math/, $(MATH_O))
+AI_O = number_pattern.o
+AI_OBJ = $(addprefix $(BUILD_PATH)/ai/, $(AI_O))
+PHYS_O = gravity.o gravity_netcdf.o
+PHYS_OBJ = $(addprefix $(BUILD_PATH)/phsyics/, $(PHYS_O))
+SRVR_O = isocket.o genecis_server.o
+SRVR_OBJ = $(addprefix $(BUILD_PATH)/net/, $(SRVR_O))
+OBJS = $(AI_O) $(MATH_O) $(SRVR_O) #$(PHYS_O)
+
+include genecis_config.mk
 
 all: regression_test misc_test
 	@date
+	
+test:
+	@echo $(SRVR_OBJ)
 	
 install:
 	@for main in $(INSTALL_PATH) ; do \
@@ -88,21 +96,20 @@ install:
 	done
 	
 clean:
-	@echo "The following tests have been removed: "
 	@for test in $(TESTS) ; do \
-		if [ -a $$test ] ; \
+		if [ -f $$test ] ; \
 		then \
 			rm $(BUILD_PATH)/$$test ; \
-			echo "  " $$test ; \
 		fi ; \
 	done
 	@for test in $(MISC_TESTS) ; do \
-		if [ -a $$test ] ; \
+		if [ -f $$test ] ; \
 		then \
 			rm $(BUILD_PATH)/$$test ; \
-			echo "  " $$test ; \
 		fi ; \
 	done
+	@find $(BUILD_PATH) -name "*.o" -exec rm '{}' \;
+	@echo "removed $(OBJS)"
 
 # Various miscellaneous test
 misc_test: $(MISC_TESTS)
@@ -110,119 +117,119 @@ misc_test: $(MISC_TESTS)
 
 reference_test: $(SRC_PATH)/misc_test/reference_test.cc
 	@echo "Building reference_test..."
-	@$(CC) -o $(BUILD_PATH)/reference_test $(SRC_PATH)/misc_test/reference_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/reference_test $(SRC_PATH)/misc_test/reference_test.cc
 	
 boost_test: $(SRC_PATH)/misc_test/boost_test.cc
 	@echo "Building boost_test..."
-	@$(CC) -o $(BUILD_PATH)/boost_test $(SRC_PATH)/misc_test/boost_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/boost_test $(SRC_PATH)/misc_test/boost_test.cc
 	
 hash_test: $(SRC_PATH)/misc_test/hash_test.cc
 	@echo "Building hash_test..."
-	@$(CC) -o $(BUILD_PATH)/hash_test $(SRC_PATH)/misc_test/hash_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/hash_test $(SRC_PATH)/misc_test/hash_test.cc
 
 buffer_test: $(SRC_PATH)/misc_test/buffer_test.cc
 	@echo "Building buffer_test..."
-	@$(CC) -o $(BUILD_PATH)/buffer_test $(SRC_PATH)/misc_test/buffer_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/buffer_test $(SRC_PATH)/misc_test/buffer_test.cc
 
 template_test: $(SRC_PATH)/misc_test/template_test.cc
 	@echo "Building template_test..."
-	@$(CC) -o $(BUILD_PATH)/template_test $(SRC_PATH)/misc_test/template_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/template_test $(SRC_PATH)/misc_test/template_test.cc
 
 # Regression Tests
 regression_test: $(TESTS)
 	@echo "Regression Tests built"
 
-math/ode.o: $(SRC_PATH)/math/ode.cc $(SRC_PATH)/math/ode.h
+$(BUILD_PATH)/math/ode.o: $(SRC_PATH)/math/ode.cc $(SRC_PATH)/math/ode.h
 	@echo "Creating obj file ode.o..."
-	@$(CC) -c $(SRC_PATH)/math/ode.cc -o $(SRC_PATH)/math/ode.o
+	@$(CC) -c $(SRC_PATH)/math/ode.cc -o $(BUILD_PATH)/math/ode.o
 	
-difq_test: $(SRC_PATH)/test/difq_test.cc $(SRC_PATH)/math/ode.o
+difq_test: $(SRC_PATH)/test/difq_test.cc $(BUILD_PATH)/math/ode.o
 	@echo "Building difq_test..."
-	@$(CC) -o $(BUILD_PATH)/difq_test $(SRC_PATH)/test/difq_test.cc $(SRC_PATH)/math/ode.o $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/difq_test $(SRC_PATH)/test/difq_test.cc $(SRC_PATH)/math/ode.o
 		
 matrix_test: $(SRC_PATH)/test/matrix_test.cc $(MATRIX)
 	@echo "Building matrix_test..."
-	@$(CC) -o $(BUILD_PATH)/matrix_test $(SRC_PATH)/test/matrix_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/matrix_test $(SRC_PATH)/test/matrix_test.cc
 	
 distribution_test: $(SRC_PATH)/test/distribution_test.cc
 	@echo "Building distribution_test..."
-	@$(CC) -o $(BUILD_PATH)/distribution_test $(SRC_PATH)/test/distribution_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/distribution_test $(SRC_PATH)/test/distribution_test.cc
 
 tree_test: $(SRC_PATH)/test/tree_test.cc
 	@echo "Building tree_test..."
-	@$(CC) -o $(BUILD_PATH)/tree_test $(SRC_PATH)/test/tree_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/tree_test $(SRC_PATH)/test/tree_test.cc
 	
 graph_test: $(SRC_PATH)/test/graph_test.cc
 	@echo "Building graph_test..."
-	@$(CC) -o $(BUILD_PATH)/graph_test $(SRC_PATH)/test/graph_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/graph_test $(SRC_PATH)/test/graph_test.cc
 	
 vector_test: $(SRC_PATH)/test/vector_test.cc $(VECTOR)
 	@echo "Building vector_test..."
-	@$(CC) -o $(BUILD_PATH)/vector_test $(SRC_PATH)/test/vector_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/vector_test $(SRC_PATH)/test/vector_test.cc
 
 container_test: $(SRC_PATH)/test/container_test.cc $(CONTAINER)
 	@echo "Building container_test..."
-	@$(CC) -o $(BUILD_PATH)/container_test $(SRC_PATH)/test/container_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/container_test $(SRC_PATH)/test/container_test.cc
 
 prime: $(SRC_PATH)/test/prime.cc
 	@echo "Building prime_test..."
-	@$(CC) -o $(BUILD_PATH)/prime $(SRC_PATH)/test/prime.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/prime $(SRC_PATH)/test/prime.cc
 	
 sort_test: $(SRC_PATH)/test/sort_test.cc
 	@echo "Building sort_test..."
-	@$(CC) -o $(BUILD_PATH)/sort_test $(SRC_PATH)/test/sort_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/sort_test $(SRC_PATH)/test/sort_test.cc
 	
 mathfunc_test:  $(SRC_PATH)/test/mathfunc_test.cc
 	@echo "Building mathfunc_test..."
-	@$(CC) -o $(BUILD_PATH)/mathfunc_test $(SRC_PATH)/test/mathfunc_test.cc $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/mathfunc_test $(SRC_PATH)/test/mathfunc_test.cc
 	
-math/graph_array.o: $(SRC_PATH)/math/graph_array.cc math/graph_array.h
+$(BUILD_PATH)/math/graph_array.o: $(SRC_PATH)/math/graph_array.cc $(SRC_PATH)/math/graph_array.h
 	@echo "Creating obj file graph_array.o..."
-	@$(CC) -c $(SRC_PATH)/math/graph_array.cc -o $(SRC_PATH)/math/graph_array.o
+	@$(CC) -c $(SRC_PATH)/math/graph_array.cc -o $(BUILD_PATH)/math/graph_array.o
 	
-graph_array_test: $(SRC_PATH)/test/graph_array_test.cc $(SRC_PATH)/math/graph_array.o
+graph_array_test: $(SRC_PATH)/test/graph_array_test.cc $(BUILD_PATH)/math/graph_array.o
 	@echo "Building graph_array_test..."
 	@$(CC) -o $(BUILD_PATH)/graph_array_test $(SRC_PATH)/test/graph_array_test.cc \
-		$(SRC_PATH)/math/graph_array.o $(CFLAGS)
+		$(SRC_PATH)/math/graph_array.o
 
-ai/number_pattern.o: $(SRC_PATH)/ai/number_pattern.cc $(SRC_PATH)/ai/number_pattern.h
+$(BUILD_PATH)/ai/number_pattern.o: $(SRC_PATH)/ai/number_pattern.cc $(SRC_PATH)/ai/number_pattern.h
 	@echo "Creating obj file number_pattern.o..."
-	@$(CC) -c $(SRC_PATH)/ai/number_pattern.cc -o $(SRC_PATH)/ai/number_pattern.o
+	@$(CC) -c $(SRC_PATH)/ai/number_pattern.cc -o $(BUILD_PATH)/ai/number_pattern.o
 
-pattern_test: $(SRC_PATH)/test/pattern_test.cc $(SRC_PATH)/ai/number_pattern.o
+pattern_test: $(SRC_PATH)/test/pattern_test.cc $(BUILD_PATH)/ai/number_pattern.o
 	@echo "Building pattern_test..."
 	@$(CC) -o $(BUILD_PATH)/pattern_test $(SRC_PATH)/test/pattern_test.cc \
-		$(SRC_PATH)/ai/number_pattern.o $(CFLAGS)
+		$(SRC_PATH)/ai/number_pattern.o
 	
 # Server Tests
 server: socket_test server_test
 	@echo "Server build complete"
 	@date
 
-net/isocket.o: $(SRC_PATH)/net/isocket.cc $(SRC_PATH)/net/isocket.h
+$(BUILD_PATH)/net/isocket.o: $(SRC_PATH)/net/isocket.cc $(SRC_PATH)/net/isocket.h
 	@echo "Creating server obj file net/isocket.o..."
-	@$(CC) -c $(SRC_PATH)/net/isocket.cc -o $(SRC_PATH)/net/isocket.o
+	@$(CC) -c $(SRC_PATH)/net/isocket.cc -o $(BUILD_PATH)/net/isocket.o
 
-net/genecis_server.o: $(SRC_PATH)/net/genecis_server.cc
+$(BUILD_PATH)/net/genecis_server.o: $(SRC_PATH)/net/genecis_server.cc
 	@echo "Creating server obj file net/genecis_server.o..."
-	@$(CC) -c $(SRC_PATH)/net/genecis_server.cc -o $(SRC_PATH)/net/genecis_server.o
+	@$(CC) -c $(SRC_PATH)/net/genecis_server.cc -o $(BUILD_PATH)/net/genecis_server.o
 
 socket_test: $(SRC_PATH)/test/socket_test.cc $(SRVR_OBJ)
 	@echo "Building socket_test..."
-	@$(CC) -o $(BUILD_PATH)/socket_test $(SRC_PATH)/test/socket_test.cc $(SRC_PATH)/net/isocket.o $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/socket_test $(SRC_PATH)/test/socket_test.cc $(BUILD_PATH)/net/isocket.o
 
 server_test: $(SRC_PATH)/test/server_test.cc $(SRVR_OBJ)
 	@echo "Building server_test..."
-	@$(CC) -o $(BUILD_PATH)/server_test $(SRC_PATH)/test/server_test.cc $(SRVR_OBJ) $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/server_test $(SRC_PATH)/test/server_test.cc $(SRVR_OBJ)
 	
 # Physics Tests
-gravity_test: $(SRC_PATH)/test/gravity_test.cc $(SRC_PATH)/physics/gravity.o physics/gravity.h
+gravity_test: $(SRC_PATH)/test/gravity_test.cc $(BUILD_PATH)/physics/gravity.o physics/gravity.h
 	@echo "Building gravity_test..."
-	@$(CC) -o $(BUILD_PATH)/gravity_test $(SRC_PATH)/test/gravity_test.cc $(SRC_PATH)/physics/gravity.o $(CFLAGS)
+	@$(CC) -o $(BUILD_PATH)/gravity_test $(SRC_PATH)/test/gravity_test.cc $(BUILD_PATH)/physics/gravity.o
 		
-physics/gravity.o: $(SRC_PATH)/physics/gravity.cc
+$(BUILD_PATH)/physics/gravity.o: $(SRC_PATH)/physics/gravity.cc
 	@echo "Creating obj file gravity.o..."
-	@$(CC) -c $(SRC_PATH)/physics/gravity.cc -o $(SRC_PATH)/physics/gravity.o
+	@$(CC) -c $(SRC_PATH)/physics/gravity.cc -o $(BUILD_PATH)/physics/gravity.o
 	
 #physics/gravity_netcdf.o: $(SRC_PATH)/physics/gravity_netcdf.cc
 #	@echo "Creating obj file gravity_netcdf.o..."
