@@ -10,13 +10,16 @@
 
 include genecis_config.mk
 V = 0
+D = 0
 VERB_0 = @
 VERB_1 = 
+OPT_0 = -O3
+OPT_1 = -g -O0
 INSTALL_PATH = /usr/local/include/genecis
 GENECIS_FOLDERS = ai algorithm base container distribution tree \
 	physics net math
 CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
-CC = $(VERB_$(V))g++ -g -O0 -Wall -std=c++98 $(CFLAGS)
+CC = $(VERB_$(V))g++ $(OPT_$(D)) -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime sort_test vector_test mathfunc_test \
 	container_test graph_array_test pattern_test#	gravity_test
