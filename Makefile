@@ -8,11 +8,11 @@
 #
 #*******************************************************************
 
-IDIR = ..
+include genecis_config.mk
 INSTALL_PATH = /usr/local/include/genecis
 GENECIS_FOLDERS = ai algorithm base container distribution tree \
 	physics net math
-CFLAGS = -I $(IDIR)
+CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
 CC = g++ -g -O0 -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime sort_test vector_test mathfunc_test \
@@ -45,8 +45,6 @@ PHYS_OBJ = $(addprefix $(BUILD_PATH)/phsyics/, $(PHYS_O))
 SRVR_O = isocket.o genecis_server.o
 SRVR_OBJ = $(addprefix $(BUILD_PATH)/net/, $(SRVR_O))
 OBJS = $(AI_O) $(MATH_O) $(SRVR_O) #$(PHYS_O)
-
-include genecis_config.mk
 
 all: regression_test misc_test
 	@date
@@ -145,7 +143,7 @@ $(BUILD_PATH)/math/ode.o: $(SRC_PATH)/math/ode.cc $(SRC_PATH)/math/ode.h
 	
 difq_test: $(SRC_PATH)/test/difq_test.cc $(BUILD_PATH)/math/ode.o
 	@echo "Building difq_test..."
-	@$(CC) -o $(BUILD_PATH)/difq_test $(SRC_PATH)/test/difq_test.cc $(SRC_PATH)/math/ode.o
+	@$(CC) -o $(BUILD_PATH)/difq_test $(SRC_PATH)/test/difq_test.cc $(BUILD_PATH)/math/ode.o
 		
 matrix_test: $(SRC_PATH)/test/matrix_test.cc $(MATRIX)
 	@echo "Building matrix_test..."
@@ -190,7 +188,7 @@ $(BUILD_PATH)/math/graph_array.o: $(SRC_PATH)/math/graph_array.cc $(SRC_PATH)/ma
 graph_array_test: $(SRC_PATH)/test/graph_array_test.cc $(BUILD_PATH)/math/graph_array.o
 	@echo "Building graph_array_test..."
 	@$(CC) -o $(BUILD_PATH)/graph_array_test $(SRC_PATH)/test/graph_array_test.cc \
-		$(SRC_PATH)/math/graph_array.o
+		$(BUILD_PATH)/math/graph_array.o
 
 $(BUILD_PATH)/ai/number_pattern.o: $(SRC_PATH)/ai/number_pattern.cc $(SRC_PATH)/ai/number_pattern.h
 	@echo "Creating obj file number_pattern.o..."
@@ -199,7 +197,7 @@ $(BUILD_PATH)/ai/number_pattern.o: $(SRC_PATH)/ai/number_pattern.cc $(SRC_PATH)/
 pattern_test: $(SRC_PATH)/test/pattern_test.cc $(BUILD_PATH)/ai/number_pattern.o
 	@echo "Building pattern_test..."
 	@$(CC) -o $(BUILD_PATH)/pattern_test $(SRC_PATH)/test/pattern_test.cc \
-		$(SRC_PATH)/ai/number_pattern.o
+		$(BUILD_PATH)/ai/number_pattern.o
 	
 # Server Tests
 server: socket_test server_test
