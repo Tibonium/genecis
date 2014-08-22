@@ -312,6 +312,16 @@ namespace container {
 		return expression_type( e1(), e2() ) ;
 	}
 
+	// find(a, b)[j] = if( a[i] ) b[j]
+	template<class E1, class E2>
+	typename array_binary_traits<E1, E2,
+			scalar_find<typename E1::value_type,typename E2::value_type> >::result_type
+	find (const container_expression<E1>& e1, const container_expression<E2>& e2) {
+	typedef typename array_binary_traits<E1, E2,
+			scalar_find<typename E1::value_type,typename E2::value_type> >::expression_type expression_type ;
+		return expression_type( e1(), e2() ) ;
+	}
+
 	// Left scalar array, operation(s,a)
 	template<class E, class T, class F>
 	class array_scalar1 :

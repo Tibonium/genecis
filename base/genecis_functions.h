@@ -33,6 +33,16 @@ namespace base {
 		}
 	};
 
+//	template<class T>
+//	struct scalar_squeeze {
+//		typedef T argument_type ;
+//		
+//		static inline
+//		argument_type use (argument_type t) {
+//			if( t != 0 ) return t ;
+//		}
+//	};
+
 	template<class T>
 	struct scalar_sqrt {
 		typedef T argument_type ;
@@ -185,6 +195,19 @@ namespace base {
 		static inline
 		result_type use(argument1_type t1, argument2_type t2) {
 			return t1 / t2 ;
+		}
+	};
+
+	template<class T1, class T2>
+	struct scalar_find {
+		typedef T1  argument1_type ;
+		typedef T2  argument2_type ;
+		typedef T2  result_type ;
+		
+		static inline
+		result_type use(argument1_type t1, argument2_type t2) {
+			if( t1 ) return t2 ;
+			else return false ;
 		}
 	};
 

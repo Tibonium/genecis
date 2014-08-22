@@ -6,7 +6,7 @@ using namespace genecis::container ;
 using namespace std ;
 
 int main() {
-	
+
 	dynamic_array<int> a(5) ;
 	dynamic_array<int> b(5) ;
 	for(size_t i=0; i<a.size(); ++i) {
@@ -19,7 +19,7 @@ int main() {
 	cout << "c: " << c << endl ;
 	a(10) = 10 ;
 	cout << "a: " << a << endl ;
-	
+
 	array<double> k(5) ;
 	array<double>::reverse_iterator i ;
 	int j = 10 ;
@@ -28,7 +28,7 @@ int main() {
 		++j ;
 	}
 	cout << "k: " << k << endl ;
-	
+
 	array<double> m(k) ;
 	cout << "m: " << m << endl ;
 	j = 1 ;
@@ -39,7 +39,7 @@ int main() {
 	cout << "m:" << m << endl ;
 	k = m ;
 	cout << "k: " << k << endl ;
-	
+
 	k += 5 ;
 	cout << "k+5:" << k << endl ;
 	k -= 10 ;
@@ -48,25 +48,41 @@ int main() {
 	cout << "k*7:" << k << endl ;
 	k /= 2 ;
 	cout << "k/2:" << k << endl ;
-	
+
 	array<double> t = k - 5 ;
 	cout << "t:" << t << endl ;
 	cout << "k:" << k << endl ;
 	k = abs(-k) ;
 	cout << "abs(-k):" << k << endl ;
+
+	int size = 10 ;
+	array<int> r(size) ;
+	array<int> s(size) ;
+	for(int i=0; i<size; i+=2) r(i) = 1 ;
+	for(int i=0; i<size; ++i) s(i) = 10 + i ;
+	t = multiply(r,s) ;
+	cout << "t:" << t << endl ;
+	t = t.squeeze() ;
+	cout << "t squeezed:" << t << endl ;
+	int p = t.pop(0) ;
+	cout << "p: " << p << endl ;
+	cout << "t:" << t << endl ;
 	
-	int size = 100000 ;
-	array<double> r(size) ;
-	array<double> s(size) ;
-	struct timeval time ;
-    struct timezone zone ;
-    int N = 10 ;
-    gettimeofday( &time, &zone ) ;
-	double start = time.tv_sec + time.tv_usec * 1e-6 ;
-	for(int i=0; i<N; ++i) {
-		t = multiply(r, s) ;
-	}
-	gettimeofday( &time, &zone ) ;
-	double complete = time.tv_sec + time.tv_usec * 1e-6 ;
-	cout << "Total time: " << (complete-start) << endl ;
+	t = find(r, s).squeeze() ;
+	cout << "find(r,s):" << t << endl ;
+	
+//	int size = 100000 ;
+//	array<double> r(size) ;
+//	array<double> s(size) ;
+//	struct timeval time ;
+//    struct timezone zone ;
+//    int N = 10 ;
+//    gettimeofday( &time, &zone ) ;
+//	double start = time.tv_sec + time.tv_usec * 1e-6 ;
+//	for(int i=0; i<N; ++i) {
+//		t = multiply(r, s) ;
+//	}
+//	gettimeofday( &time, &zone ) ;
+//	double complete = time.tv_sec + time.tv_usec * 1e-6 ;
+//	cout << "Total time: " << (complete-start) << endl ;
 }
