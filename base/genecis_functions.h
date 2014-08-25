@@ -129,6 +129,18 @@ namespace base {
 		}
 	};
 
+	template<class E>
+	struct scalar_mod_assign {
+		typedef typename E::reference  argument1_type ;
+		typedef typename E::const_reference  argument2_type ;
+		typedef typename E::value_type		 result_type ;
+		
+		static inline
+		result_type use(argument1_type t1, argument2_type t2) {
+			return t1 %= t2 ;
+		}
+	};
+
 /** ==================== Binary function calls ==================== **/
 	template<template<class T1, class T2> class F, class G, class E>
 	void genecis_assign( G& g, const genecis_expression<E>& e ) {
@@ -195,6 +207,18 @@ namespace base {
 		static inline
 		result_type use(argument1_type t1, argument2_type t2) {
 			return t1 / t2 ;
+		}
+	};
+
+	template<class T1, class T2>
+	struct scalar_mod {
+		typedef T1  argument1_type ;
+		typedef T2  argument2_type ;
+		typedef T1  result_type ;
+		
+		static inline
+		result_type use(argument1_type t1, argument2_type t2) {
+			return t1 % t2 ;
 		}
 	};
 

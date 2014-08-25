@@ -14,21 +14,25 @@
 namespace genecis {
 namespace math {
 
-	template<typename E> class matrix ;
-
-	template<typename E>
-	std::ostream& operator<< (std::ostream& os, matrix<E>& m)
+	template<class M>
+	std::ostream& operator<< (std::ostream& os, const matrix_expression<M>& m)
 	{
-		typedef size_t		size_type ;
-		typedef E			value_type ;	
+		typedef M							expression_type ;
+		typedef typename M::size_type		size_type ;
+		typedef typename M::value_type		value_type ;
+		typedef typename M::container_type	container_type ;
 
+		expression_type e = m() ;
+		size_type rows = e.rows() ;
+		size_type cols = e.cols() ;
+		
 		std::stringstream s ;	
-		s << "\nrows: " << m.rows() << "   det:   " << m.det() 
-		  << "\ncols: " << m.cols() ;
+		s << "\nrows: " << rows << "   det:   " << e.det() 
+		  << "\ncols: " << cols ;
 		os << s.str().c_str() ;
 		s.clear() ;
 		s.str(std::string()) ;
-		if( m.singular() ) {
+		if( e.singular() ) {
 			s << "   singular" << endl ;
 		} else {
 			s << "   non-singular" << endl ;
@@ -36,11 +40,11 @@ namespace math {
 		os << s.str().c_str() ;
 		s.clear() ;
 		s.str(std::string()) ;	
-		for(size_type i=0; i<m.rows(); ++i) {
+		for(size_type i=0; i<rows; ++i) {
 			s << "| " ;
-			for(size_type j=0; j<m.cols(); ++j) {
+			for(size_type j=0; j<cols; ++j) {
 				char buf[32];
-		        value_type data = m(i,j) ;
+		        value_type data = e(i,j) ;
 		        if( typeid(value_type) == typeid(int) ) {
 		        	if( data >= 1e5 ) {
 		        		sprintf(buf, "%1.1e ", (double)data) ;

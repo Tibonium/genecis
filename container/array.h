@@ -208,6 +208,10 @@ namespace container {
 				genecis_assign<scalar_divide_assign> (*this, c) ;
 			}
 			
+			void operator%= (const value_type& c) {
+				genecis_assign<scalar_mod_assign> (*this, c) ;
+			}
+					
 			/**
 			 * Squeezes the array down to an array with no zeros
 			 */

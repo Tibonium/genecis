@@ -24,6 +24,9 @@ int main() {
 			mymatx(i,j) = (16+i*8 - j*2) % 7 ;
 		}
 	}
+//	cout << "mymatx: " << mymatx << endl ;
+//	mymatx.resize(2,2) ;
+//	cout << "resized:" << mymatx << endl ;
 //	for(unsigned i=0; i<mymatx.rows(); ++i) {
 //		mymatx(i,i) = 1 ;
 //	}
@@ -38,7 +41,6 @@ int main() {
 //	cout << "double == int: " ;
 //	cout << ((result) ? "true" : "false") << endl ;
 
-//	cout << "mymatx: " << mymatx << endl ;
 //	mymatx.transpose() ;
 //	cout << "transpose: " << mymatx << endl ;
 //	cout << "omatx: " << omatx << endl ;
@@ -61,7 +63,7 @@ int main() {
 			mtx(i,j) = i*900+j*100 ;
 		}
 	}
-//	cout << "mtx: " << *mtx << endl ;
+//	cout << "mtx: " << mtx << endl ;
 //	(*mtx)(0,0) = 2 ;
 //	(*mtx)^2 ;
 //	cout << "mtx^2: " << *mtx << endl ;
@@ -72,7 +74,7 @@ int main() {
 			dmtx(i,j) = i+j*0.0234+1 ;
 		}
 	}
-//	cout << "dmtx: " << dmtx << endl ;
+	cout << "dmtx: " << dmtx << endl ;
 //	dmtx.swap_row(0,1) ;
 //	cout << "dmtx after swap_row: " << dmtx << endl ;
 //	dmtx.swap_col(0,1) ;
@@ -82,62 +84,62 @@ int main() {
 //	cout << "+omatx: " << omatx << endl ;
 //	dmtx.inverse() ;
 	dmtx.lu_decomp(mtx,mymatx) ;
-	cout << "dmtx decomp: upper" << endl ;
-	cout << mtx << endl ;
-	cout << "lower" << endl ;
-	cout << mymatx << endl ;
-//	cout << "LU" << endl ;
-//	cout << mymatx*mtx << endl ;
+	cout << "dmtx decomp:\nupper" << mtx << endl ;
+	cout << "lower" << mymatx << endl ;
+	matrix<double> lu = matrix_product(mymatx,mtx) ;
+	cout << "LU" << lu << endl ;
+	matrix<double> t = mymatx * mtx ;
+	cout << "t: " << t << endl ;
 
 //	matrix<double> omatx2 ;
 //	omatx.transpose(omatx2) ;
 //	cout << "omatx2: " << omatx2 << endl ;
 //	cout << "omatx: " << omatx << endl ;
 	
-	srand(time(0)) ;
-	unsigned N = 10 ;
-	matrix<double> m(N,N) ;
-	matrix<double> m2(N,N) ;
+//	srand(time(0)) ;
+//	unsigned N = 10 ;
+//	matrix<double> m(N,N) ;
+//	matrix<double> m2(N,N) ;
 //	boost::numeric::ublas::matrix<double> m3(N,N) ;
-	for(unsigned i=0; i<N; ++i) {
-		for(unsigned j=0; j<N; ++j) {
-			m(i,j) = rand() % 10 + 1 ;
-			m2(i,j) = rand() % 10 + 1 ;
+//	for(unsigned i=0; i<N; ++i) {
+//		for(unsigned j=0; j<N; ++j) {
+//			m(i,j) = rand() % 10 + 1 ;
+//			m2(i,j) = rand() % 10 + 1 ;
 //			m3(i,j) = rand() % 10 + 1 ;
-		}
-	}
+//		}
+//	}
 	
 //	cout << "m: " << m << endl ;
 //	cout << "m2: " << m2 << endl ;
 //	matrix<double> m3 = m * m2 ;
 //	cout << "m3: " << m3 << endl ;
 //	if (true) {
-	matrix<double> mn = m-m2 ;
+//	matrix<double> mn = m-m2 ;
 //	cout << "m-m2: " << mn << endl ;
 //	delete mn ;
 //	}
 //	cout << "m: " << m << endl ;
 //	cout << "m2: " << m2 << endl ;
-	matrix<double> temp = 2.0 * m2 ;
+//	matrix<double> temp = 2.0 * m2 ;
 //	cout << "m2*2.0: " << temp << endl ;
-	cout << "Starting matrix multiply" << endl ;
-	struct timeval time ;
-    struct timezone zone ;
-    double start ;
-    double complete ;
-    double avg = 0 ;
-    for(unsigned i=0; i<N; ++i) {
-	    gettimeofday( &time, &zone ) ;
-    	start = time.tv_sec + time.tv_usec * 1e-6 ;
+//	cout << "Starting matrix multiply" << endl ;
+//	struct timeval time ;
+//    struct timezone zone ;
+//    double start ;
+//    double complete ;
+//    double avg = 0 ;
+//    for(unsigned i=0; i<N; ++i) {
+//	    gettimeofday( &time, &zone ) ;
+//    	start = time.tv_sec + time.tv_usec * 1e-6 ;
 //		temp = m2 * m2 ;
 //		prod(m3, m3) ;
-		m2 *= 4.0 ;
-		gettimeofday( &time, &zone ) ;
-    	complete = time.tv_sec + time.tv_usec * 1e-6 ;
-    	avg += (complete-start) ;
-    	cout << "matrix.h Complete...time: " << (complete-start) << endl ;
-    }
-    cout << "Average execute time: " << avg/N << endl ;
+//		m2 *= 4.0 ;
+//		gettimeofday( &time, &zone ) ;
+//    	complete = time.tv_sec + time.tv_usec * 1e-6 ;
+//    	avg += (complete-start) ;
+//    	cout << "matrix.h Complete...time: " << (complete-start) << endl ;
+//    }
+//    cout << "Average execute time: " << avg/N << endl ;
 //    cout << "temp: " << temp << endl ;
 //    gettimeofday( &time, &zone ) ;
 //    start = time.tv_sec + time.tv_usec * 1e-6 ;

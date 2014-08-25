@@ -5,70 +5,64 @@
 #ifndef GENECIS_MATH_MATRIX
 #define GENECIS_MATH_MATRIX
 
+#include <genecis/container/array.h>
 #include <genecis/math/matrix_io.h>
 #include <genecis/math/matrix_operations.h>
+
+using namespace genecis::container ;
 
 namespace genecis {
 namespace math {
 
 	using namespace std ;
 
-	template<class _T> class matrix :
-		public matrix_expression<matrix, _T> {
+	template<class T> class matrix :
+		public matrix_expression<matrix<T> > {
 
-			typedef matrix<_T> 		self_type ;
-			typedef _T				value_type ;
+		public:
+
+			typedef matrix<T> 		self_type ;
+			typedef array<T>		container_type ;
+			typedef T				value_type ;
 			typedef size_t			size_type ;
-			typedef _T *			pointer ;
-			typedef _T &			reference ;
-			typedef const _T &		const_reference ;
+			typedef T *				pointer ;
+			typedef T &				reference ;
+			typedef const T &		const_reference ;
 			typedef pointer			iterator ;
 			typedef const pointer	const_iterator ;
 
-		public:
 	/******************** Constructor/Destructors *********************/
 			/**
 			 * Main  Constructor
 			 * Creates an NxM matrix from a basic array
 			 * Defaults to a 1x1 matrix
 			 */
-			matrix(size_type _rows=1, size_type _cols=1) : 
-				__rows(_rows), __cols(_cols),
-				bSingular(false), bVerify(true)
+			matrix(size_type rows=1, size_type cols=1) : 
+				__rows(rows), __cols(cols),
+				__singular(false), __verify(true),
+				__diagonal(false)
 			{
 				size_type N = __rows * __cols ;
-				__data = new value_type[N] ;
-				memset(__data, 0, N * sizeof(value_type)) ;
+				__data = container_type(N) ;
 			}
 
 			/**
 			 * Copy Constructor
 			 */
-			template<template <typename> class E>
-			matrix(matrix_expression<E,value_type> const& r) {
-				E<value_type> const& rhs = r ;
-				__rows = rhs.rows() ;
-				__cols = rhs.cols() ;
-				bVerify = true ;
-				bSingular = rhs.singular() ;
-				size_type N = __rows * __cols ;
-				__data = new value_type[N] ;
-				for(size_type i=0; i<__rows; ++i) {
-					for(size_type j=0; j<__cols; ++j) {
-						__data[i*__cols+j] = rhs(i,j) ;
-					}
-				}
+			template<class M>
+			matrix(matrix_expression<M> const& rhs) {
+				__rows = rhs().rows() ;
+				__cols = rhs().cols() ;
+				__verify = true ;
+				__singular = false ;
+				__diagonal = false ;
+				__data = rhs().data() ;
 			}
 		
 			/**
 			 * Destructor
 			 */
-			virtual ~matrix() {
-				if(__data) {
-					delete[] __data ;
-					__data = NULL ;
-				}
-			}
+			virtual ~matrix() {}
 
 			inline size_type rows() const {
 				return __rows ;
@@ -79,73 +73,85 @@ namespace math {
 			}
 
 			inline bool singular() const {
-				return bSingular ;
+				return __singular ;
 			}
 		
 			inline value_type det() {
-				if ( bVerify ) {
+				if ( __verify ) {
 					singularity() ;
 				}
-				return m_det ;
+				return __determinent ;
 			}
 		
 			inline bool verify() const {
-				return bVerify ;
+				return __verify ;
 			}
-		
-			inline value_type* data() const {
+			
+			inline bool diagonal() const {
+				return __diagonal ;
+			}
+
+			inline void diagonal(bool state) {
+				__diagonal = state ;
+				__verify = !state ;
+			}
+
+			inline container_type data() const {
 				return __data ;
 			}
 
 	/************************* Operators ******************************/
 			/* Accessor and Assigner */
-			inline value_type& operator() (size_type i, size_type j) const {
-				return __data[ i * __cols + j ] ;
+			// m(i,j) = __data( i*__col + j )
+			inline reference operator() (size_type i, size_type j) {
+				return __data( i * __cols + j ) ;
+			}
+
+			inline const_reference operator() (size_type i, size_type j) const {
+				return __data( i * __cols + j ) ;
 			}
 
 			template<size_type _index>
 			inline void operator= (value_type c) {
-				bVerify = true ;
-				__data[_index] = c ;
+				__verify = true ;
+				(*this)(_index) = c ;
 			}
 
 		/*================= Matrix Scalar Operators ================*/
 			inline void operator*= (value_type c) {
-				for(size_type i=0; i<(__rows*__cols); ++i) {
-					__data[i] *= c ;
-				}
-				m_det *= pow(c,__rows) ; ;
+				__data *= c ;
+				__determinent *= pow(c,__rows) ; ;
 			}
 
 			inline void operator/= (value_type c) {
-				for(size_type i=0; i<(__rows*__cols); ++i) {
-					__data[i] /= c ;
-				}
-				m_det /= pow(c,__rows) ; ;
+				__data /= c ;
+				__determinent /= pow(c,__rows) ; ;
 			}
 
 			inline void operator+= (value_type c) {
-				for(size_type i=0; i<(__rows*__cols); ++i) {
-					__data[i] += c ;
-				}
-				m_det = determinant(__data, __cols) ;
+				__data += c ;
+				__determinent = determinant( *this ) ;
 			}
 
 			inline void operator-= (value_type c) {
-				for(size_type i=0; i<(__rows*__cols); ++i) {
-					__data[i] -= c ;
-				}
-				m_det = determinant(__data, __cols) ;
+				__data -= c ;
+				__determinent = determinant( *this ) ;
 			}
 
 			inline void operator%= (value_type c) {
-				for(size_type i=0; i<(__rows*__cols); ++i) {
-					__data[i] %= c ;
-				}
-				m_det = determinant(__data, __cols) ;
+				__data %= c ;
+				__determinent = determinant( *this ) ;
 			}
 
 		/*================ Matrix Matrix Operators =================*/
+			self_type operator* (const self_type& rhs) {
+				self_type tmp ;
+				tmp.__rows = rhs.rows() ;
+				tmp.__cols = rhs.cols() ;
+				tmp.__data = multiply((*this).__data, rhs.__data) ;
+				return tmp ;
+			}
+		
 			inline void operator*= (matrix& rhs) {
 				try {
 					if( __cols != rhs.__rows ) {
@@ -153,8 +159,8 @@ namespace math {
 					} else {
 						matrix<value_type> temp = *this ;
 						*this = temp * rhs ;
-						this->bVerify = true ;
-						this->bSingular = false ;
+						this->__verify = true ;
+						this->__singular = false ;
 					}
 				} catch (int e) {
 					cout << "matrix::operator*=: A _cols(" << __cols
@@ -171,8 +177,8 @@ namespace math {
 					} else {
 						matrix<value_type> temp = *this ;
 						*this = temp + rhs ;
-						bVerify = true ;
-						bSingular = false ;
+						__verify = true ;
+						__singular = false ;
 					}
 				} catch (int e) {
 					cout << "matrix::operator+=: Only defined for matrices with "
@@ -190,8 +196,8 @@ namespace math {
 					} else {
 						matrix<value_type> temp = *this ;
 						*this = temp - rhs ;
-						bVerify = true ;
-						bSingular = false ;
+						__verify = true ;
+						__singular = false ;
 					}
 				} catch (int e) {
 					cout << "matrix::operator-=: Only defined for matrices with "
@@ -249,7 +255,7 @@ namespace math {
 			inline matrix* inverse() {
 				try {
 					singularity() ;
-					if( bSingular || m_det == 0 ) {
+					if( __singular || __determinent == 0 ) {
 						throw 1 ;
 					} else {
 						matrix<value_type>* inv_mtx = this ;
@@ -313,12 +319,13 @@ namespace math {
 			 * Decomposes a matrix into its upper and lower triangular
 			 * matricies.
 			 */
-			inline void lu_decomp(matrix& upper, matrix& lower) {
+			template<class M>
+			inline void lu_decomp(matrix_expression<M>& upper, matrix_expression<M>& lower) {
 				try {
-					if(  bSingular || (__rows != __cols) ) {
+					if(  __singular || (__rows != __cols) ) {
 						throw -1 ;
 					} else {
-						lu_factorize( upper, lower, __data, __rows, __cols ) ;
+						lu_factorize( upper, lower, *this ) ;
 					}
 				} catch (int e) {
 	//				cout << "matrix::lu_decomp: Only square, non-singular "
@@ -326,9 +333,9 @@ namespace math {
 	//					 << "triangular matrices. Setting determinant to "
 	//					 << "zero and singularness to true."
 	//					 << endl ;
-					m_det = 0 ;
-					bSingular = true ;
-					bVerify = false ;
+					__determinent = 0 ;
+					__singular = true ;
+					__verify = false ;
 				}
 			}
 
@@ -341,11 +348,9 @@ namespace math {
 				size_type N = r * c ;
 				__rows = r ;
 				__cols = c ;
-				bVerify = true ;
-				bSingular = false ;
-				delete[] __data ;
-				__data = new value_type[N] ;
-				memset(__data, 0, N*sizeof(value_type)) ;
+				__verify = true ;
+				__singular = false ;
+				__data = container_type(N) ;
 			}
 		
 			/**
@@ -358,8 +363,8 @@ namespace math {
 					__data[r1*__rows+i] = __data[r2*__rows+i] ;
 					__data[r2*__rows+i] = temp ;
 				}
-				bVerify = true ;
-				bSingular = false ;
+				__verify = true ;
+				__singular = false ;
 			}
 		
 			/**
@@ -372,8 +377,8 @@ namespace math {
 					__data[i*__rows+c1] = __data[i*__rows+c2] ;
 					__data[i*__rows+c2] = temp ;
 				}
-				bVerify = true ;
-				bSingular = false ;
+				__verify = true ;
+				__singular = false ;
 			}
 		
 			/**
@@ -432,294 +437,74 @@ namespace math {
 	//		friend std::ostream& operator<< <> (std::ostream& os, matrix& output) ;
 
 		private:
-			value_type* __data ;
+			container_type __data ;
 			size_type __rows ;
 			size_type __cols ;
-			bool bSingular ;
-			bool bVerify ;
-			value_type m_det ;
+			bool __singular ;
+			bool __verify ;
+			bool __diagonal ;
+			value_type __determinent ;
 
 
 			/**
 			 * Determine if the matrix is singular
 			 * This function is used to determine if a matrix is singular
 			 * by first looking to see if a zero _row or column exists.
-			 * If one exists, the bSingular member variable is set to
-			 * true and m_det is set to zero.
+			 * If one exists, the __singular member variable is set to
+			 * true and __determinent is set to zero.
 			 * If a zero _row/column is not found, the determinant of the
 			 * matrix is then calculated and checked to be non-zero.
 			 */		
 			inline void singularity() {
-				if( bVerify ) {
+				if( __verify ) {
 
 					// Only square matricies can be non-singular
 					if( __rows != __cols ) {
-						m_det = 0 ;
-						bSingular = true ;
+						__determinent = 0 ;
+						__singular = true ;
 					}
 
 					// check for a zero _row
-					if( !bSingular ) {
-						if( check_zero_row(__data, __rows, __cols) ) {
-							bSingular = true ;
-							m_det = 0 ;
+					if( !__singular ) {
+						if( check_zero_row( data(), __rows, __cols) ) {
+							__singular = true ;
+							__determinent = 0 ;
 						}
 					}
 
 					// check for a zero column
-					if( !bSingular ) {
-						if( check_zero_column(__data, __rows, __cols) ) {
-							bSingular = true ;
-							m_det = 0 ;
+					if( !__singular ) {
+						if( check_zero_column( data(), __rows, __cols) ) {
+							__singular = true ;
+							__determinent = 0 ;
 						}
 					}
 
 					// check for determinant equals zero and for matrices
 					// of int types, determinant must be 1 or -1 otherwise
 					// matrix is singular
-					if( !bSingular ) {
-						m_det = determinant(__data, __cols) ;
-						if( !m_det ) {
-							bSingular = true ;
+					if( !__singular ) {
+						__determinent = determinant( *this ) ;
+						if( !__determinent ) {
+							__singular = true ;
 						} else {
 							if( typeid(value_type) == typeid(int) ) {
-								if( m_det == 1 || m_det == -1 ) {
-									bSingular = false ;
+								if( __determinent == 1 || __determinent == -1 ) {
+									__singular = false ;
 								} else {
-									bSingular = true ;
+									__singular = true ;
 								}
 							} else {
-								bSingular = false ;
+								__singular = false ;
 							}
 						}
 					}
 				
-					bVerify = false ;
+					__verify = false ;
 				}
 			}
 
 	};
-
-	/*********************** MATRIX OPERATIONS *************************
-	**
-	* This section contains all metatemplates for the various
-	* matrix operations for this class. That would return a new matrix
-	* but instead return class copies.
-	*
-	*******************************************************************/
-
-	/** ===================Scalar Multiplication=================== **/
-	template<typename T>
-	class matrix_scale_up : public matrix_expression<matrix_scale_up,T> {
-			T _c ;
-			matrix<T> const& _m ;
-		public:
-			matrix_scale_up(T c, matrix<T> const& m) :
-				_c(c), _m(m) {}
-			size_t rows() const { return _m.rows() ; }
-			size_t cols() const { return _m.cols() ; }
-			bool verify() const { return _m.verify() ; }
-			bool singular() const { return _m.singular() ; }
-			T operator() (size_t i, size_t j) const { return _c * _m(i,j) ; }
-	};
-
-	template<typename T>
-	matrix_scale_up<T> const operator* (T c, matrix<T> const& m)
-	{
-		return matrix_scale_up<T>(c,m) ;
-	}
-
-	template<typename T>
-	matrix_scale_up<T> const operator* (matrix<T> const& m, T c)
-	{
-		return matrix_scale_up<T>(c,m) ;
-	}
-
-	/** ======================Scalar Division====================== **/
-	template<typename T>
-	class matrix_scale_down : public matrix_expression<matrix_scale_down,T> {
-			T _c ;
-			matrix<T> const& _m ;
-		public:
-			matrix_scale_down(T c, matrix<T> const& m) :
-				_c(c), _m(m) {}
-			size_t rows() const { return _m.rows() ; }
-			size_t cols() const { return _m.cols() ; }
-			bool verify() const { return _m.verify() ; }
-			bool singular() const { return _m.singular() ; }
-			T operator() (size_t i, size_t j) const { return _m(i,j) / _c ; }
-	};
-
-	template<typename T>
-	matrix_scale_down<T> const operator/ (T c, matrix<T> const& m)
-	{
-		return matrix_scale_down<T>(c,m) ;
-	}
-
-	template<typename T>
-	matrix_scale_down<T> const operator/ (matrix<T> const& m, T c)
-	{
-		return matrix_scale_down<T>(c,m) ;
-	}
-
-	/** ======================Scalar Addition====================== **/
-	template<typename T>
-	class matrix_scale_add : public matrix_expression<matrix_scale_add,T> {
-			T _c ;
-			matrix<T> const& _m ;
-		public:
-			matrix_scale_add(T c, matrix<T> const& m) :
-				_c(c), _m(m) {}
-			size_t rows() const { return _m.rows() ; }
-			size_t cols() const { return _m.cols() ; }
-			bool verify() const { return _m.verify() ; }
-			bool singular() const { return _m.singular() ; }
-			T operator() (size_t i, size_t j) const { return _m(i,j) + _c ; }
-	};
-
-	template<typename T>
-	matrix_scale_add<T> const operator+ (T c, matrix<T> const& m)
-	{
-		return matrix_scale_add<T>(c,m) ;
-	}
-
-	template<typename T>
-	matrix_scale_add<T> const operator+ (matrix<T> const& m, T c)
-	{
-		return matrix_scale_add<T>(c,m) ;
-	}
-
-	/** =====================Scalar Subtration===================== **/
-	template<typename T>
-	class matrix_scale_minus : public matrix_expression<matrix_scale_minus,T> {
-			T _c ;
-			matrix<T> const& _m ;
-		public:
-			matrix_scale_minus(T c, matrix<T> const& m) :
-				_c(c), _m(m) {}
-			size_t rows() const { return _m.rows() ; }
-			size_t cols() const { return _m.cols() ; }
-			bool verify() const { return _m.verify() ; }
-			bool singular() const { return _m.singular() ; }
-			T operator() (size_t i, size_t j) const { return _m(i,j) - _c ; }
-	};
-
-	template<typename T>
-	matrix_scale_minus<T> const operator- (T c, matrix<T> const& m)
-	{
-		return matrix_scale_minus<T>(c,m) ;
-	}
-
-	template<typename T>
-	matrix_scale_minus<T> const operator- (matrix<T> const& m, T c)
-	{
-		return matrix_scale_minus<T>(c,m) ;
-	}
-
-	/** ===================== Modulation ===================== **/
-	template<typename T>
-	class matrix_scale_mod : public matrix_expression<matrix_scale_mod,T> {
-			T _c ;
-			matrix<T> const& _m ;
-		public:
-			matrix_scale_mod(T c, matrix<T> const& m) :
-				_c(c), _m(m) {}
-			size_t rows() const { return _m.rows() ; }
-			size_t cols() const { return _m.cols() ; }
-			bool verify() const { return _m.verify() ; }
-			bool singular() const { return _m.singular() ; }
-			T operator() (size_t i, size_t j) const { return _m(i,j) % _c ; }
-	};
-
-	template<typename T>
-	matrix_scale_mod<T> const operator- (T c, matrix<T> const& m)
-	{
-		return matrix_scale_mod<T>(c,m) ;
-	}
-
-	template<typename T>
-	matrix_scale_mod<T> const operator- (matrix<T> const& m, T c)
-	{
-		return matrix_scale_mod<T>(c,m) ;
-	}
-
-	/** ================== Matrix Multiplication ================== **/
-	template<typename T>
-	class matrix_prod : public matrix_expression<matrix_prod,T> {
-			matrix<T> const& _lhs ;
-			matrix<T> const& _rhs ;
-		public:
-			matrix_prod(matrix<T> const& lhs, matrix<T> const& rhs) :
-				_lhs(lhs), _rhs(rhs) {}
-			size_t rows() const { return _lhs.rows() ; }
-			size_t cols() const { return _rhs.cols() ; }
-			bool verify() const { return true ; }
-			bool singular() const { return false ; }
-			T operator() (size_t i, size_t j) const {
-				T c = 0 ;
-				for(size_t n=0; n<_lhs.cols(); ++n) {
-					c += _lhs(i,n) * _rhs(n,j) ;
-				}
-				return c ;
-			}
-	};
-
-	template<typename T>
-	matrix_prod<T> const operator* (matrix<T> const& lhs, matrix<T> const& rhs)
-	{
-		assert( lhs.cols() == rhs.rows() ) ;
-		return matrix_prod<T>(lhs,rhs) ;
-	}
-
-	/** ===================== Matrix Addition ===================== **/
-	template<typename T>
-	class matrix_sum : public matrix_expression<matrix_sum,T> {
-			matrix<T> const& _lhs ;
-			matrix<T> const& _rhs ;
-		public:
-			matrix_sum(matrix<T> const& lhs, matrix<T> const& rhs) :
-				_lhs(lhs), _rhs(rhs) {}
-			size_t rows() const { return _lhs.rows() ; }
-			size_t cols() const { return _rhs.cols() ; }
-			bool verify() const { return true ; }
-			bool singular() const { return false ; }
-			T operator() (size_t i, size_t j) const {
-				return _lhs(i,j) + _rhs(i,j) ;
-			}
-	};
-
-	template<typename T>
-	matrix_sum<T> const operator+ (matrix<T> const& lhs, matrix<T> const& rhs)
-	{
-		assert( lhs.cols() == rhs.cols() &&
-				lhs.rows() == rhs.rows() ) ;
-		return matrix_sum<T>(lhs,rhs) ;
-	}
-
-	/** =================== Matrix Subtraction =================== **/
-	template<typename T>
-	class matrix_minus : public matrix_expression<matrix_minus,T> {
-			matrix<T> const& _lhs ;
-			matrix<T> const& _rhs ;
-		public:
-			matrix_minus(matrix<T> const& lhs, matrix<T> const& rhs) :
-				_lhs(lhs), _rhs(rhs) {}
-			size_t rows() const { return _lhs.rows() ; }
-			size_t cols() const { return _rhs.cols() ; }
-			bool verify() const { return true ; }
-			bool singular() const { return false ; }
-			T operator() (size_t i, size_t j) const {
-				return _lhs(i,j) - _rhs(i,j) ;
-			}
-	};
-
-	template<typename T>
-	matrix_minus<T> const operator- (matrix<T> const& lhs, matrix<T> const& rhs)
-	{
-		assert( lhs.cols() == rhs.cols() &&
-				lhs.rows() == rhs.rows() ) ;
-		return matrix_minus<T>(lhs,rhs) ;
-	}
 
 }	// end of namespace math
 }	// end of namespace genecis

@@ -5,6 +5,8 @@
 #ifndef GENECIS_MATH_MATRIX_OPERATIONS_H
 #define GENECIS_MATH_MATRIX_OPERATIONS_H
 
+#include <genecis/math/matrix_expression.h>
+
 namespace genecis {
 namespace math {
 
@@ -12,51 +14,41 @@ namespace math {
 	 * Calculates the determinant of the matrix using Laplace's formula
 	 * and the cofactor matricies. 
 	 */
-	template<typename __Type, typename __Size>
-	__Type determinant(__Type* data, __Size n) {
-		typedef __Type	value_type ;
-		typedef __Size	size_type ;
+	template<class M>
+	typename M::value_type determinant( matrix_expression<M>& m ) {
+		typedef typename M::value_type	value_type ;
+		typedef typename M::size_type	size_type ;
 		
-		value_type result = 0 ;
-		value_type* temp = new value_type[n*n] ;
-		if( n == 1 ) {
-			delete[] temp ;
-			return data[0] ;
-		} else if( n == 2 ) {
-			delete[] temp ;
-			return (data[0]*data[3]-data[1]*data[2]) ;
-		} else {
-			for(size_type p=0; p<n; ++p) {
-				size_type h = 0 ;
-				size_type k = 0 ;
-				for(size_type i=1; i<n; ++i) {
-					for(size_type j=0; j<n; ++j) {
-						if( j == p ) continue ;
-						temp[h*n+k] = data[i*n+j] ;
-						++k ;
-						if( k == n ) { ++h ; k = 0 ;}
-					}
-				}
-				result += data[0+p]*pow(-1,p)*determinant(temp, n-1) ;
+		value_type result = 1 ;
+		size_type rows = m().rows() ;
+		if( !m().diagonal() ) {
+			M upper( m() ) ;
+			M lower( m() ) ;
+			lu_factorize( upper, lower, m ) ;
+			for(size_type i=0; i<rows; ++i) {
+				result *= upper(i,i) ;
 			}
-			delete[] temp ;
-			return result ;
+		} else {
+			for(size_type i=0; i<rows; ++i) {
+				result *= m()(i,i) ;
+			}
 		}
+		return result ;
 	}
 
 	/**
 	 * Checks for a zero row within the matrix
 	 */
-	template<typename __Type, typename __Size>
-	bool check_zero_row( __Type* data, __Size rows, __Size cols ) {
-		typedef __Type		value_type ;
-		typedef __Size		size_type ;
-	
+	template<class C, class __Size>
+	bool check_zero_row( const C& data, __Size rows, __Size cols ) {
+		typedef typename C::value_type		value_type ;
+		typedef typename C::size_type		size_type ;
+
 		bool zero = false ;
 		for(size_type i=0; i<rows; ++i) {
-			if( data[i*rows+0] == 0 ) {
+			if( data(i*cols) == 0 ) {
 				for(size_type j=1; j<cols; ++j) {
-					if( data[i*rows+j] != 0 ) {
+					if( data(i*cols+j) != 0 ) {
 						zero = false ;
 						break ;
 					} else {
@@ -71,16 +63,16 @@ namespace math {
 	/**
 	 * Checks for a zero column within the matrix
 	 */
-	template<typename __Type, typename __Size>
-	bool check_zero_column( __Type* data, __Size rows, __Size cols ) {
-		typedef __Type		value_type ;
-		typedef __Size		size_type ;
+	template<class C, typename __Size>
+	bool check_zero_column( const C& data, __Size rows, __Size cols ) {
+		typedef typename C::value_type		value_type ;
+		typedef typename C::size_type		size_type ;
 	
 		bool zero = false ;
 		for(size_type i=0; i<cols; ++i) {
-			if( data[i] == 0 ) {
+			if( data(i) == 0 ) {
 				for(size_type j=1; j<rows; ++j) {
-					if( data[j*rows+i] != 0 ) {
+					if( data(j*cols+i) != 0 ) {
 						zero = false ;
 						break ;
 					} else {
@@ -96,40 +88,48 @@ namespace math {
 	 * Decomposes a matrix into its upper and lower triangular
 	 * matricies.
 	 */
-	template<class M, typename __Type, typename __Size>
-	void lu_factorize( M& upper, M& lower,
-			__Type* data, __Size& rows, __Size& cols )
+	template<class M>
+	void lu_factorize( matrix_expression<M>& upper,
+					   matrix_expression<M>& lower,
+					   const matrix_expression<M>& origin )
 	{
-		typedef __Type		value_type ;
-		typedef __Size		size_type ;
+		typedef M expression_type ;
+		typedef typename M::value_type		value_type ;
+		typedef typename M::size_type		size_type ;
+		
+		size_type rows = origin().rows() ;
+		size_type cols = origin().cols() ;
 
-		upper.resize(rows, cols) ;
-		lower.resize(rows, cols) ;
+		upper().resize(rows, cols) ;
+		lower().resize(rows, cols) ;
 		for(size_type i=0; i<rows; ++i) {
 			for(size_type j=0; j<cols; ++j) {
-				if( i == 0 ) upper(i,j) = data[i*rows+j] ;
-				if( i == j ) lower(i,j)= 1 ;
+				if( i == 0 ) upper()(i,j) = origin()(i,j) ;
+				if( i == j ) lower()(i,j)= 1 ;
 				if( (i != 0) && (j == 0) ) {
-					lower(i,0) = data[i*rows] / upper(0,0) ;
+					lower()(i,0) = origin()(i,0) / upper()(0,0) ;
 				}
 				if( (j >= i) && (i != 0) ) {
 					value_type temp = 0 ;
 					for(size_type k=0; k<=i-1; ++k) {
-						temp += lower(i,k) * upper(k,j) ;
+						temp += lower()(i,k) * upper()(k,j) ;
 					}
-					upper(i,j) = data[i*rows+j] - temp ;
+					upper()(i,j) = origin()(i,j) - temp ;
 				}
 				if( (j < i) && (j != 0) ) {
 					value_type temp = 0 ;
 					for(size_type k=0; k<=j-1; ++k) {
-						temp += lower(i,k) * upper(k,j) ;
+						temp += lower()(i,k) * upper()(k,j) ;
 					}
-					lower(i,j) = (data[i*rows+j] - temp) / upper(j,j) ;
+					lower()(i,j) = (origin()(i,j) - temp) / upper()(j,j) ;
 				}
 			}
 		}
+		upper().diagonal(true) ;
+		lower().diagonal(true) ;
 	}
 
 }	// end of namespace math
 }	// end of namespace genecis
+
 #endif

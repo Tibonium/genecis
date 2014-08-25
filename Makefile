@@ -10,7 +10,7 @@
 
 include genecis_config.mk
 V = 0
-D = 0
+D = 1
 VERB_0 = @
 VERB_1 = 
 OPT_0 = -O3
@@ -151,7 +151,7 @@ difq_test: $(SRC_PATH)/test/difq_test.cc $(BUILD_PATH)/math/ode.o
 	@echo "Building difq_test..."
 	$(CC) -o $(BUILD_PATH)/difq_test $(SRC_PATH)/test/difq_test.cc $(BUILD_PATH)/math/ode.o
 		
-matrix_test: $(SRC_PATH)/test/matrix_test.cc $(MATRIX)
+matrix_test: $(SRC_PATH)/test/matrix_test.cc $(MATRIX) $(CONTAINER)
 	@echo "Building matrix_test..."
 	$(CC) -o $(BUILD_PATH)/matrix_test $(SRC_PATH)/test/matrix_test.cc
 	
