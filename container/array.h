@@ -37,7 +37,7 @@ namespace container {
 			array() : __begin(0), __end(0) {}
 
 			/**
-			 * Constructs an array of type _T with size specificed and
+			 * Constructs an array of type T with size specificed and
 			 * fills the array with the value c or zeros.
 			 */
 			array(size_type s, const value_type& c=0) {

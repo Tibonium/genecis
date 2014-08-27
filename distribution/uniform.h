@@ -22,32 +22,38 @@ namespace distribution {
 
 	class uniform :
 		public probability_density_function<double> {
+		
+		public:
+		
+			typedef double			value_type ;
+	
+			///constructor
+			uniform( value_type lower, value_type upper ) :
+			__lower(lower), __upper(upper) {
+				__norm = 1.0 / ( __upper - __lower ) ;
+			}
+			
+			// Empty constructor
+			uniform() {} ;
+			
+			virtual ~uniform() {} ;
+			
+			virtual value_type probability(value_type a, value_type b) {
+				value_type low = min( __upper, max(a, __lower) ) ;
+				value_type high = max( __lower, min(b, __upper) ) ;
+				value_type result = ( high - low ) * __norm ;
+				return result ;
+			}
 
 		private:
 	
-			double _lower ;
-			double _upper ;
-			double _norm ;
-			double _a, _b ;
-			double _result ;
-
-		public:
-	
-			virtual double probability(double a, double b) {
-				_a = min( _upper, max(a, _lower) ) ;
-				_b = max( _lower, min(b, _upper) ) ;
-				_result = ( _b - _a ) * _norm ;
-				return _result ;
-			}
-
-			///constructor
-			uniform( double lower, double upper ) :
-			_lower(lower), _upper(upper) {
-				_norm = 1.0 / ( _upper - _lower ) ;
-			}
+			value_type __lower ;
+			value_type __upper ;
+			value_type __norm ;
 
 	};
 
 }	// end of namespace distribution
 }	// end of namespace genecis
+
 #endif
