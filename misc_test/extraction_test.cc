@@ -6,6 +6,25 @@ using namespace genecis::container ;
 using namespace genecis::distribution ;
 using namespace std ;
 
+template<class T>
+struct extract_e2 {
+	typedef T		argument_type ;
+	typedef int		result_type ;
+	
+	static
+	result_type use(argument_type t) {
+		return t.e2 ;
+	}
+};
+
+template<class E>
+typename array_unary_traits<E, extract_e2<typename E::value_type> >::result_type
+get_second (const container_expression<E>& e) {
+	typedef typename array_unary_traits<E,
+		extract_e2<typename E::value_type> >::expression_type	expression_type ;
+	return expression_type( e() ) ;
+}
+
 struct collection {
 	
 	double e1 ;
@@ -82,7 +101,7 @@ int main() {
 	// e2
 	a.e2 = 10 ;
 	b.e2 = 7 ;
-	c.e2 = 100 ;
+//	c.e2 = 100 ;
 	// e3
 	a.e3 = uniform(5,10) ;
 	b.e3 = uniform(20,100) ;
@@ -100,19 +119,20 @@ int main() {
 	m(2) = c ;
 	
 	array<int> t(3) ;
-	extract(1,&m,&t) ;
+//	t = get_second(m) ;
+//	extract(1,&m,&t) ;
 //	double answer =  t(0).probability(7,8) ;
 	cout << "t:" << t << endl ;
 	
-	char s[] = "this is the beginning of a great world!" ;
-	char d[8] ;
-	int N = 8 ;
-	int offset = 12 ;
-	char* it =  s + offset ;
-	memcpy(d, it, N) ;
-	for(int i=0; i<N; ++i) {
-		cout << d[i] ;
-	}
-	cout << endl ;
+//	char s[] = "this is the beginning of a great world!" ;
+//	char d[8] ;
+//	int N = 8 ;
+//	int offset = 12 ;
+//	char* it =  s + offset ;
+//	memcpy(d, it, N) ;
+//	for(int i=0; i<N; ++i) {
+//		cout << d[i] ;
+//	}
+//	cout << endl ;
 
 }
