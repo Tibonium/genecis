@@ -6,10 +6,22 @@ using namespace genecis::container ;
 using namespace genecis::distribution ;
 using namespace std ;
 
-template<class T>
+struct collection {
+
+	typedef double		value_type1 ;
+	typedef int			value_type2 ;
+	typedef uniform		value_type3 ;
+	
+	value_type1 e1 ;
+	value_type2 e2 ;
+	value_type3 e3 ;
+	
+};
+
+template<class E>
 struct extract_e2 {
-	typedef T		argument_type ;
-	typedef int		result_type ;
+	typedef E		argument_type ;
+	typedef typename E::value_type2		result_type ;
 	
 	static
 	result_type use(argument_type t) {
@@ -17,21 +29,59 @@ struct extract_e2 {
 	}
 };
 
+template<class E, class F>
+class array_unary_special :
+	public container_expression<array_unary_special<E,F> >
+{	
+	public:
+		typedef F	functor_type ;
+		typedef E	expression_type ;
+		typedef typename E::size_type	size_type ;
+		typedef typename E::value_type::value_type2	value_type ;
+		typedef const value_type	const_reference ;
+		typedef typename E::iterator		iterator ;
+		typedef typename E::const_iterator			const_iterator ;
+	
+		explicit
+		array_unary_special( const expression_type& e ) : __e(e) {}
+				
+		const expression_type& expression() const {
+			return __e ;
+		}
+		
+		const size_type size() const {
+			return expression().size() ;
+		}
+		
+		const_reference operator() (size_type i) const {
+			return functor_type::use( __e(i) ) ;
+		}
+		
+		const_iterator begin() const {
+			return expression().begin() ;
+		}
+		
+		const_iterator end() const {
+			return expression().end() ;
+		}
+	
+	private:
+		expression_type	__e ;
+};
+
+template<class E, class F>
+struct array_unary_special_traits {
+	typedef array_unary_special<E,F>	result_type ;
+	typedef result_type		expression_type ;
+};
+
 template<class E>
-typename array_unary_traits<E, extract_e2<typename E::value_type> >::result_type
+typename array_unary_special_traits<E, extract_e2<typename E::value_type> >::result_type
 get_second (const container_expression<E>& e) {
-	typedef typename array_unary_traits<E,
+	typedef typename array_unary_special_traits<E,
 		extract_e2<typename E::value_type> >::expression_type	expression_type ;
 	return expression_type( e() ) ;
 }
-
-struct collection {
-	
-	double e1 ;
-	int e2 ;
-	uniform e3 ;
-	
-};
 
 template<class C, class R>
 void extract(typename C::size_type i, C* c, R* result) {
@@ -118,11 +168,10 @@ int main() {
 	m(1) = b ;
 	m(2) = c ;
 	
-	array<int> t(3) ;
-//	t = get_second(m) ;
+//	array<int> t = get_second(m) ;
 //	extract(1,&m,&t) ;
 //	double answer =  t(0).probability(7,8) ;
-	cout << "t:" << t << endl ;
+//	cout << "t:" << t << endl ;
 	
 //	char s[] = "this is the beginning of a great world!" ;
 //	char d[8] ;

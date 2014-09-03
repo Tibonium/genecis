@@ -90,6 +90,30 @@ layer_determinant( const vector_expression<E>& e ) {
     return expression_type( e() ) ;
 }
 
+template<class E1, class E2>
+struct nested_plus_assign {
+	typedef E1		argument_type1 ;
+	typedef E2		argument_type2 ;
+	typedef argument_type1	result_type ;
+	typedef typename E1::size_type	size_type ;
+
+	static
+	result_type apply(argument_type1 t1, argument_type2 t2) {
+		size_type size( t2.size() ) ;
+		for(size_type i=0; i<size; ++i)
+			t1 += t2(i) ;
+		return t1 ;
+	}
+
+};
+
+template<template<class E1, class E2>class F, class V, class E>
+void nested_vector_assign( V& v, const vector_expression<E>& e) {
+	typedef F<V,E>		functor_type ;
+    typedef typename V::size_type size_type ;
+    v = functor_type::apply( v, e () ) ;
+}
+
 int main() {
 
 	vector<double> v1(4) ;
@@ -113,7 +137,10 @@ int main() {
 	std::cout << "vv1: " << vv1 << std::endl ;
 	std::cout << "vv2: " << vv2 << std::endl ;
 	std::cout << "v_diff: " << v_diff << std::endl ;
-	
+	vector<double> vtest (4,0.0) ;
+	nested_vector_assign<nested_plus_assign>(vtest, v_diff) ;
+	std::cout << "vtest: " << vtest << std::endl ;
+		
 	matrix<double> m1(2,2) ;
 	matrix<double> m2(2,2) ;
 	matrix<double> m3(2,2) ;
