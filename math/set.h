@@ -16,6 +16,9 @@ using namespace genecis::container ;
 namespace genecis {
 namespace math {
 
+	// Forward decleration
+	template<class T> class empty_set ;
+
 	template<class T, class container=array<T> >
 	class set {
 
@@ -41,7 +44,7 @@ namespace math {
 			/**
 			 * Construct a set from a specified size
 			 */
-			set(size_type n) : __set(array<T>(n)) {}
+			set(size_type n) : __set(container_type(n)) {}
 			
 			/**
 			 * Copy constructor
@@ -127,6 +130,22 @@ namespace math {
 					*it = operator() (first+i), ++it ;
 				return sub ;
 			}
+			
+			/**
+			 * Determines if a given set is a subset of the set.
+			 */
+			inline
+			bool isSubset(const self_type& sub) {
+				size_type count = 0 ;
+				size_type this_size = size() ;
+				size_type sub_size = sub.size() ;
+				for(size_type i=0; i<this_size; ++i) {
+					for(size_type j=0; j<sub_size; ++j) {
+						if( operator() (i) == sub(j) ) count ++ ;
+					}
+				}
+				return count == sub.size() ;
+			}
 		
 			/**
 			 * Union of two sets
@@ -195,17 +214,21 @@ namespace math {
 			 * things not in (that is, things outside of) A.
 			 */
 			self_type complement(const self_type& subset) {
-				size_type n = size() - subset.size() ;
-				self_type comp(n) ;
-				iterator it = comp.begin() ;
-				for(size_type i=0; i<size(); ++i) {
-					bool dup = false ;
-					for(size_type j=0; j<subset.size(); ++j) {
-						if( operator() (i) == subset(j) ) dup = true ;
+				if( isSubset(subset) ) {
+					size_type n = size() - subset.size() ;
+					self_type comp(n) ;
+					iterator it = comp.begin() ;
+					for(size_type i=0; i<size(); ++i) {
+						bool dup = false ;
+						for(size_type j=0; j<subset.size(); ++j) {
+							if( operator() (i) == subset(j) ) dup = true ;
+						}
+						if( !dup ) *it = operator() (i), ++it ;
 					}
-					if( !dup ) *it = operator() (i), ++it ;
+					return comp ;
+				} else {
+					return empty_set<value_type>() ;
 				}
-				return comp ;
 			}
 
 			/**
@@ -308,6 +331,21 @@ namespace math {
 			// The container that holds the elements of the set
 			container_type __set ;
 
+	};
+	
+	/**
+	 * In mathematics, and more specifically set theory, the empty
+	 * set is the unique set having no elements; its size or
+	 * cardinality (count of elements in a set) is zero. 
+	 */
+	template<class T>
+	class empty_set : public set<T> {
+	
+		public:
+			empty_set() : set<T>(0) {}
+	
+			virtual ~empty_set() {}
+	
 	};
 
 }	// end of namespace math

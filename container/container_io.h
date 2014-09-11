@@ -27,9 +27,9 @@ namespace container {
 		s << "[" << size << "]: {" ;
 		for(size_t i=0; i<size; ++i) {
 			s << e (i) ;
-			(i!=(size-1)) ? s << "," :
-				s << "}" ;
+			if( i!=(size-1) ) s << "," ;
 		}
+		s << "}" ;
 		os << s.str().c_str() ;
 		return os ;
 	}

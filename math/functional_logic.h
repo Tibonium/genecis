@@ -9,7 +9,11 @@ namespace genecis {
 namespace math {
 
 	class functional_logic {
-	
+		
+		public:
+		
+		private:
+		
 	};
 
 }	// end of namespace math

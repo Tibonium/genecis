@@ -60,5 +60,9 @@ int main() {
 	set = a.symmetric_difference(b) ;
 	cout << "Symmetric Difference of A and B " ;
 	set.print() ;
+	
+	set = empty_set<value_type>() ;
+	cout << "Empty set " ;
+	set.print() ;
 
 }
