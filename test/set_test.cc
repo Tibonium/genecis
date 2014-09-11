@@ -61,8 +61,22 @@ int main() {
 	cout << "Symmetric Difference of A and B " ;
 	set.print() ;
 	
-	set = empty_set<value_type>() ;
+	set_type e = empty_set<value_type>() ;
 	cout << "Empty set " ;
+	e.print() ;
+
+	set = a.unite(e) ;
+	cout << "Union of A and the empty set " ;
 	set.print() ;
 
+	set = a.intersect(e) ;
+	cout << "Intersection of A and the empty set " ;
+	set.print() ;
+
+	set = a.symmetric_difference(e) ;
+	cout << "Symmetric Difference of A and the empty set " ;
+	set.print() ;
+	
+	( a.isSubset(e) ) ? cout << "the empty set is a subset of A" << endl :
+		cout << "the empty set is not a subset of A...oops" << endl ;
 }
