@@ -26,6 +26,61 @@ layer_prod( const vector_expression<E1>& e1, const vector_expression<E2>& e2 ) {
 }
 
 template<class E>
+struct matrix_inverse {
+	typedef E		argument_type ;
+	typedef argument_type	result_type ;
+	typedef typename E::value_type	value_type ;
+	
+	static
+	result_type apply(argument_type t) {
+		argument_type tmp(t) ;
+		value_type d = t(0,0)*t(1,1) - t(0,1)*t(1,0) ;
+		tmp(0,0) = t(1,1) / d ;
+		tmp(1,0) = -t(1,0) / d ;
+		tmp(0,1) = -t(0,1) / d ;
+		tmp(1,1) = t(0,0) / d ;
+		return tmp ;
+	}
+};
+
+template<class E>
+typename vector_unary_traits<E, matrix_inverse<typename E::value_type> >::result_type
+inverse( const vector_expression<E>& e ) {
+	typedef typename vector_unary_traits<E, matrix_inverse<typename E::value_type> >::expression_type
+		expression_type ;
+	return expression_type( e() ) ;
+}
+
+/** ========== VECTOR UNARY SPECIAL ========== **/
+template<class E, std::size_t I1, std::size_t I2>
+struct nested_index {
+	typedef E			argument_type ;
+	typedef typename E::value_type		result_type ;
+	
+	static
+	result_type apply(argument_type t) {
+		return t(I1,I2) ;
+	}
+};
+
+template<class E1, class E2>
+struct nested_plus_assign {
+	typedef E1		argument_type1 ;
+	typedef E2		argument_type2 ;
+	typedef argument_type1	result_type ;
+	typedef typename E1::size_type	size_type ;
+
+	static
+	result_type apply(argument_type1 t1, argument_type2 t2) {
+		size_type size( t2.size() ) ;
+		for(size_type i=0; i<size; ++i)
+			t1 += t2(i) ;
+		return t1 ;
+	}
+
+};
+
+template<class E>
 struct component_determinant{
 	typedef E			argument_type ;
 	typedef typename E::value_type			result_type ;
@@ -90,28 +145,19 @@ layer_determinant( const vector_expression<E>& e ) {
     return expression_type( e() ) ;
 }
 
-template<class E1, class E2>
-struct nested_plus_assign {
-	typedef E1		argument_type1 ;
-	typedef E2		argument_type2 ;
-	typedef argument_type1	result_type ;
-	typedef typename E1::size_type	size_type ;
-
-	static
-	result_type apply(argument_type1 t1, argument_type2 t2) {
-		size_type size( t2.size() ) ;
-		for(size_type i=0; i<size; ++i)
-			t1 += t2(i) ;
-		return t1 ;
-	}
-
-};
-
 template<template<class E1, class E2>class F, class V, class E>
 void nested_vector_assign( V& v, const vector_expression<E>& e) {
 	typedef F<V,E>		functor_type ;
     typedef typename V::size_type size_type ;
     v = functor_type::apply( v, e () ) ;
+}
+
+template<class E, std::size_t I1, std::size_t I2>
+typename vector_unary_special_traits<E, nested_index<typename E::value_type, I1, I2> >::result_type
+nested_access( const vector_expression<E>& e ) {
+	typedef typename vector_unary_special_traits<E, nested_index<typename E::value_type,
+		I1, I2> >::expression_type	expression_type ;
+	return expression_type( e() ) ;
 }
 
 int main() {
@@ -164,6 +210,12 @@ int main() {
 	std::cout << "vm1: " << vm1 << std::endl ;
 	std::cout << "vm2: " << vm2 << std::endl ;
 	std::cout << "m_diff: " << m_diff << std::endl ;
+	
+	vector<matrix<double> > test_inverse = inverse(m_diff) ;
+	std::cout << "test_inverse:" << test_inverse << std::endl ;
+	
+	vector<double> test_access = nested_access<vector<matrix<double> >,1,1>(m_diff) ;
+	std::cout << "test_access:" << test_access << std::endl ;
 	
 	vector<double> det = layer_determinant(m_diff) ;
 	std::cout << "det: " << det << std::endl ;

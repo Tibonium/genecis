@@ -173,7 +173,7 @@ namespace container {
 			}
 		
 			/**
-			 * Element accessor
+			 * Element accessor without bounding check
 			 */
 			inline reference operator() (size_type t) {
 				return *( __begin + t ) ;
@@ -181,6 +181,39 @@ namespace container {
 		
 			inline const_reference operator() (size_type t) const {
 				return *( __begin + t ) ;
+			}
+			
+			/**
+			 * Element accessor with bounding check
+			 */
+			inline reference operator[] (size_type t) {
+				try {
+					if( t >= size() ) {
+						throw -1 ;
+					} else {
+				return *( __begin + t ) ;
+					}
+				} catch (int e) {
+					std::cout << "array::operator[] bad index value of "
+							  << t << ", out of bounds error."
+							  << std::endl ;
+					exit(e) ;
+				}
+			}
+		
+			inline const_reference operator[] (size_type t) const {
+				try {
+					if( t >= size() ) {
+						throw -1 ;
+					} else {
+				return *( __begin + t ) ;
+					}
+				} catch (int e) {
+					std::cout << "array::operator[] bad index value of "
+							  << t << ", out of bounds error."
+							  << std::endl ;
+					exit(e) ;
+				}
 			}
 		
 			/**

@@ -156,13 +156,46 @@ namespace container {
 			 *	2. If index is negative, _data will be accessed from the end
 			 *	   in reverse order.
 			 */
-			reference operator() (size_type index) {
+			inline reference operator() (size_type index) {
 				if( index > size()-1 ) {
 					resize(index+1) ;
 				} else if ( index < 0 ) {
 					index += size() ;
 				}
 				return *( __begin + index ) ;
+			}
+			
+			/**
+			 * Element accessor with bounding check
+			 */
+			inline reference operator[] (size_type t) {
+				try {
+					if( t >= size()-1 ) {
+						throw -1 ;
+					} else {
+				return *( __begin + t ) ;
+					}
+				} catch (int e) {
+					std::cout << "dynamic_array::operator[] bad index value of "
+							  << t << ", out of bounds error."
+							  << std::endl ;
+					exit(e) ;
+				}
+			}
+		
+			inline const_reference operator[] (size_type t) const {
+				try {
+					if( t >= size()-1 ) {
+						throw -1 ;
+					} else {
+				return *( __begin + t ) ;
+					}
+				} catch (int e) {
+					std::cout << "dynamic_array::operator[] bad index value of "
+							  << t << ", out of bounds error."
+							  << std::endl ;
+					exit(e) ;
+				}
 			}
 		
 			/**

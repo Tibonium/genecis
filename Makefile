@@ -21,7 +21,7 @@ GENECIS_FOLDERS = ai algorithm base container distribution tree \
 CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
 CC = $(VERB_$(V))g++ $(OPT_$(D)) -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
-	socket_test graph_test prime sort_test vector_test mathfunc_test \
+	socket_test graph_test prime set_test vector_test mathfunc_test \
 	container_test graph_array_test pattern_test#	gravity_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test \
 	extraction_test
@@ -184,10 +184,6 @@ prime: $(SRC_PATH)/test/prime.cc
 	@echo "Building prime_test..."
 	$(CC) -o $(BUILD_PATH)/prime $(SRC_PATH)/test/prime.cc
 	
-sort_test: $(SRC_PATH)/test/sort_test.cc
-	@echo "Building sort_test..."
-	$(CC) -o $(BUILD_PATH)/sort_test $(SRC_PATH)/test/sort_test.cc
-	
 mathfunc_test:  $(SRC_PATH)/test/mathfunc_test.cc
 	@echo "Building mathfunc_test..."
 	$(CC) -o $(BUILD_PATH)/mathfunc_test $(SRC_PATH)/test/mathfunc_test.cc
@@ -207,7 +203,11 @@ $(BUILD_PATH)/ai/number_pattern.o: $(SRC_PATH)/ai/number_pattern.cc $(SRC_PATH)/
 pattern_test: $(SRC_PATH)/test/pattern_test.cc $(BUILD_PATH)/ai/number_pattern.o
 	@echo "Building pattern_test..."
 	$(CC) -o $(BUILD_PATH)/pattern_test $(SRC_PATH)/test/pattern_test.cc $(BUILD_PATH)/ai/number_pattern.o
-	
+
+set_test: $(SRC_PATH)/test/set_test.cc $(SRC_PATH)/math/set.h $(CONTAINER) 
+	@echo "Building set_test..."
+	$(CC) -o $(BUILD_PATH)/set_test $(SRC_PATH)/test/set_test.cc
+
 # Server Tests
 server: socket_test server_test
 	@echo "Server build complete"
