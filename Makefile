@@ -204,7 +204,7 @@ pattern_test: $(SRC_PATH)/test/pattern_test.cc $(BUILD_PATH)/ai/number_pattern.o
 	@echo "Building pattern_test..."
 	$(CC) -o $(BUILD_PATH)/pattern_test $(SRC_PATH)/test/pattern_test.cc $(BUILD_PATH)/ai/number_pattern.o
 
-set_test: $(SRC_PATH)/test/set_test.cc $(SRC_PATH)/math/set.h $(CONTAINER) 
+set_test: $(SRC_PATH)/test/set_test.cc $(SRC_PATH)/math/set.h $(SRC_PATH)/math/functional_logic.h $(CONTAINER) 
 	@echo "Building set_test..."
 	$(CC) -o $(BUILD_PATH)/set_test $(SRC_PATH)/test/set_test.cc
 

@@ -116,6 +116,43 @@ namespace math {
 			}
 			
 			/**
+			 * Assignment operator +++DOES NOT WORK, LVALUE ISSUE+++
+			 */
+			template<size_type t>
+			void operator= (value_type c) {
+				operator() (t) = c ;
+			}
+			
+			/**
+			 * Set equality operator
+			 */
+			inline
+			bool operator== (const self_type& rhs) const {
+				return __set == rhs.__set ;
+			}
+			
+			/**
+			 * Set elements are all unique
+			 */
+			inline
+			bool uniqueElements() const {
+				size_type s = size() ;
+				bool unique = true ;
+				for(size_type i=0; i<s-1; ++i) {
+					for(size_type j=1; j<s; ++j) {
+						if( i != j ) {
+							if( operator() (i) == operator() (j) ) {
+								unique = false ;
+								break ;
+							}
+						}
+					}
+					if( !unique ) break ;
+				}
+				return unique ;
+			}
+			
+			/**
 			 * Subset of the parent set
 			 *
 			 * In mathematics, especially in set theory, a set A is
@@ -347,7 +384,7 @@ namespace math {
 			virtual ~empty_set() {}
 	
 	};
-
+	
 }	// end of namespace math
 }	// end of namespace genecis
 

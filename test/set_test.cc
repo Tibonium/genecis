@@ -1,5 +1,6 @@
 #include <genecis/math/set.h>
 #include <genecis/container/array.h>
+#include <genecis/math/functional_logic.h>
 #include <vector>
 
 using namespace std ;
@@ -79,4 +80,42 @@ int main() {
 	
 	( a.isSubset(e) ) ? cout << "the empty set is a subset of A" << endl :
 		cout << "the empty set is not a subset of A...oops" << endl ;
+		
+	set_type domain(5) ;
+	i = 1 ;
+	for(set_type::iterator it=domain.begin(); it!=domain.end(); ++it, ++i) {
+		(*it) = i ;
+	}
+	cout << "Domain " ;
+	domain.print() ;
+
+	set_type fcod(5) ;
+	set_type::iterator k=fcod.begin() ;
+//	(*k) = 1 ;
+//	(*++k) = 2 ;
+//	(*++k) = 3 ;
+//	(*++k) = 4 ;
+//	(*++k) = 5 ;
+	(*k) = 1 ;
+	(*++k) = 4 ;
+	(*++k) = 3 ;
+	(*++k) = 1 ;
+	(*++k) = 1 ;
+	functional_logic<value_type,value_type> f(domain,domain,domain,fcod) ;
+	
+	f.print() ;
+	cout << "The function is"
+		 << (f.isValid() ? " " : " not ")
+		 << "a valid function." << endl ;
+	if( f.isValid() ) {
+		cout << "The function is"
+			 << (f.isInjective() ? " " : " not ")
+			 << "a one-to-one function." << endl ;
+		cout << "The function is"
+			 << (f.isSurjective() ? " " : " not ")
+			 << "onto." << endl ;
+		cout << "The function is"
+			 << (f.isBijective() ? " " : " not ")
+			 << "a bijection." << endl ;
+	 }
 }
