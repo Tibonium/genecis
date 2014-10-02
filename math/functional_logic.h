@@ -29,13 +29,13 @@ namespace math {
 			/**
 			 * Constructor
 			 */
-			functional_logic( const domain_type& domain,
-							  const codomain_type& codomain,
-							  const domain_type& x,
-							  const codomain_type& y )
-				: __domain(domain),
-				  __codomain(codomain),
-				  __x(x), __y(y)
+			functional_logic( const domain_type& map_from,
+							  const codomain_type& map_to,
+							  const domain_type& domain,
+							  const codomain_type& codomain )
+				: __map_from(map_from),
+				  __map_to(map_to),
+				  __domain(domain), __codomain(codomain)
 			{}
 			
 			/**
@@ -54,8 +54,9 @@ namespace math {
 			 */
 			inline
 			bool isValid() {
-				return __domain.isSubset(__x)
-					&& __codomain.isSubset(__y) ;
+				return __map_from.isSubset(__domain)
+					&& __map_to.isSubset(__codomain)
+					&& __domain.uniqueElements() ;
 			}
 			
 			/**
@@ -70,8 +71,7 @@ namespace math {
 			 */
 			bool isInjective() {
 				if( !isValid() ) return false ;
-				return (__x.uniqueElements()
-					&& __y.uniqueElements()) ;
+				return __codomain.uniqueElements() ;
 			}
 			
 			/**
@@ -83,7 +83,7 @@ namespace math {
 			 * such that f(x) = y.
 			 */
 			bool isSurjective() {
-				return __x.size() == __y.size() ;
+				return __domain.size() == __codomain.size() ;
 			}
 			
 			/**
@@ -108,18 +108,18 @@ namespace math {
 			 */
 			void print() {
 				std::cout << "The Function is: " << std::endl ;
-				for(size_type i=0; i<__x.size(); ++i) {
-					std::cout << "f(" << __x(i) << ") = "
-						 << __y(i) << std::endl ;
+				for(size_type i=0; i<__domain.size(); ++i) {
+					std::cout << "f(" << __domain(i) << ") = "
+						 << __codomain(i) << std::endl ;
 				}
 			}
 		
 		private:
 		
-			domain_type		__domain ;
+			domain_type	__map_from ;
+			codomain_type	__map_to ;
+			domain_type	__domain ;
 			codomain_type	__codomain ;
-			domain_type		__x ;
-			codomain_type	__y ;
 
 	};
 
