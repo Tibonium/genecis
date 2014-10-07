@@ -45,7 +45,6 @@ namespace signal {
 						result += input[2*m] * std::exp(even) ;
 						result += input[2*m+1] * std::exp(odd) ;
 					}
-					result /= std::sqrt(N) ;
 					output[k] = result ;
 				}
 			}
@@ -55,8 +54,9 @@ namespace signal {
 			 * data set using the radix-2 Cooley-Tukey algorithm.
 			 * Takes a complex set of data and returns a real set.
 			 *
-			 * x_k = \Sum_{m=0}^{N/2-1} X_{2m}*e^{\frac{2\pi i}{N} (2m)k}
-			 *		+ \Sum_{m=0}^{N/2-1} X_{2m+1}*e^{\frac{2\pi i}{N} (2m+1)k}
+			 * x_k = \frac{1}{N} \left(
+			 *		\Sum_{m=0}^{N/2-1} X_{2m}*e^{\frac{2\pi i}{N} (2m)k}
+			 *	 + \Sum_{m=0}^{N/2-1} X_{2m+1}*e^{\frac{2\pi i}{N} (2m+1)k} \right)
 			 *
 			 * @param input		DFT of a signal
 			 * @param output	Inverse DFT of the signal
@@ -78,7 +78,7 @@ namespace signal {
 						result += input[2*m] * std::exp(even) ;
 						result += input[2*m+1] * std::exp(odd) ;
 					}
-					result /= std::sqrt(N) ;
+					result /= N ;
 					output[k] = std::abs(result) ;
 				}
 			}
