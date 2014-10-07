@@ -44,12 +44,20 @@ namespace container {
 				create_storage( s ) ;
 				std::fill_n(__begin, s, c) ;
 			}
+			
+			/**
+			 * Iterator constructor
+			 */
+			array(iterator It, size_type s ) {
+				create_storage( s ) ;
+				std::copy( It, It+s,  __begin ) ;
+			}
 		
 			/**
 			 * Copy constructor
 			 */
 			array(self_type& a) {
-				this->create_storage( a.size() ) ;
+				create_storage( a.size() ) ;
 				std::copy( a.begin(), a.end(), __begin ) ;
 			}
 			

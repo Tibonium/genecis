@@ -17,12 +17,12 @@ OPT_0 = -O3
 OPT_1 = -g -O0
 INSTALL_PATH = /usr/local/include/genecis
 GENECIS_FOLDERS = ai algorithm base container distribution tree \
-	physics net math
+	physics net math signal
 CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
 CC = $(VERB_$(V))g++ $(OPT_$(D)) -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime set_test vector_test mathfunc_test \
-	container_test graph_array_test pattern_test#	gravity_test
+	container_test graph_array_test pattern_test signal_test#	gravity_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test \
 	extraction_test
 MATRIX = $(SRC_PATH)/math/matrix.h $(SRC_PATH)/math/matrix_expression.h \
@@ -41,7 +41,7 @@ DIST_HDR = ${wildcard $(SRC_PATH)/distribution/*.h}
 TREE_HDR = ${wildcard $(SRC_PATH)/tree/*.h}
 PHYS_HDR = ${wildcard $(SRC_PATH)/physics/*.h}
 SRVR_HDR = ${wildcard $(SRC_PATH)/net/*.h}
-SRVR_FILES = ${wildcard $(SRC_PATH)/net/*.cc}
+SIG_HDR = ${wildcard $(SRC_PATH)/signal/*.h}
 
 MATH_O = graph_array.o ode.o
 MATH_OBJ = $(addprefix $(BUILD_PATH)/math/, $(MATH_O))
@@ -51,13 +51,12 @@ PHYS_O = gravity.o gravity_netcdf.o
 PHYS_OBJ = $(addprefix $(BUILD_PATH)/phsyics/, $(PHYS_O))
 SRVR_O = isocket.o genecis_server.o
 SRVR_OBJ = $(addprefix $(BUILD_PATH)/net/, $(SRVR_O))
-OBJS = $(AI_O) $(MATH_O) $(SRVR_O) #$(PHYS_O)
+SIG_O =
+SIG_OBJ = $(addprefix $(BUILD_PATH)/signal/, $(SIG_O))
+OBJS = $(AI_O) $(MATH_O) $(SRVR_O) $(SIG_O) $(PHYS_O)
 
 all: regression_test misc_test
 	@date
-	
-test:
-	@echo $(SRVR_OBJ)
 	
 install:
 	@for main in $(INSTALL_PATH) ; do \
@@ -98,6 +97,9 @@ install:
 	done
 	@for file in $(SRVR_HDR) ; do \
 		cp $$file $(INSTALL_PATH)/net/ ; \
+	done
+	@for file in $(SIG_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/signal/ ; \
 	done
 	
 clean:
@@ -241,4 +243,9 @@ $(BUILD_PATH)/physics/gravity.o: $(SRC_PATH)/physics/gravity.cc
 #physics/gravity_netcdf.o: $(SRC_PATH)/physics/gravity_netcdf.cc
 #	@echo "Creating obj file gravity_netcdf.o..."
 #	$(CC) -c $(SRC_PATH)/physics/gravity_netcdf.cc -o -lnetcdf $(SRC_PATH)/physics/gravity_netcdf.o
+
+# Signal processing Tests
+signal_test: $(SRC_PATH)/test/signal_test.cc $(SIG_HDR)
+	@echo "Building signal_test..."
+	$(CC) -o $(BUILD_PATH)/signal_test $(SRC_PATH)/test/signal_test.cc
 
