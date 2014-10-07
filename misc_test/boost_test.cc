@@ -1,6 +1,8 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <complex>
+#include <cmath>
 
 using namespace boost::numeric::ublas ;
 
@@ -160,66 +162,106 @@ nested_access( const vector_expression<E>& e ) {
 	return expression_type( e() ) ;
 }
 
+template<class T>
+struct scalar_abs:
+    public scalar_real_unary_functor<T> {
+    typedef typename scalar_real_unary_functor<T>::argument_type
+		 argument_type;
+    typedef typename scalar_real_unary_functor<T>::result_type
+		 result_type;
+
+    static inline result_type apply(argument_type t) {
+        return type_traits<result_type>::abs(t);
+    }
+};
+
+/**
+ * Magnitude of a complex vector.
+ */
+template<class E> BOOST_UBLAS_INLINE
+    typename vector_unary_traits<E,
+    scalar_abs<typename E::value_type> >::result_type
+abs(const vector_expression<E> &e) {
+    typedef typename vector_unary_traits<E,
+    scalar_abs<typename E::value_type> >::expression_type
+        expression_type;
+    return expression_type( e() );
+}
+
 int main() {
 
-	vector<double> v1(4) ;
-	vector<double> v2(4) ;
-	vector<double> v3(4) ;
-	vector<double> v4(4) ;
-	for(unsigned i=0; i<v1.size(); ++i) {
-		v1(i) = (i+1)*1 ;
-		v2(i) = (i+1)*2 ;
-		v3(i) = (i+1)*6 ;
-		v4(i) = (i+1)*4 ;
-	}
-	vector<vector<double> > vv1(2) ;
-	vv1(0) = v1 ;
-	vv1(1) = v2 ;
-	vector<vector<double> > vv2(2) ;
-	vv2(0) = v3 ;
-	vv2(1) = v4 ;
-	vector<vector<double> > v_diff = layer_prod(vv2, vv1) ;
-	
-	std::cout << "vv1: " << vv1 << std::endl ;
-	std::cout << "vv2: " << vv2 << std::endl ;
-	std::cout << "v_diff: " << v_diff << std::endl ;
-	vector<double> vtest (4,0.0) ;
-	nested_vector_assign<nested_plus_assign>(vtest, v_diff) ;
-	std::cout << "vtest: " << vtest << std::endl ;
-		
-	matrix<double> m1(2,2) ;
-	matrix<double> m2(2,2) ;
-	matrix<double> m3(2,2) ;
-	matrix<double> m4(2,2) ;
-	for(unsigned i=0; i<m1.size1(); ++i) {
-		for(unsigned j=0; j<m1.size2(); ++j) {
-			m1(i,j) = (i+1)*1 + j * 1 ;
-			m2(i,j) = (i+1)*6 + j * 2 ;
-			m3(i,j) = (i+1)*5 + j * 3 ;
-			m4(i,j) = (i+1)*4 + j * 4 ;
+	typedef std::complex<double>	complex_num ;
+
+	bool full_test = false ;
+
+	vector<complex_num> vc(3) ;
+	vc(0) = complex_num(5, 10) ;
+	vc(1) = complex_num(-3, 2) ;
+	vc(2) = complex_num(1, -1) ;
+
+	std::cout << "vc:" << vc << std::endl ;
+//	std::cout << "abs(vc):" << abs(vc) << std::endl ;
+
+	if( full_test ) {
+		vector<double> v1(4) ;
+		vector<double> v2(4) ;
+		vector<double> v3(4) ;
+		vector<double> v4(4) ;
+		for(unsigned i=0; i<v1.size(); ++i) {
+			v1(i) = (i+1)*1 ;
+			v2(i) = (i+1)*2 ;
+			v3(i) = (i+1)*6 ;
+			v4(i) = (i+1)*4 ;
 		}
-	}	
-	vector<matrix<double> > vm1(2) ;
-	vm1(0) = m1 ;
-	vm1(1) = m2 ;
-	vector<matrix<double> > vm2(2) ;
-	vm2(0) = m3 ;
-	vm2(1) = m4 ;
-	vector<matrix<double> > m_diff = vm1 - vm2 ;
+		vector<vector<double> > vv1(2) ;
+		vv1(0) = v1 ;
+		vv1(1) = v2 ;
+		vector<vector<double> > vv2(2) ;
+		vv2(0) = v3 ;
+		vv2(1) = v4 ;
+		vector<vector<double> > v_diff = layer_prod(vv2, vv1) ;
 	
-	std::cout << "vm1: " << vm1 << std::endl ;
-	std::cout << "vm2: " << vm2 << std::endl ;
-	std::cout << "m_diff: " << m_diff << std::endl ;
+		std::cout << "vv1: " << vv1 << std::endl ;
+		std::cout << "vv2: " << vv2 << std::endl ;
+		std::cout << "v_diff: " << v_diff << std::endl ;
+		vector<double> vtest (4,0.0) ;
+		nested_vector_assign<nested_plus_assign>(vtest, v_diff) ;
+		std::cout << "vtest: " << vtest << std::endl ;
+		
+		matrix<double> m1(2,2) ;
+		matrix<double> m2(2,2) ;
+		matrix<double> m3(2,2) ;
+		matrix<double> m4(2,2) ;
+		for(unsigned i=0; i<m1.size1(); ++i) {
+			for(unsigned j=0; j<m1.size2(); ++j) {
+				m1(i,j) = (i+1)*1 + j * 1 ;
+				m2(i,j) = (i+1)*6 + j * 2 ;
+				m3(i,j) = (i+1)*5 + j * 3 ;
+				m4(i,j) = (i+1)*4 + j * 4 ;
+			}
+		}	
+		vector<matrix<double> > vm1(2) ;
+		vm1(0) = m1 ;
+		vm1(1) = m2 ;
+		vector<matrix<double> > vm2(2) ;
+		vm2(0) = m3 ;
+		vm2(1) = m4 ;
+		vector<matrix<double> > m_diff = vm1 - vm2 ;
 	
-	vector<matrix<double> > test_inverse = inverse(m_diff) ;
-	std::cout << "test_inverse:" << test_inverse << std::endl ;
+		std::cout << "vm1: " << vm1 << std::endl ;
+		std::cout << "vm2: " << vm2 << std::endl ;
+		std::cout << "m_diff: " << m_diff << std::endl ;
 	
-	vector<double> test_access = nested_access<vector<matrix<double> >,1,1>(m_diff) ;
-	std::cout << "test_access:" << test_access << std::endl ;
+		vector<matrix<double> > test_inverse = inverse(m_diff) ;
+		std::cout << "test_inverse:" << test_inverse << std::endl ;
 	
-	vector<double> det = layer_determinant(m_diff) ;
-	std::cout << "det: " << det << std::endl ;
+		vector<double> test_access = nested_access<vector<matrix<double> >,1,1>(m_diff) ;
+		std::cout << "test_access:" << test_access << std::endl ;
 	
-	double result = prod( m1, m2 )(0,0) ;
-	std::cout << "result: " << result << std::endl ;
+		vector<double> det = layer_determinant(m_diff) ;
+		std::cout << "det: " << det << std::endl ;
+	
+		double result = prod( m1, m2 )(0,0) ;
+		std::cout << "result: " << result << std::endl ;
+	}
 }

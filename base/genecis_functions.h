@@ -7,6 +7,7 @@
 
 #include <genecis/base/genecis_expression.h>
 #include <cmath>
+#include <complex>
 
 namespace genecis {
 namespace base {
@@ -72,6 +73,17 @@ namespace base {
 			return std::abs(t) ;
 		}
 	};
+
+//	template<>
+//	struct scalar_abs<std::complex<double> > {
+//		typedef std::complex<double>	argument_type ;
+//		typedef double			result_type ;
+//		
+//		static inline
+//		result_type use (argument_type t) {
+//			return std::abs(t) ;
+//		}
+//	};
 
 	template<class T>
 	struct scalar_sin {

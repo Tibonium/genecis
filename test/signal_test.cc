@@ -14,33 +14,43 @@ double sinc( double x ) {
 	return result ;
 }
 
+template<class Cplx, class Real>
+void convert_real( const Cplx& input, Real& output ) {
+	typedef typename Cplx::size_type	size_type ;
+	size_type s( input.size() ) ;
+	for(size_type i=0; i<s; ++i)
+		output(i) = std::abs(input(i)) ;
+}
+
 int main() {
 
-	typedef double		value_type ;
+	typedef complex<double>		value_type ;
 	typedef array<value_type>	container ;
 	typedef size_t				size_type ;
 
-//	size_type factor = 5 ;
-	size_type N = 100 ;
+	size_type N = 10 ;
 	
-	value_type sig[100] ;
+	value_type sig[10] ;
 	for(size_type i=0; i<N; ++i) {
-		sig[i] = (i<50) ? 1 : 0 ;
+		sig[i] = (i<5) ? value_type(1,0) : value_type(0,0) ;
 	}
-//	value_type imp[] = { sinc(-10), sinc(-8), sinc(-6), sinc(-4), 
-//						 sinc(-2), sinc(0), sinc(2), sinc(4),
-//						 sinc(6), sinc(8) } ;
 
 	container input( sig, N ) ;
-//	container impulse( imp, N ) ;
+	container impulse ;
 	container output ;
-	
-//	cout << "impulse:" << impulse << endl ;
-	
-//	sample_rate::upsample( input, impulse, factor, output ) ;
+
 	fourier_transform::discrete( input, output ) ;
 	
+	array<double> r(output.size()) ;
+
 	cout << "input signal:" << input << endl ;
 	cout << "dft signal:" << output << endl ;
+	convert_real( output, r ) ;
+	cout << "real signal:" << r << endl ;
+	
+	fourier_transform::inverse( output, impulse ) ;
+	cout << "inverse dft signal:" << impulse << endl ;
+	convert_real( impulse, r ) ;
+	cout << "real inverse signal:" << r << endl ;
 	
 }

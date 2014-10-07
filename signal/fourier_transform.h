@@ -19,19 +19,45 @@ namespace signal {
 		
 			template<class C>
 			static void discrete( const C& input, C& output ) {
-				typedef typename C::value_type		value_type ;
-				typedef std::complex<value_type>	complex_num ;
+				typedef typename C::value_type::value_type		value_type ;
+				typedef typename C::value_type					complex_num ;
 				size_type N( input.size() ) ;
+				size_type half_N( N/2 ) ;
 				output.resize( N ) ;
 				complex_num result ;
+				value_type r = -2.0*M_PI/N ;
 				for(size_type k=0; k<N; ++k) {
 					result = complex_num(0.0,0.0) ;
-					for(size_type n=0; n<N; ++n) {
-						std::complex<double> a( 0.0, -2.0*M_PI*k*n/N ) ;
-						result += input[n] * std::exp(a) ;
+					for(size_type m=0; m<half_N; ++m) {
+						complex_num even( 0.0, r*k*(2*m) ) ;
+						complex_num odd( 0.0, r*k*(2*m+1) ) ;
+						result += input[2*m] * std::exp(even) ;
+						result += input[2*m+1] * std::exp(odd) ;
 					}
 					result /= std::sqrt(N) ;
-					output[k] = std::abs(result) ;
+					output[k] = result ;
+				}
+			}
+			
+			template<class C>
+			static void inverse( const C& input, C& output ) {
+				typedef typename C::value_type::value_type		value_type ;
+				typedef typename C::value_type					complex_num ;
+				size_type N( input.size() ) ;
+				size_type half_N( N/2 ) ;
+				output.resize( N ) ;
+				complex_num result ;
+				value_type r = 2.0*M_PI/N ;
+				for(size_type k=0; k<N; ++k) {
+					result = complex_num(0.0,0.0) ;
+					for(size_type m=0; m<half_N; ++m) {
+						complex_num even( 0.0, r*k*(2*m) ) ;
+						complex_num odd( 0.0, r*k*(2*m+1) ) ;
+						result += input[2*m] * std::exp(even) ;
+						result += input[2*m+1] * std::exp(odd) ;
+					}
+					result /= std::sqrt(N) ;
+					output[k] = result ;
 				}
 			}
 	
