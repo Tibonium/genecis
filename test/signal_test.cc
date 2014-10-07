@@ -24,33 +24,29 @@ void convert_real( const Cplx& input, Real& output ) {
 
 int main() {
 
-	typedef complex<double>		value_type ;
-	typedef array<value_type>	container ;
+	typedef double				value_type ;
+	typedef complex<value_type>	complex_num ;
+	typedef array<complex_num>	container_cplx ;
+	typedef array<value_type>	container_real ;
 	typedef size_t				size_type ;
 
 	size_type N = 10 ;
 	
 	value_type sig[10] ;
 	for(size_type i=0; i<N; ++i) {
-		sig[i] = (i<5) ? value_type(1,0) : value_type(0,0) ;
+		sig[i] = (i<5) ? 1 : 0 ;
 	}
 
-	container input( sig, N ) ;
-	container impulse ;
-	container output ;
+	container_real input( sig, N ) ;
+	container_real impulse ;
+	container_cplx output ;
 
 	fourier_transform::discrete( input, output ) ;
-	
-	array<double> r(output.size()) ;
 
 	cout << "input signal:" << input << endl ;
 	cout << "dft signal:" << output << endl ;
-	convert_real( output, r ) ;
-	cout << "real signal:" << r << endl ;
 	
 	fourier_transform::inverse( output, impulse ) ;
 	cout << "inverse dft signal:" << impulse << endl ;
-	convert_real( impulse, r ) ;
-	cout << "real inverse signal:" << r << endl ;
 	
 }

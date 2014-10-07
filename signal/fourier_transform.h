@@ -17,8 +17,19 @@ namespace signal {
 	
 		public:
 		
-			template<class C>
-			static void discrete( const C& input, C& output ) {
+			/**
+			 * Produces the Discrete Fourier-transform of a data set
+			 * using the radix-2 Cooley-Tukey algorithm. Takes a real
+			 * data set and returns a complex set.
+			 *
+			 * X_k = \Sum_{m=0}^{N/2-1} x_{2m}*e^{\frac{-2\pi i}{N} (2m)k}
+			 *		+ \Sum_{m=0}^{N/2-1} x_{2m+1}*e^{\frac{-2\pi i}{N} (2m+1)k}
+			 *
+			 * @param input		input signal
+			 * @param output	DFT of input signal
+			 */
+			template<class R, class C>
+			static void discrete( const R& input, C& output ) {
 				typedef typename C::value_type::value_type		value_type ;
 				typedef typename C::value_type					complex_num ;
 				size_type N( input.size() ) ;
@@ -39,8 +50,19 @@ namespace signal {
 				}
 			}
 			
-			template<class C>
-			static void inverse( const C& input, C& output ) {
+			/**
+			 * Produces the Inverse Discrete Fourier-transform of a
+			 * data set using the radix-2 Cooley-Tukey algorithm.
+			 * Takes a complex set of data and returns a real set.
+			 *
+			 * x_k = \Sum_{m=0}^{N/2-1} X_{2m}*e^{\frac{2\pi i}{N} (2m)k}
+			 *		+ \Sum_{m=0}^{N/2-1} X_{2m+1}*e^{\frac{2\pi i}{N} (2m+1)k}
+			 *
+			 * @param input		DFT of a signal
+			 * @param output	Inverse DFT of the signal
+			 */
+			template<class C, class R>
+			static void inverse( const C& input, R& output ) {
 				typedef typename C::value_type::value_type		value_type ;
 				typedef typename C::value_type					complex_num ;
 				size_type N( input.size() ) ;
@@ -57,7 +79,7 @@ namespace signal {
 						result += input[2*m+1] * std::exp(odd) ;
 					}
 					result /= std::sqrt(N) ;
-					output[k] = result ;
+					output[k] = std::abs(result) ;
 				}
 			}
 	
