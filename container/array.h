@@ -286,6 +286,32 @@ namespace container {
 					exit(e) ;
 				}
 			}
+			
+			/**
+			 * Resizes the array to a new size
+			 *
+			 * @param s		new size of the array
+			 * @param copy	preserve data in the array. If true, data
+			 *				is copied up to min(size,new size), and
+			 * 				zeros are placed in all empty entries. If
+			 *				false, the array entries are set to zero.
+			 */
+			void resize(size_type s, bool copy=false) {
+				if( copy ) {
+					iterator __tmp ;
+					__tmp = mng.allocate( s ) ;
+					size_type n = std::min( size(), s ) ;
+					std::copy( __begin, __begin+n, __tmp ) ;
+					if( n < s ) std::fill_n( __tmp+n, s-n, 0 ) ;
+					mng.deallocate( __begin, size() ) ;
+					__begin = __tmp ;
+					__end = __tmp + s ;
+				} else {
+					mng.deallocate( __begin, size() ) ;
+					create_storage( s ) ;
+					std::fill_n( __begin, s, 0 ) ;
+				}
+			}
 
 		private:
 			// begin and end of the data stored in this class

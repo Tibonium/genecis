@@ -71,6 +71,10 @@ int main() {
 	t = find(r, s).squeeze() ;
 	cout << "find(r,s):" << t << endl ;
 	
+	size = 2 ;
+	t.resize(size, true) ;
+	cout << "t resized:" << t << endl ;
+	
 //	int size = 100000 ;
 //	array<double> r(size) ;
 //	array<double> s(size) ;
