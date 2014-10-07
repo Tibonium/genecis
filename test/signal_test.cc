@@ -1,5 +1,5 @@
-#include <iostream>
-#include <cmath>
+#include <ctime>
+#include <cstdlib>
 #include <genecis/container/array.h>
 #include <genecis/signal/sample_rate.h>
 #include <genecis/signal/fourier_transform.h>
@@ -30,11 +30,12 @@ int main() {
 	typedef array<value_type>	container_real ;
 	typedef size_t				size_type ;
 
-	size_type N = 10 ;
+	size_type N = 100 ;
 	
-	value_type sig[10] ;
+	value_type sig[100] ;
+	srand(time(0)) ;
 	for(size_type i=0; i<N; ++i) {
-		sig[i] = (i<5) ? 1 : 0 ;
+		sig[i] = std::sin(30*2*M_PI*i/100) + rand()%2 - 1/2 ;
 	}
 
 	container_real input( sig, N ) ;
@@ -43,10 +44,13 @@ int main() {
 
 	fourier_transform::discrete( input, output ) ;
 
+	impulse.resize( N ) ;
+	convert_real( output, impulse ) ;
+	cout << "real dft sig:" << impulse << endl ;
 	cout << "input signal:" << input << endl ;
-	cout << "dft signal:" << output << endl ;
-	
-	fourier_transform::inverse( output, impulse ) ;
-	cout << "inverse dft signal:" << impulse << endl ;
+//	cout << "dft signal:" << output << endl ;
+//	
+//	fourier_transform::inverse( output, impulse ) ;
+//	cout << "inverse dft signal:" << impulse << endl ;
 	
 }
