@@ -14,14 +14,6 @@ double sinc( double x ) {
 	return result ;
 }
 
-template<class Cplx, class Real>
-void convert_real( const Cplx& input, Real& output ) {
-	typedef typename Cplx::size_type	size_type ;
-	size_type s( input.size() ) ;
-	for(size_type i=0; i<s; ++i)
-		output(i) = std::abs(input(i)) ;
-}
-
 int main() {
 
 	typedef double				value_type ;
@@ -45,7 +37,7 @@ int main() {
 	fourier_transform::discrete( input, output ) ;
 
 	impulse.resize( N ) ;
-	convert_real( output, impulse ) ;
+	fourier_transform::convert_real( output, impulse ) ;
 	cout << "real dft sig:" << impulse << endl ;
 	cout << "input signal:" << input << endl ;
 //	cout << "dft signal:" << output << endl ;

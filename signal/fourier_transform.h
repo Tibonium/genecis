@@ -82,6 +82,21 @@ namespace signal {
 					output[k] = std::abs(result) ;
 				}
 			}
+			
+			/**
+			 * Converts an array of complex numbers to an array of
+			 * reals. This is implemented because currently the
+			 * container_expression has yet to implement this
+			 * capability. In the furture this will be removed when
+			 * the container_expression class has this capability.
+			 */
+			template<class Cplx, class Real>
+			static void convert_real( const Cplx& input, Real& output ) {
+				typedef typename Cplx::size_type	size_type ;
+				size_type s( input.size() ) ;
+				for(size_type i=0; i<s; ++i)
+					output(i) = std::abs(input(i)) ;
+			}
 	
 	};
 
