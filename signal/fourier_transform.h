@@ -30,8 +30,8 @@ namespace signal {
 			 */
 			template<class R, class C>
 			static void discrete( const R& input, C& output ) {
-				typedef typename C::value_type::value_type		value_type ;
 				typedef typename C::value_type					complex_num ;
+				typedef typename complex_num::value_type		value_type ;
 				size_type N( input.size() ) ;
 				size_type half_N( N/2 ) ;
 				output.resize( N ) ;
@@ -63,8 +63,8 @@ namespace signal {
 			 */
 			template<class C, class R>
 			static void inverse( const C& input, R& output ) {
-				typedef typename C::value_type::value_type		value_type ;
 				typedef typename C::value_type					complex_num ;
+				typedef typename complex_num::value_type		value_type ;
 				size_type N( input.size() ) ;
 				size_type half_N( N/2 ) ;
 				output.resize( N ) ;
