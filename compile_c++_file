@@ -10,6 +10,7 @@ else
   cc_file="$1.cc"
 fi
 no_file=$(find $cc_file)
+cpp="g++ -I /usr/local/include -L /usr/local/lib"
 if [ "$no_file" = "" ];
 then
   echo ***Error: $cc_file does not exist***
@@ -17,9 +18,9 @@ else
   echo File $cc_file found, creating exe file
   if [ "$2" = "" ];
   then
-     g++ $cc_file -o $1
+     $cpp $cc_file -o $1
   else
-     g++ $cc_file -o $1 -l$2
+     $cpp $cc_file -o $1 -l$2
   fi
   if [ -e $1 ];
   then
