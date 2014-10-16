@@ -3,14 +3,21 @@ if [ -e $1 ];
 then
   rm $1
 fi
-if [ "$2" = "gfortran" ]
+if [ "$2" = "gfortran" ];
 then
   cc_file="$1.f"
 else
   cc_file="$1.cc"
 fi
 no_file=$(find $cc_file)
-cpp="g++ -I /usr/local/include -L /usr/local/lib"
+if [ "$2" = "debug" ];
+then
+  debug="true"
+  cpp="g++ -g -I /usr/local/include -L /usr/local/lib"
+else
+  debug="false"
+  cpp="g++ -I /usr/local/include -L /usr/local/lib"
+fi
 if [ "$no_file" = "" ];
 then
   echo ***Error: $cc_file does not exist***
@@ -20,7 +27,17 @@ else
   then
      $cpp $cc_file -o $1
   else
-     $cpp $cc_file -o $1 -l$2
+     if [ $debug = "true" ];
+     then
+       if [ $3 = "" ];
+       then
+         $cpp $cc_file -o $1
+       else
+         $cpp $cc_file -o $1 -l$3
+       fi
+     else
+       $cpp $cc_file -o $1 -l$2
+     fi
   fi
   if [ -e $1 ];
   then
