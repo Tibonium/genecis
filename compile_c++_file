@@ -38,7 +38,7 @@ else
      else
        if [ "$3" = "" ];
        then
-         $cpp $cc_file -o $1 -$2
+         $cpp $cc_file -o $1 -l$2
        else
          $cpp $cc_file -o $1 -l$2 -l$3
        fi
