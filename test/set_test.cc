@@ -31,7 +31,7 @@ int main() {
 	size_type n = 10 ;
 	container_type origin(n) ;
 	
-	typename container_type::iterator it = origin.begin() ;
+	container_type::iterator it = origin.begin() ;
 	value_type i = 0 ;
 	for(it=origin.begin(); it!=origin.end(); ++it, ++i) {
 		*it = i ;

@@ -47,7 +47,6 @@ namespace tree {
 		 			 	++_count ;
 				 	}
 			 	}
-			 	delete temp ;
 			 }
 
 			 inline void delete_node(const KEY_TYPE& key) {

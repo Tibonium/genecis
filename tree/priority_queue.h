@@ -200,9 +200,9 @@ namespace tree {
 		private:
 			int* _rank ;		//array to store priority values in
 			TYPE* _data ;		//actual data values in queue
-			size_t _front ;		//highest prioirty
-			size_t _back ;		//lowest priority
-			size_t _max_index ;	//maximum number of queue elements
+			unsigned _front ;		//highest prioirty
+			unsigned _back ;		//lowest priority
+			unsigned _max_index ;	//maximum number of queue elements
 
 	};
 
@@ -239,7 +239,7 @@ namespace tree {
 				else os << endl ;
 			}	
 		}
-		sprintf(buf, "front:%3d back:%3d\n   max_index:%3d", 
+		sprintf(buf, "front:%3u back:%3u\n   max_index:%3u", 
 				output._front, output._back, output._max_index) ;
 		os << buf << endl ;
 		return os ;
