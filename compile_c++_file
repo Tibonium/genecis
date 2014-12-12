@@ -13,10 +13,10 @@ no_file=$(find $cc_file)
 if [ "$2" = "debug" ];
 then
   debug="true"
-  cpp="g++ -g -I /usr/local/include -L /usr/local/lib"
+  cpp="g++ -g -I /usr/local/include -I $PROJECTS_DIR/ -L /usr/local/lib -L $(pwd)"
 else
   debug="false"
-  cpp="g++ -I /usr/local/include -L /usr/local/lib"
+  cpp="g++ -I/usr/local/include -I $PROJECTS_DIR/ -L /usr/local/lib -L $(pwd)"
 fi
 if [ "$no_file" = "" ];
 then
