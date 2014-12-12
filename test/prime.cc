@@ -8,6 +8,8 @@ using namespace std ;
 
 int main() {
 
+	cout << "Prime Test" << endl ;
+
 	const char* filename = "prime_list.txt" ;
 	ifstream file( filename ) ;
 	if( !file ) {
