@@ -15,9 +15,9 @@ namespace math {
 		
 		public:
 		
-			typedef functional_logic<T1,T2>				self_type ;
-			typedef set<T1>								domain_type ;
-			typedef set<T2>								codomain_type ;
+			typedef functional_logic<T1,T2>			self_type ;
+			typedef set<T1>					domain_type ;
+			typedef set<T2>					codomain_type ;
 			typedef typename domain_type::size_type		size_type ;
 			typedef typename domain_type::value_type	domain_value_type ;
 			typedef typename domain_type::reference		domain_reference ;
@@ -30,9 +30,9 @@ namespace math {
 			 * Constructor
 			 */
 			functional_logic( const domain_type& map_from,
-							  const codomain_type& map_to,
-							  const domain_type& domain,
-							  const codomain_type& codomain )
+					  const codomain_type& map_to,
+					  const domain_type& domain,
+					  const codomain_type& codomain )
 				: __map_from(map_from),
 				  __map_to(map_to),
 				  __domain(domain), __codomain(codomain)
@@ -83,7 +83,7 @@ namespace math {
 			 * such that f(x) = y.
 			 */
 			bool isSurjective() {
-				return __domain.size() == __codomain.size() ;
+				return __map_from.size() == __map_to.size() ;
 			}
 			
 			/**

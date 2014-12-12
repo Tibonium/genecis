@@ -23,8 +23,8 @@ int main() {
 //		++N ;
 //	}
 	
-	typedef int					value_type ;
-	typedef size_t				size_type ;
+	typedef int			value_type ;
+	typedef size_t			size_type ;
 	typedef array<value_type>	container_type ;
 	typedef set<value_type>		set_type ;
 	
@@ -82,12 +82,20 @@ int main() {
 		cout << "the empty set is not a subset of A...oops" << endl ;
 		
 	set_type domain(5) ;
+	set_type codomain(10) ;
+	set_type::iterator itd ;
 	i = 1 ;
-	for(set_type::iterator it=domain.begin(); it!=domain.end(); ++it, ++i) {
-		(*it) = i ;
+	for(itd=domain.begin(); itd!=domain.end(); ++itd, ++i) {
+		(*itd) = i ;
+	}
+	i = 1 ;
+	for(itd=codomain.begin(); itd!=codomain.end(); ++itd, ++i) {
+		(*itd) = i ;
 	}
 	cout << "Domain " ;
 	domain.print() ;
+	cout << "Codomain " ;
+	codomain.print() ;
 
 	set_type fcod(5) ;
 	set_type::iterator k=fcod.begin() ;
@@ -97,11 +105,11 @@ int main() {
 //	(*++k) = 4 ;
 //	(*++k) = 5 ;
 	(*k) = 1 ;
-	(*++k) = 4 ;
+	(*++k) = 2 ;
 	(*++k) = 3 ;
-	(*++k) = 1 ;
-	(*++k) = 1 ;
-	functional_logic<value_type,value_type> f(domain,domain,domain,fcod) ;
+	(*++k) = 4 ;
+	(*++k) = 5 ;
+	functional_logic<value_type,value_type> f(domain,codomain,domain,fcod) ;
 	
 	f.print() ;
 	cout << "The function is"
