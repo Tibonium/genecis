@@ -1,6 +1,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <genecis/container/array.h>
+#include <genecis/signal/wave_generator.h>
 #include <genecis/signal/sample_rate.h>
 #include <genecis/signal/fourier_transform.h>
 
@@ -38,11 +39,14 @@ int main() {
 
 	impulse.resize( N ) ;
 	fourier_transform::convert_real( output, impulse ) ;
-	cout << "real dft sig:" << impulse << endl ;
-	cout << "input signal:" << input << endl ;
+//	cout << "real dft sig:" << impulse << endl ;
+//	cout << "input signal:" << input << endl ;
 //	cout << "dft signal:" << output << endl ;
 //	
 //	fourier_transform::inverse( output, impulse ) ;
 //	cout << "inverse dft signal:" << impulse << endl ;
+
+	container_real* wave = wave_generator::square_wave<container_real>( 6, 2, 5.1 ) ;
+	cout << "square_wave: " << *wave << endl ; 
 	
 }
