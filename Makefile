@@ -22,7 +22,7 @@ CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
 CC = $(VERB_$(V))g++ $(OPT_$(D)) -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime set_test vector_test mathfunc_test \
-	container_test graph_array_test pattern_test signal_test#	gravity_test
+	container_test graph_array_test pattern_test signal_test numerics_test#	gravity_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test \
 	extraction_test
 MATRIX = $(SRC_PATH)/math/matrix.h $(SRC_PATH)/math/matrix_expression.h \
@@ -43,7 +43,7 @@ PHYS_HDR = ${wildcard $(SRC_PATH)/physics/*.h}
 SRVR_HDR = ${wildcard $(SRC_PATH)/net/*.h}
 SIG_HDR = ${wildcard $(SRC_PATH)/signal/*.h}
 
-MATH_O = graph_array.o ode.o
+MATH_O = graph_array.o ode.o numerics.o
 MATH_OBJ = $(addprefix $(BUILD_PATH)/math/, $(MATH_O))
 AI_O = number_pattern.o
 AI_OBJ = $(addprefix $(BUILD_PATH)/ai/, $(AI_O))
@@ -205,6 +205,14 @@ $(BUILD_PATH)/ai/number_pattern.o: $(SRC_PATH)/ai/number_pattern.cc $(SRC_PATH)/
 pattern_test: $(SRC_PATH)/test/pattern_test.cc $(BUILD_PATH)/ai/number_pattern.o
 	@echo "Building pattern_test..."
 	$(CC) -o $(BUILD_PATH)/pattern_test $(SRC_PATH)/test/pattern_test.cc $(BUILD_PATH)/ai/number_pattern.o
+
+$(BUILD_PATH)/math/numerics.o: $(SRC_PATH)/math/numerics.cc $(SRC_PATH)/math/numerics.h
+	@echo "Creating obj file numerics.o..."
+	$(CC) -c $(SRC_PATH)/math/numerics.cc -o $(BUILD_PATH)/math/numerics.o
+	
+numerics_test: $(SRC_PATH)/test/numerics_test.cc $(BUILD_PATH)/math/numerics.o
+	@echo "Building numerics_test..."
+	$(CC) -o $(BUILD_PATH)/numerics_test $(SRC_PATH)/test/numerics_test.cc $(BUILD_PATH)/math/numerics.o
 
 set_test: $(SRC_PATH)/test/set_test.cc $(SRC_PATH)/math/set.h $(SRC_PATH)/math/functional_logic.h $(CONTAINER) 
 	@echo "Building set_test..."

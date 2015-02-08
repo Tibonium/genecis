@@ -16,4 +16,6 @@
 #include <genecis/math/matrix.h>
 #include <genecis/math/set.h>
 
+#include <genecis/math/numerics.h>
+
 #endif
