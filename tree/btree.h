@@ -2,15 +2,45 @@
  * @file btree.h
  */
  
-#ifndef GENECIS_TREE_BTREE_H
-#define GENECIS_TREE_BTREE_H
-
-#include <genecis/tree/btree_node.h>
+#pragma once
 
 namespace genecis {
 namespace tree {
 
-	template <class _type, int _size> class btree {
+	template <class _type, int _size>
+	struct btree_node {
+
+		private:
+	
+			int num_keys ;
+			_type key_ring[_size-1] ;
+			btree_node<_type,_size>* child[_size] ;
+	
+	};
+	
+	template <class _type, int _size>
+	class btree {
+
+		public:
+	
+			/**
+			 * Allows the user to insert a key into the btree
+			 *
+			 * @param key		The key we want to add
+			 */
+			void insert(_type key) {
+				insert(root,key) ;
+			}
+		
+			// Constructor
+			btree() {
+				root = NULL ;
+			}
+	
+			// Destructor
+			~btree() {
+				destroy_tree(root) ;
+			}
 
 		private:
 	
@@ -98,31 +128,7 @@ namespace tree {
 				}
 			}
 
-	
-		public:
-	
-			/**
-			 * Allows the user to insert a key into the btree
-			 *
-			 * @param key		The key we want to add
-			 */
-			void insert(_type key) {
-				insert(root,key) ;
-			}
-		
-			// Constructor
-			btree() {
-				root = NULL ;
-			}
-	
-			// Destructor
-			~btree() {
-				destroy_tree(root) ;
-			}
-
-	};
+	};	
 
 }	// end of namespace tree
 }	// end of namespace genecis
-
-#endif

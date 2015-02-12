@@ -2,8 +2,7 @@
  *	@file priority_queue.h
  */
 
-#ifndef GENECIS_TREE_PRIORITY_QUEUE_H
-#define GENECIS_TREE_PRIORITY_QUEUE_H
+#pragma once
 
 #include <cstring>
 #include <cmath>
@@ -18,27 +17,28 @@ namespace tree {
 
 	using namespace std ;
 
-	template <class TYPE> class priority_queue ;
+	template <class T> class priority_queue ;
 
-	template <class TYPE>
-	ostream& operator<< (ostream& os, const priority_queue<TYPE>& output) ;
+	template <class T>
+	ostream& operator<< (ostream& os, const priority_queue<T>& output) ;
 
-	template <class TYPE> class priority_queue {
+	template <class T>
+	class priority_queue {
 
-		typedef priority_queue<TYPE> self_type ;
+		typedef priority_queue<T> self_type ;
 
 		public:
 	
 			/*=================== Public Accessors ===================*/
-			inline const TYPE& data(const TYPE& d) {
+			inline const T& data(const T& d) {
 				return _data[d] ;
 			}
 		
-			inline const TYPE& data(const size_t& i) {
+			inline const T& data(const size_t& i) {
 				return _data[i] ;
 			}
 
-			inline const TYPE& operator[] (const TYPE& d) {
+			inline const T& operator[] (const T& d) {
 				size_t start = _front ;
 				bool found = false ;
 				while( start != _back ) {
@@ -55,7 +55,7 @@ namespace tree {
 						throw 1 ;
 					}
 				} catch (int e) {
-					cout << "priority_queue::operator[] (const TYPE&) "
+					cout << "priority_queue::operator[] (const T&) "
 						 << "data value " << d << " not found. exit status"
 						 << " (" << e << ")" << endl ;
 				}
@@ -65,7 +65,7 @@ namespace tree {
 			 * Pushes a new data value onto the back of the queue and
 			 * sets its' priority to the default rank of 16.
 			 */
-			inline void push_back(const TYPE& data) {
+			inline void push_back(const T& data) {
 				try {
 					if( _front == _back && _rank[_front] != 0 ) {
 						throw 1 ;
@@ -88,7 +88,7 @@ namespace tree {
 			/**
 			 * Pushes a new data/rank pair onto the back of the queue.
 			 */
-			inline void push_back(const TYPE& data, const int& rank) {
+			inline void push_back(const T& data, const int& rank) {
 				try {
 					if( _front == _back && _rank[_front] != 0 ) {
 						throw 1 ;
@@ -108,12 +108,12 @@ namespace tree {
 				}
 			}
 		
-			inline const TYPE& pop_front() {
+			inline const T& pop_front() {
 				try {
 					if( _rank[_front] == 0 ) {
 						throw 1 ;
 					} else {
-						TYPE& d = _data[_front] ;
+						T& d = _data[_front] ;
 						_rank[_front] = 0 ;
 						while( _rank[_front] == 0 ) {
 							++_front ;
@@ -129,7 +129,7 @@ namespace tree {
 				}
 			}
 		
-			inline const TYPE& pop_top_rank() {
+			inline const T& pop_top_rank() {
 				try{
 					if( _rank[_front] == 0 ) {
 						throw 1 ;
@@ -153,7 +153,7 @@ namespace tree {
 							if( _back == 0 ) _back = _max_index ;
 							else --_back ;
 						} else _back = t ;
-						TYPE& d = _data[t] ;
+						T& d = _data[t] ;
 						return d ;
 					}
 				} catch(int e) {
@@ -172,14 +172,14 @@ namespace tree {
 				_max_index(size-1)
 			{
 				_rank = new int[size] ;
-				_data = new TYPE[size] ;
+				_data = new T[size] ;
 				memset(_rank, 0, size*sizeof(int)) ;
-				if( typeid(TYPE) == typeid(string) ) {
+				if( typeid(T) == typeid(string) ) {
 					for(unsigned i=0; i<size; ++i) {
 						_data[i] = "" ;
 					}
 				} else {
-					memset(_data, 0, size*sizeof(TYPE)) ;
+					memset(_data, 0, size*sizeof(T)) ;
 				}
 			}
 		
@@ -199,20 +199,20 @@ namespace tree {
 	
 		private:
 			int* _rank ;		//array to store priority values in
-			TYPE* _data ;		//actual data values in queue
+			T* _data ;		//actual data values in queue
 			unsigned _front ;		//highest prioirty
 			unsigned _back ;		//lowest priority
 			unsigned _max_index ;	//maximum number of queue elements
 
 	};
 
-	template <class TYPE>
-	inline ostream& operator<< (ostream& os, const priority_queue<TYPE>& output) {
+	template <class T>
+	inline ostream& operator<< (ostream& os, const priority_queue<T>& output) {
 		char buf[64] ;
 		stringstream ss ;
 		string s ;
 		os << "    Data    Rank" << endl ;
-		if( typeid(TYPE) == typeid(string) ) {
+		if( typeid(T) == typeid(string) ) {
 			for(size_t i=0; i<=output._max_index; ++i) {
 				s = output._data[i] ;
 				if( s == "" ) s = "empty" ;
@@ -247,5 +247,3 @@ namespace tree {
 
 }	// end of namespace tree
 }	// end of namespace genecis
-
-#endif

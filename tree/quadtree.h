@@ -93,5 +93,5 @@ namespace tree {
             container_type _quadrant ;
     };
 
-}
-}
+}   // end of namespace tree
+}   // end of namespace genecis

@@ -2,16 +2,90 @@
  * @file avl_tree.h
  */
 
-#ifndef GENECIS_TREE_AVL_TREE_H
-#define GENECIS_TREE_AVL_TREE_H
+#pragma once
 
-#include <genecis/tree/avl_node.h>
 #include <cstdio>
 
 namespace genecis {
 namespace tree {
 
-	template <class _type> class avl_tree {
+	template<class T>
+	struct avl_node {
+
+		public:
+		
+		    typedef T                       value_type ;
+		    typedef char                    balance_type ;
+		    typedef avl_node<value_type>    node_type ;
+		    typedef node_type*              node_ptr ;
+	
+			value_type key ;
+			balance_type balance ;
+			node_ptr left ;
+			node_ptr right ;
+			node_ptr parent ;
+
+	};
+	
+	template <class T>
+	class avl_tree {
+
+		public:
+		
+		    typedef T                                   value_type ;
+		    typedef std::size_t                         size_type ;
+		    typedef avl_tree<value_type>                self_type ;
+		    typedef avl_node<value_type>                node_type ;
+		    typedef typename node_type::node_ptr        node_ptr ;
+		    typedef typename node_type::balance_type    balance_type ;
+		
+			// Constructor
+			avl_tree() {
+				root = NULL ;
+			}
+				
+			// Destructor
+			virtual ~avl_tree() {
+				clear_tree( root ) ;
+			}
+	
+			/**
+			 * Inserts a new leaf into the avl_tree with the new key
+			 *
+			 * @param key	key that the new leaf will have
+			 */
+			void insert( const value_type key ) {
+				ancestor = NULL ;
+				temp = root ;
+				node_ptr leaf = new node_type ;
+				leaf->key = key ;
+				leaf->balance = ' ' ;
+				leaf->left = NULL ;
+				leaf->right = NULL ;
+				leaf->parent = NULL ;
+				insert( leaf ) ;
+			}
+		
+			/**
+			 * Searches throughout the tree looking for a leaf that has
+			 * the requested key. Returns false if key does not exist
+			 * in the tree.
+			 *
+			 * @param key	key to search for in the tree
+			 */
+			bool search( const value_type key ) const {
+				return search( root, key ) ;
+			}
+		
+			/**
+			 * Prints out the avl_tree to the display
+			 */
+			void print_tree() {
+				cout << "Printing AVL_tree..." << endl;
+				cout << "Root Node: " << root->key << " balance: "
+					 << root->balance << "\n\n";
+				print_tree( root ) ;
+			}
 
 		private:
 	
@@ -21,11 +95,9 @@ namespace tree {
 			 * we need to go with inserting, rotating, and balancing the
 			 * tree.
 			 */
-			avl_node<_type>* root ;
-
-			avl_node<_type>* ancestor ;
-		
-			avl_node<_type>* temp ;
+			node_ptr root ;
+			node_ptr ancestor ;
+			node_ptr temp ;
 			
 			/**
 			 * This function takes a newly created leaf and inserts it
@@ -33,38 +105,38 @@ namespace tree {
 			 *
 			 * @param leaf		New leaf to be inserted into tree.
 			 */
-			void insert(avl_node<_type>* leaf) {
-				if (root == NULL) {
+			void insert( node_ptr leaf ) {
+				if( root == NULL ) {
 					root = leaf ;
 					return ;
 				}
 
-				if (temp == NULL) {
+				if( temp == NULL ) {
 					temp = leaf ;
-					restore_avl_tree(ancestor,leaf) ;
+					restore_avl_tree( ancestor, leaf ) ;
 				} else
-				if (temp->key < leaf->key) {
+				if( temp->key < leaf->key ) {
 					leaf->parent = temp ;
-					if (temp->balance == '=') { ancestor = temp ; }
+					if( temp->balance == '=' ) { ancestor = temp ; }
 					temp = temp->left ;
-					insert(leaf) ;
+					insert( leaf ) ;
 				} else {
 					leaf->parent = temp ;
-					if (temp->balance == '=') { ancestor = temp ; } 
+					if( temp->balance == '=' ) { ancestor = temp ; } 
 					temp = temp->right ;
-					insert(leaf) ;
+					insert( leaf ) ;
 				}
 			}
 		
-			bool search(avl_node<_type>* leaf, const _type& key) const {
-				if ( leaf != NULL ) {
-					if ( leaf->key == key ) {
+			bool search( node_ptr leaf, const value_type key) const {
+				if( leaf != NULL ) {
+					if( leaf->key == key ) {
 						return true ;
 					} else
-					if ( key < leaf->key ) {
-						search(leaf->left,key) ;
+					if( key < leaf->key ) {
+						search( leaf->left, key ) ;
 					} else {
-						search(leaf->right,key) ;
+						search( leaf->right, key ) ;
 					}
 				} else {
 					cout << "Key: " << key << " is not within the tree."
@@ -82,17 +154,17 @@ namespace tree {
 			 * @param history	Last tree leaf that has to be rebalanced
 			 * @param newleaf	The leaf that we just inserted
 			 */
-			void restore_avl_tree(avl_node<_type>* history, avl_node<_type>* newleaf) {
+			void restore_avl_tree( node_ptr history, node_ptr newleaf ) {
 				//--------------------------------------------------------------
 				// Case 1: history is NULL, ie all balance factors are '='
 				//--------------------------------------------------------------
-				if (history == NULL) {
-					if (newleaf->key < root->key) {
+				if( history == NULL ) {
+					if( newleaf->key < root->key ) {
 						root->balance = 'L' ;
 					} else {
 						root->balance = 'R' ;
 					}
-					adjustbalance(root,newleaf) ;
+					adjustbalance( root, newleaf ) ;
 				} else
 	
 				//--------------------------------------------------------------
@@ -102,47 +174,47 @@ namespace tree {
 				//               OR
 				// history->balance = 'R' and newleaf is on the left
 				//--------------------------------------------------------------
-				if ( (history->balance == 'L' && newleaf->key > history->key) ||
-					 (history->balance == 'R' && newleaf->key < history->key) )
+				if( (history->balance == 'L' && newleaf->key > history->key) ||
+					(history->balance == 'R' && newleaf->key < history->key) )
 				{
 					history->balance = '=' ;
-					adjustbalance(history,newleaf) ;
+					adjustbalance( history, newleaf ) ;
 				} else
 	
 				//--------------------------------------------------------------
 				// Case 3: history->balance = 'R' and newleaf was put on the
 				//         right subtree of history's right child.
 				//--------------------------------------------------------------
-				if ( history->balance == 'R' &&
-					 newleaf->key > history->right->key )
+				if( history->balance == 'R' &&
+					newleaf->key > history->right->key )
 				{
 					history->balance = '=' ;
-					rotateLeft(history) ;
-					adjustbalance(history->parent,newleaf) ;
+					rotateLeft( history ) ;
+					adjustbalance( history->parent, newleaf ) ;
 				} else
 	
 				//--------------------------------------------------------------
 				// Case 4: history->balance = 'L' and newleaf was put on the
 				//         left subtree of history's left child.
 				//--------------------------------------------------------------
-				if ( history->balance == 'L' &&
-					 newleaf->key < history->left->key )
+				if( history->balance == 'L' &&
+					newleaf->key < history->left->key )
 				{
 					history->balance = '=' ;
-					rotateRight(history) ;
-					adjustbalance(history->parent,newleaf) ;
+					rotateRight( history ) ;
+					adjustbalance( history->parent, newleaf ) ;
 				} else
 	
 				//--------------------------------------------------------------
 				// Case 5: history->balance = 'R' and newleaf was put on the
 				//		   left subtree of history's right child.
 				//--------------------------------------------------------------
-				if ( history->balance == 'R' &&
-					 newleaf->key < history->right->left->key )
+				if( history->balance == 'R' &&
+					newleaf->key < history->right->left->key )
 				{
-					rotateRight(history->right) ;
-					rotateLeft(history) ;
-					adjustRightLeft(history,newleaf) ;
+					rotateRight( history->right ) ;
+					rotateLeft( history ) ;
+					adjustRightLeft( history, newleaf ) ;
 				} else
 	
 				//--------------------------------------------------------------
@@ -150,9 +222,9 @@ namespace tree {
 				//         right subtree of history's left child.
 				//--------------------------------------------------------------
 				{
-					rotateLeft(history->left) ;
-					rotateRight(history) ;
-					adjustLeftRight(history,newleaf) ;
+					rotateLeft( history->left ) ;
+					rotateRight( history ) ;
+					adjustLeftRight( history, newleaf ) ;
 				}
 			}
 
@@ -164,14 +236,14 @@ namespace tree {
 			 *					adjusted
 			 * @param start		leaf that was just inserted
 			 */
-			void adjustbalance(avl_node<_type>* end, avl_node<_type>* start) {
-				if ( start != end ) {
-					if ( start->key < start->parent->key ) {
+			void adjustbalance( node_ptr end, node_ptr start ) {
+				if( start != end ) {
+					if( start->key < start->parent->key ) {
 						start->parent->balance = 'L' ;
-						adjustbalance(end,start->parent) ;
+						adjustbalance( end, start->parent ) ;
 					} else {
 						start->parent->balance = 'R' ;
-						adjustbalance(end,start->parent) ;
+						adjustbalance( end, start->parent ) ;
 					}
 				}
 			}
@@ -184,17 +256,17 @@ namespace tree {
 			 *
 			 * @param LLnode	leaf that needs to be rotated around
 			 */
-			void rotateLeft(avl_node<_type>* LLnode) {
-				avl_node<_type>* ltemp = LLnode->right ;
+			void rotateLeft( node_ptr LLnode ) {
+				node_ptr ltemp = LLnode->right ;
 				LLnode->right = ltemp->left ;
-				if ( ltemp->left != NULL ) {
+				if( ltemp->left != NULL ) {
 					ltemp->left->parent = LLnode ;
 				}
-				if ( LLnode->parent == NULL ) {
+				if( LLnode->parent == NULL ) {
 					root = ltemp ;
 					ltemp->parent = NULL ;
 				} else
-				if ( LLnode->parent->left == LLnode ) {
+				if( LLnode->parent->left == LLnode ) {
 					LLnode->parent->left = ltemp ;
 				} else {
 					LLnode->parent->right = ltemp ;
@@ -212,17 +284,17 @@ namespace tree {
 			 *
 			 * @param RRnode	leaf that needs to be rotated around
 			 */
-			void rotateRight(avl_node<_type>* RRnode) {
-				avl_node<_type>* rtemp = RRnode->left ;
+			void rotateRight( node_ptr RRnode ) {
+				node_ptr rtemp = RRnode->left ;
 				RRnode->left = rtemp->right ;
-				if ( rtemp->right != NULL ) {
+				if( rtemp->right != NULL ) {
 					rtemp->right->parent = RRnode ;
 				}
-				if ( RRnode->parent == NULL ) {
+				if( RRnode->parent == NULL ) {
 					root = rtemp ;
 					rtemp->parent = NULL ;
 				} else
-				if ( RRnode->parent->left == RRnode ) {
+				if( RRnode->parent->left == RRnode ) {
 					RRnode->parent->left = rtemp ;
 				} else {
 					RRnode->parent->right = rtemp ;
@@ -238,17 +310,17 @@ namespace tree {
 			 * @param end	 last leaf up tree that needs adjusting
 			 * @param start	 leaf that was just inserted
 			 */
-			void adjustRightLeft(avl_node<_type>* end, avl_node<_type>* start) {
-				if ( end == root ) {
+			void adjustRightLeft( node_ptr end, node_ptr start ) {
+				if( end == root ) {
 					end->balance = '=' ;
 				} else
-				if ( start->key < end->parent->key ) {
+				if( start->key < end->parent->key ) {
 					end->balance = 'R' ;
-					adjustbalance(end->parent->left, start) ;
+					adjustbalance( end->parent->left, start ) ;
 				} else {
 					end->balance = '=' ;
 					end->parent->left->balance = 'L' ;
-					adjustbalance(end, start) ;
+					adjustbalance( end, start ) ;
 				}
 			}
 		
@@ -258,17 +330,17 @@ namespace tree {
 			 * @param end	 last leaf up tree that needs adjusting
 			 * @param start	 leaf that was just inserted
 			 */
-			void adjustLeftRight(avl_node<_type>* end, avl_node<_type>* start) {
-				if ( end == root ) {
+			void adjustLeftRight( node_ptr end, node_ptr start ) {
+				if( end == root ) {
 					end->balance = '=' ;
 				} else
-				if ( start->key > end->parent->key ) {
+				if( start->key > end->parent->key ) {
 					end->balance = 'L' ;
-					adjustbalance(end->parent->right, start) ;
+					adjustbalance( end->parent->right, start ) ;
 				} else {
 					end->balance = '=' ;
 					end->parent->right->balance = 'R' ;
-					adjustbalance(end, start) ;
+					adjustbalance( end, start ) ;
 				}
 			}
 		
@@ -277,28 +349,26 @@ namespace tree {
 			 *
 			 * @param leaf		Leaf with information we want to output
 			 */
-			void print_tree(avl_node<_type>* leaf) {
-				if(leaf != NULL) {
+			void print_tree( node_ptr leaf ) {
+				if( leaf != NULL ) {
 					cout << "Node: " << leaf->key << " balance: "
-						 << leaf->balance << "\n";
-					if(leaf->left != NULL) {
-						cout << "\t moving left\n";
-						print_tree(leaf->left);
+						 << leaf->balance << "\n" ;
+					if( leaf->left != NULL ) {
+						cout << "\t moving left\n" ;
+						print_tree( leaf->left ) ;
 						cout << "Returning to Node" << leaf->key
-							 << " from its' left subtree\n";
+							 << " from its' left subtree\n" ;
 					} else {
-						cout << "\t left subtree is empty\n";
+						cout << "\t left subtree is empty\n" ;
 					}
 
-					//cout << "Node: " << leaf->key << " balance is " <<
-					//leaf->balance << "\n";
 					if( leaf->right != NULL ) {
-						cout << "\t moving right\n";
-						print_tree(leaf->right);
+						cout << "\t moving right\n" ;
+						print_tree( leaf->right ) ;
 						cout << "Returning to Node" << leaf->key 
-							 << " from its' right subtree\n";
+							 << " from its' right subtree\n" ;
 					} else {
-						cout << "\t right subtree is empty\n";
+						cout << "\t right subtree is empty\n" ;
 					}
 				}
 			}
@@ -308,67 +378,15 @@ namespace tree {
 			 *
 			 * @param leaf	leaf to delete
 			 */
-			void clear_tree(avl_node<_type>* leaf) {
-				if (leaf != NULL) {
-					clear_tree(leaf->left) ;
-					clear_tree(leaf->right) ;
+			void clear_tree( node_ptr leaf ) {
+				if( leaf != NULL ) {
+					clear_tree( leaf->left ) ;
+					clear_tree( leaf->right ) ;
 					delete leaf ;
 				}
 			}
-	
-		public:
-	
-			/**
-			 * Inserts a new leaf into the avl_tree with the new key
-			 *
-			 * @param key	key that the new leaf will have
-			 */
-			void insert(const _type& key) {
-				ancestor = NULL ;
-				temp = root ;
-				avl_node<_type>* leaf = new avl_node<_type> ;
-				leaf->key = key ;
-				leaf->balance = ' ' ;
-				leaf->left = NULL ;
-				leaf->right = NULL ;
-				leaf->parent = NULL ;
-				insert(leaf) ;
-			}
-		
-			/**
-			 * Searches throughout the tree looking for a leaf that has
-			 * the requested key. Returns false if key does not exist
-			 * in the tree.
-			 *
-			 * @param key	key to search for in the tree
-			 */
-			bool search(const _type& key) const {
-				return search(root, key) ;
-			}
-		
-			/**
-			 * Prints out the avl_tree to the display
-			 */
-			void print_tree() {
-				cout << "Printing AVL_tree..." << endl;
-				cout << "Root Node: " << root->key << " balance: "
-					 << root->balance << "\n\n";
-				print_tree(root) ;
-			}
-		
-			// Constructor
-			avl_tree() {
-				root = NULL ;
-			}
-				
-			// Destructor
-			~avl_tree() {
-				clear_tree(root) ;
-			}
 
 	};
-
+	
 }	// end of namespace tree
 }	// end of namespace genecis
-
-#endif

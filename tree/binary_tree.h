@@ -2,32 +2,106 @@
  * @file binary_tree.h
  */
  
-#ifndef GENECIS_TREE_BINARY_TREE_H
-#define GENECIS_TREE_BINARY_TREE_H 
+#pragma once
 
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#include <genecis/tree/binary_node.h>
 
 namespace genecis {
 namespace tree {
 
 	using namespace std ;
 
-	template <typename _type> class binary_tree {
+	template<class T>
+	struct binary_node {
 
-		private:
+		public:
+	        typedef T                           value_type ;
+	        typedef binary_node<value_type>     self_type ;
+	        typedef self_type*                  node_ptr ;
+	        
+			value_type key ;
+			node_ptr left ;
+			node_ptr right ;
+
+	};
 	
-			// Creates a root node to begin the tree at
-			binary_node<_type>* root ;
+	template<class T>
+	class binary_tree {
+
+		public:
+		
+		    typedef T                               value_type ;
+		    typedef std::size_t                     size_type ;
+		    typedef binary_tree<value_type>         self_type ;
+	        typedef binary_node<value_type>         node_type ;
+		    typedef typename node_type::node_ptr    node_ptr ;
+	
+			/**
+			 * Constructor
+			 */
+			binary_tree() {
+				_root = NULL ;
+			}
+
+			/**
+			 * Destructor
+			 */
+			virtual ~binary_tree() {
+				destroy_tree( _root ) ;
+			}
+		
+		    /**
+		     * Inserts a key into the binary tree.
+		     */
+			void insert( const value_type key ) {
+				if ( _root != NULL ) {
+					insert( key, _root ) ;
+				} else {
+					_root = new node_type ;
+					_root->key = key ;
+					_root->left = NULL ;
+					_root->right = NULL ;
+				}
+			}
 		
 			/**
-			 * The are the functions that do all of the work
-			 * Making them private prevents the user from starting
-			 * in the binary tree from anywhere other then the
-			 * root node.
-			 */		 
+			 * Searches the binary tree for a node with the requested
+			 * key. Returns the node if a node with the key exists
+			 * otherwise, returns NULL.
+			 *
+			 * @param key       node identifier to search for
+			 */
+			node_ptr search( const value_type key ) {
+				return search( key, _root ) ;
+			}
+		
+			// Printdata function
+			void printdata() const {
+				printdata( _root ) ;
+			}
+		
+			// levelCount function
+			size_type levelCount( size_type lvl ) {
+				size_type counts = 0 ;
+				levelCount( lvl, _root, counts ) ;
+				return counts ;
+			}
+		
+			// leavesCount function
+			size_type leavesCount() {
+				size_type counts = 0 ;
+				leavesCount( _root, counts ) ;
+				return counts ;
+			}
+			
+		private:
+	
+			/**
+			 * Root node for the binary tree.
+			 */ 
+			node_ptr _root ;
 			 
 			/**
 			 * Our recursive search function that returns the leaf
@@ -37,12 +111,12 @@ namespace tree {
 			 * @param key		The key we're looking for
 			 * @param leaf		The leaf with this key
 			 */
-			binary_node<_type>* search(const _type key, binary_node<_type>* leaf) {
+			node_ptr search( const value_type key, node_ptr leaf ) {
 				if ( leaf != NULL ) {
-					if ( key == leaf->key_value ) {
+					if ( key == leaf->key ) {
 						return leaf ;
 					} else
-					if ( key < leaf->key_value ) {
+					if ( key < leaf->key ) {
 						search(key, leaf->left) ;
 					} else {
 						search(key, leaf->right) ;
@@ -60,13 +134,13 @@ namespace tree {
 			 * @param key		The key we're looking to insert
 			 * @param leaf		The leaf in the tree we are looking at
 			 */
-			void insert(const _type key, binary_node<_type>* leaf) {
-				if ( key < leaf->key_value ) {
+			void insert( const value_type key, node_ptr leaf ) {
+				if ( key < leaf->key ) {
 					if( leaf->left != NULL ) {
 						insert(key, leaf->left) ;
 					} else {
-						leaf->left = new binary_node<_type> ;
-						leaf->left->key_value = key ;
+						leaf->left = new node_type ;
+						leaf->left->key = key ;
 						leaf->left->left = NULL ;
 						leaf->left->right = NULL ;
 					}
@@ -74,8 +148,8 @@ namespace tree {
 					if( leaf->right != NULL ) {
 						insert(key, leaf->right) ;
 					} else {
-						leaf->right = new binary_node<_type> ;
-						leaf->right->key_value = key ;
+						leaf->right = new node_type ;
+						leaf->right->key = key ;
 						leaf->right->left = NULL ;
 						leaf->right->right = NULL ;
 					}
@@ -88,7 +162,7 @@ namespace tree {
 			 *
 			 * @param leaf		leaf to delete
 			 */
-			void destroy_tree(binary_node<_type>* leaf) {
+			void destroy_tree( node_ptr leaf ) {
 				if ( leaf != NULL ) {
 					destroy_tree( leaf->left ) ;
 					destroy_tree( leaf->right ) ;
@@ -101,11 +175,11 @@ namespace tree {
 			 *
 			 * @param leaf		leaf that you want to print the data about
 			 */
-			void printdata(binary_node<_type>* leaf) const {
+			void printdata( node_ptr leaf ) const {
 				if ( leaf != NULL ) {
 					printdata(leaf->left) ;
 					printdata(leaf->right) ;
-					cout << leaf->key_value << " " << endl;
+					cout << leaf->key << " " << endl;
 				}
 			}
 		
@@ -113,18 +187,18 @@ namespace tree {
 			 * The recursive function that finds the number of nodes within
 			 * a given level of the tree.
 			 *
-			 * @param _lvl		The level we want to find the number of
+			 * @param lvl		The level we want to find the number of
 			 *					nodes on
 			 * @param leaf		The leaf on the current level
 			 * @param counts	Stores the number of nodes on a the level _lvl
 			 */
-			void levelCount(int _lvl, binary_node<_type>* leaf, int& counts) {
-				if(_lvl != 1) {
+			void levelCount( size_type lvl, node_ptr leaf, size_type& counts ) {
+				if(lvl != 1) {
 					if( leaf->left != NULL ) {
-						levelCount(_lvl-1, leaf->left, counts) ;
+						levelCount(lvl-1, leaf->left, counts) ;
 					}
 					if( leaf->right != NULL ) {
-						levelCount(_lvl-1, leaf->right, counts) ;
+						levelCount(lvl-1, leaf->right, counts) ;
 					}
 				} else {
 					++counts ;
@@ -139,7 +213,7 @@ namespace tree {
 			 *					it has no children
 			 * @param counts	Stores the number of nodes with no children
 			 */
-			void leavesCount(binary_node<_type>* leaf, int& counts) {
+			void leavesCount( node_ptr leaf, size_type& counts ) {
 				if( (leaf->left == NULL) && (leaf->right == NULL) ) {
 					++counts ;
 				} else {
@@ -151,62 +225,8 @@ namespace tree {
 					}
 				}
 			}
-	
-		public:
-	
-			// Constructor
-			binary_tree<_type>() {
-				root = NULL ;
-			}
-
-			// Destructor
-			~binary_tree<_type>() {
-				destroy_tree() ;
-			}
-		
-			void insert(const _type key) {
-				if ( root != NULL ) {
-					insert(key, root) ;
-				} else {
-					root = new binary_node<_type> ;
-					root->key_value = key ;
-					root->left = NULL ;
-					root->right = NULL ;
-				}
-			}
-		
-			// Search function
-			binary_node<_type>* search(const _type key) {
-				return search(key, root) ;
-			}
-		
-			// Destroy_tree function
-			void destroy_tree() {
-				destroy_tree( root ) ;
-			}
-		
-			// Printdata function
-			void printdata() const {
-				printdata( root ) ;
-			}
-		
-			// levelCount function
-			int levelCount(int _lvl) {
-				int counts = 0 ;
-				levelCount(_lvl,root, counts) ;
-				return counts ;
-			}
-		
-			// leavesCount function
-			int leavesCount() {
-				int counts = 0 ;
-				leavesCount(root,counts) ;
-				return counts ;
-			}
 
 	};
-
+	
 }	// end of namespace tree
 }	// end of namespace genecis
-
-#endif
