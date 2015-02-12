@@ -167,7 +167,7 @@ distribution_test: $(SRC_PATH)/test/distribution_test.cc
 	@echo "Building distribution_test..."
 	$(CC) -o $(BUILD_PATH)/distribution_test $(SRC_PATH)/test/distribution_test.cc
 
-tree_test: $(SRC_PATH)/test/tree_test.cc
+tree_test: $(SRC_PATH)/test/tree_test.cc $(CONTAINER) $(TREE_HDR)
 	@echo "Building tree_test..."
 	$(CC) -o $(BUILD_PATH)/tree_test $(SRC_PATH)/test/tree_test.cc
 	

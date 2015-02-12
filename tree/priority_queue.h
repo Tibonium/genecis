@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <genecis/container/array.h>
 #include <cstring>
 #include <cmath>
 #include <sstream>
@@ -12,38 +13,79 @@
 #include <iostream>
 #include <typeinfo>
 
+using namespace genecis::container ;
+
 namespace genecis {
 namespace tree {
 
 	using namespace std ;
 
-	template <class T> class priority_queue ;
+	template<class T> class priority_queue ;
 
-	template <class T>
-	ostream& operator<< (ostream& os, const priority_queue<T>& output) ;
+	template<class T>
+	ostream& operator<< ( ostream& os, const priority_queue<T>& output ) ;
 
-	template <class T>
+	template<class T>
 	class priority_queue {
 
-		typedef priority_queue<T> self_type ;
-
 		public:
+
+            typedef T                               value_type ;
+            typedef std::size_t                     size_type ;
+            typedef priority_queue<value_type>      self_type ;
+            typedef array<size_type>                rank_container ;
 	
+			/**
+			 * Constructor, takes a size of array and sets all member
+			 * variables, and allocates memory for the _rank and _data
+			 * array as well as initializing them all to a value of 0.
+			 */
+			priority_queue( const size_type size ) : _front(0), _back(0),
+				_max_index(size-1)
+			{
+				_rank = rank_container( size ) ;
+				_data = new value_type[size] ;
+				if( typeid(value_type) == typeid(string) ) {
+					for(unsigned i=0; i<size; ++i) {
+						_data[i] = "" ;
+					}
+				} else {
+					memset(_data, 0, size*sizeof(T)) ;
+				}
+			}
+		
+			/**
+			 * Destructor, cleans up the _rank and _data points if they
+			 * have not been already.
+			 */
+			virtual ~priority_queue() {
+			    delete[] _data ;
+			}
+
 			/*=================== Public Accessors ===================*/
-			inline const T& data(const T& d) {
+			/**
+			 * Returns a data entry via a lookup of a value_type
+			 */
+			value_type data( value_type d) const {
 				return _data[d] ;
 			}
 		
-			inline const T& data(const size_t& i) {
+		    /**
+		     * Returns a data entry via a lookup of an index
+		     */
+			value_type data( size_type i ) const {
 				return _data[i] ;
 			}
 
-			inline const T& operator[] (const T& d) {
-				size_t start = _front ;
+            /**
+             * Overloaded [] operator specific to this class
+             */
+			value_type operator[] ( value_type d ) const {
+				size_type start = _front ;
 				bool found = false ;
 				while( start != _back ) {
-					size_t bytes = max( sizeof(_data[start]), sizeof(d) ) ;
-					int check = memcmp(_data[start], d, bytes) ;
+					size_type bytes = max( sizeof(_data[start]), sizeof(d) ) ;
+					size_type check = memcmp( _data[start], d, bytes ) ;
 					if( check == 0 ) found = true ; break ;
 					++ start ;
 					if( start > _max_index ) start = 0 ;
@@ -65,7 +107,7 @@ namespace tree {
 			 * Pushes a new data value onto the back of the queue and
 			 * sets its' priority to the default rank of 16.
 			 */
-			inline void push_back(const T& data) {
+			void push_back( value_type data ) {
 				try {
 					if( _front == _back && _rank[_front] != 0 ) {
 						throw 1 ;
@@ -88,7 +130,7 @@ namespace tree {
 			/**
 			 * Pushes a new data/rank pair onto the back of the queue.
 			 */
-			inline void push_back(const T& data, const int& rank) {
+			void push_back( value_type data, size_type rank ) {
 				try {
 					if( _front == _back && _rank[_front] != 0 ) {
 						throw 1 ;
@@ -108,12 +150,15 @@ namespace tree {
 				}
 			}
 		
-			inline const T& pop_front() {
+		    /**
+		     * Pops from the front
+		     */
+			value_type pop_front() {
 				try {
 					if( _rank[_front] == 0 ) {
 						throw 1 ;
 					} else {
-						T& d = _data[_front] ;
+						value_type d = _data[_front] ;
 						_rank[_front] = 0 ;
 						while( _rank[_front] == 0 ) {
 							++_front ;
@@ -128,17 +173,20 @@ namespace tree {
 					exit(e) ;
 				}
 			}
-		
-			inline const T& pop_top_rank() {
+		    
+		    /**
+		     * Finds the top ranked value.
+		     */
+			value_type pop_top_rank() {
 				try{
 					if( _rank[_front] == 0 ) {
 						throw 1 ;
 					} else {
-						size_t s = _front ;
-						size_t t = 0 ;
-						size_t rh = _rank[s] ;
+						size_type s = _front ;
+						size_type t = 0 ;
+						size_type rh = _rank[s] ;
 						++s ;
-						size_t rl = _rank[s] ;
+						size_type rl = _rank[s] ;
 						while( s != _front ) {
 							if( rl > rh ) { rh = rl ; t = s ; }
 							++s ;
@@ -153,7 +201,7 @@ namespace tree {
 							if( _back == 0 ) _back = _max_index ;
 							else --_back ;
 						} else _back = t ;
-						T& d = _data[t] ;
+						value_type d = _data[t] ;
 						return d ;
 					}
 				} catch(int e) {
@@ -163,46 +211,15 @@ namespace tree {
 				}
 			}
 
-			/**
-			 * Constructor, takes a size of array and sets all member
-			 * variables, and allocates memory for the _rank and _data
-			 * array as well as initializing them all to a value of 0.
-			 */
-			priority_queue(const size_t& size) : _front(0), _back(0),
-				_max_index(size-1)
-			{
-				_rank = new int[size] ;
-				_data = new T[size] ;
-				memset(_rank, 0, size*sizeof(int)) ;
-				if( typeid(T) == typeid(string) ) {
-					for(unsigned i=0; i<size; ++i) {
-						_data[i] = "" ;
-					}
-				} else {
-					memset(_data, 0, size*sizeof(T)) ;
-				}
-			}
-		
-			/**
-			 * Destructor, cleans up the _rank and _data points if they
-			 * have not been already.
-			 */
-			~priority_queue() {
-				_front = 0 ;
-				_back = 0 ;
-				_max_index = 0 ;
-				delete[] _data ;
-				delete[] _rank ;
-			}
-		
-		friend ostream& operator<< <> (ostream& os, const priority_queue& output) ;
+    		friend ostream& operator<< <> (ostream& os, const priority_queue& output) ;
 	
 		private:
-			int* _rank ;		//array to store priority values in
-			T* _data ;		//actual data values in queue
-			unsigned _front ;		//highest prioirty
-			unsigned _back ;		//lowest priority
-			unsigned _max_index ;	//maximum number of queue elements
+		
+			rank_container _rank ;		//array to store priority values in
+			value_type* _data ;		//actual data values in queue
+			size_type _front ;		//highest prioirty
+			size_type _back ;		//lowest priority
+			size_type _max_index ;	//maximum number of queue elements
 
 	};
 
@@ -218,7 +235,7 @@ namespace tree {
 				if( s == "" ) s = "empty" ;
 				int l = s.size() ;
 				if( l > 1 ) l -= ceil((double)l/2.0) ;
-				sprintf(buf, "| %*s %*d   |", (8-l), s.c_str(), (5+l), output._rank[i]) ;
+				sprintf(buf, "| %*s %*d   |", (8-l), s.c_str(), (5+l), (int)output._rank[i]) ;
 				os << buf ;
 				if( i == output._front && i == output._back ) os << " (front/back)" << endl ;
 				else if( i == output._front ) os << " (front)" << endl ;
@@ -231,7 +248,7 @@ namespace tree {
 				ss << output._data[i] ;
 				int l = (ss.str()).size() ;
 				if( l > 1 ) l -= ceil((double)l/2.0) ;
-				sprintf(buf, "| %*s %*d  |", (8-l), (ss.str()).c_str(), (7+l), output._rank[i]) ;
+				sprintf(buf, "| %*s %*u  |", (8-l), (ss.str()).c_str(), (7+l), (int)output._rank[i]) ;
 				os << buf ;
 				if( i == output._front && i == output._back ) os << " (front/back)" << endl ;
 				else if( i == output._front ) os << " (front)" << endl ;
@@ -240,7 +257,7 @@ namespace tree {
 			}	
 		}
 		sprintf(buf, "front:%3u back:%3u\n   max_index:%3u", 
-				output._front, output._back, output._max_index) ;
+				(int)output._front, (int)output._back, (int)output._max_index) ;
 		os << buf << endl ;
 		return os ;
 	}
