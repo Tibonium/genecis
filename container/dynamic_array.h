@@ -36,7 +36,16 @@ namespace container {
 			 * Constructor with specified size.
 			 * @param size		size of array to be allocated
 			 */
-			dynamic_array(size_type s, value_type c=0) {
+			dynamic_array(size_type s) {
+				create_storage( s ) ;
+			}
+			
+			/**
+			 * Constructor with specified size.
+			 * @param size		size of array to be allocated
+			 * @param c         default value to set the entries to
+			 */
+			dynamic_array(size_type s, value_type c) {
 				create_storage( s ) ;
 				fill_n(__begin, s, c) ;
 			}

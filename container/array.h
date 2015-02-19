@@ -37,10 +37,17 @@ namespace container {
 			array() : __begin(0), __end(0) {}
 
 			/**
+			 * Constructs an array of type T with size specificed.
+			 */
+			array(size_type s) {
+				create_storage( s ) ;
+			}
+			
+			/**
 			 * Constructs an array of type T with size specificed and
 			 * fills the array with the value c or zeros.
 			 */
-			array(size_type s, const value_type& c=0) {
+			array(size_type s, const value_type c) {
 				create_storage( s ) ;
 				std::fill_n(__begin, s, c) ;
 			}
