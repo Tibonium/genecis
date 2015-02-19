@@ -1,5 +1,6 @@
 #include <genecis/tree/quadtree.h>
 #include <iostream>
+#include <cstdlib>
 
 using namespace std ;
 using namespace genecis::tree ;
@@ -17,10 +18,14 @@ int main() {
     cout << "Done." << endl ;
     
     point p ;
-    p.x = 10 ;
-    p.y = 5 ;
-    point_tree.insert(p) ;
+    srand(1) ;
+    int N = 50 ;
+    for(int i=0; i<N; ++i) {
+        p.x = rand() % 100 ;
+        p.y = rand() % 100 ;
+        point_tree.insert(p) ;
+    }
     
-    point_tree.print_tree() ;
+    point_tree.print() ;
 
 }

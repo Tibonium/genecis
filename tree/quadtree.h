@@ -38,19 +38,19 @@ namespace tree {
  */
     template<class T>
     class quad {
-        
+
         public:
 
             typedef T                                      value_type ;
             typedef typename T::coord_type                 coord_type ;
             typedef value_type*                            value_ptr ;
             typedef quad<value_type>                       self_type ;
-            typedef array<self_type*>                      container_type ;
+            typedef self_type*                             node_type ;
+            typedef array<node_type>                       container_type ;
             typedef array<T>                               data_container ;
             typedef typename container_type::iterator      iterator ;
             typedef typename container_type::pointer       pointer ;
             typedef typename container_type::size_type     size_type ;
-            typedef typename container_type::value_type    node_type ;
 
             /**
              * Default constructor
@@ -61,10 +61,7 @@ namespace tree {
             quad()
             : __x(0), __y(0), __width(100), __height(100), __index(0) 
             {
-                __quadrant = container_type(4) ;
-                for(size_type i=0; i<4; ++i) {
-                    __quadrant(i) = NULL ;
-                }
+                __quadrant = container_type(4, NULL) ;
                 __data = data_container(0) ;
             }
 
@@ -75,14 +72,11 @@ namespace tree {
              * all to NULL.
              */
             quad( coord_type x, coord_type y,
-                  coord_type width, coord_type height,
-                  size_type num )
+            coord_type width, coord_type height,
+            size_type num )
             : __x(x), __y(y), __width(width), __height(height), __index(0)
             {
-                __quadrant = container_type(4) ;
-                for(size_type i=0; i<4; ++i) {
-                    __quadrant(i) = NULL ;
-                }
+                __quadrant = container_type(4, NULL) ;
                 __data = data_container(num) ;
             }
 
@@ -90,46 +84,50 @@ namespace tree {
              * Destructor
              */
             virtual ~quad() {}
-             
-             /** Returns the top right quadrant **/
-             node_type top_right() const {
+
+            /** Returns the top right quadrant **/
+            node_type top_right() const {
                 return __quadrant(TOP_RIGHT) ;
-             }
+            }
 
-             /** Sets the top right quadrant **/
-             void top_right( node_type n ) {
+            /** Sets the top right quadrant **/
+            void top_right( node_type n ) {
+                if( __quadrant(TOP_RIGHT) ) delete __quadrant(TOP_RIGHT) ;
                 __quadrant(TOP_RIGHT) = n ;
-             }
-             
-             /** Returns the top left quadrant **/
-             node_type top_left() const {
-                return __quadrant(TOP_LEFT) ;
-             }
+            }
 
-             /** Sets the top left quadrant **/
-             void top_left( node_type n ) {
+            /** Returns the top left quadrant **/
+            node_type top_left() const {
+                return __quadrant(TOP_LEFT) ;
+            }
+
+            /** Sets the top left quadrant **/
+            void top_left( node_type n ) {
+                if( __quadrant(TOP_LEFT) != NULL ) delete __quadrant(TOP_LEFT) ;
                 __quadrant(TOP_LEFT) = n ;
-             }
+            }
 
             /** Returns the bottom left quadrant **/
             node_type bottom_left() const {
                 return __quadrant(BOTTOM_LEFT) ;
             }
 
-             /** Sets the bottom left quadrant **/
-             void bottom_left( node_type n ) {
+            /** Sets the bottom left quadrant **/
+            void bottom_left( node_type n ) {
+                if( __quadrant(BOTTOM_LEFT) ) delete __quadrant(BOTTOM_LEFT) ;
                 __quadrant(BOTTOM_LEFT) = n ;
-             }
+            }
 
             /** Returns the bottom right quadrant **/
             node_type bottom_right() const {
                 return __quadrant(BOTTOM_RIGHT) ;
             }
 
-             /** Sets the bottom right quadrant **/
-             void bottom_right( node_type n ) {
+            /** Sets the bottom right quadrant **/
+            void bottom_right( node_type n ) {
+                if( __quadrant(BOTTOM_RIGHT) ) delete __quadrant(BOTTOM_RIGHT) ;
                 __quadrant(BOTTOM_RIGHT) = n ;
-             }
+            }
 
             /** Returns the number of elements in this node **/
             size_type size() const {
@@ -142,10 +140,20 @@ namespace tree {
             }
 
             /**
-             * Adds an item to the data container at the back
-             */
+            * Adds an item to the data container at the back
+            */
             void add( value_type t ) {
                 __data(__index++) = t ;
+            }
+
+            /** Returns the parent node **/
+            node_type parent() {
+                return __parent ;
+            }
+
+            /** Sets the parent node **/
+            void parent( self_type* p ) {
+                __parent = p ;
             }
 
             /**
@@ -177,6 +185,11 @@ namespace tree {
              * Current index value and size of the array.
              */
             size_type __index ;
+
+            /**
+             * Pointer to the parent node
+             */
+            self_type* __parent ;
     };
 
 /**
@@ -208,6 +221,7 @@ namespace tree {
                       coord_type width, coord_type height )
             {
                 __root = new node_type( x, y, width, height, __size ) ;
+                __root->parent( NULL ) ;
             }
             
             /**
@@ -224,16 +238,32 @@ namespace tree {
              */
             void insert( value_type item ) {
                 node_ptr tmp = find_node( __root, item ) ;
-                tmp->add( item ) ;
                 if( criteria_functor::check( tmp ) ) {
-                    split_functor::apply( tmp ) ;
+                    node_ptr tmp2 = split_functor::apply( tmp ) ;
+                    if( tmp == __root ) {
+                        __root = tmp2 ;
+                        delete tmp ;
+                    } else {
+                        if( tmp == tmp->parent()->top_left() ) {
+                            tmp->parent()->top_left( tmp2 ) ;
+                        } else if( tmp == tmp->parent()->top_right() ) {
+                            tmp->parent()->top_right( tmp2 ) ;
+                        } else if( tmp == tmp->parent()->bottom_left() ) {
+                            tmp->parent()->bottom_left( tmp2 ) ;
+                        } else {
+                            tmp->parent()->bottom_right( tmp2 ) ;
+                        }
+                    }
+                    tmp = find_node( tmp2, item ) ;
                 }
+                tmp->add(item) ;
             }
             
             /**
              * Test funciton -- Not permanent
              */
-            void print_tree() {
+            void print() {
+                std::cout << "ROOT:" << std::endl ;
                 print( __root ) ;
             }
         
@@ -244,6 +274,7 @@ namespace tree {
              */
             void print( node_ptr n ) {
                 size_type size( n->size() ) ;
+                if( n != __root ) std::cout << "\tNEXT LEVEL" << std::endl ;
                 for(size_type i=0; i<size; ++i) {
                     std::cout << "(" << n->data(i).x << ", " << n->data(i).y << ")" << std::endl ;
                 }
@@ -272,28 +303,32 @@ namespace tree {
             node_ptr find_node( node_ptr node, value_type item ) {
                 bool left = bound_functor::left( node, item ) ;
                 bool top = bound_functor::top( node, item ) ;
-                if( left ) {
-                    if( top ) {
-                        if( node->top_left() ) {
-                            find_node( node->top_left(), item ) ;
+                bool bottom = bound_functor::bottom( node, item ) ;
+                node_ptr result = node ;
+                if( left || top || bottom ) {
+                    if( left ) {
+                        if( top ) {
+                            if( node->top_left() ) {
+                                result = find_node( node->top_left(), item ) ;
+                            }
+                        } else {
+                            if( node->bottom_left() ) {
+                                result = find_node( node->bottom_left(), item ) ;
+                            }
                         }
                     } else {
-                        if( node->bottom_left() ) {
-                            find_node( node->bottom_left(), item ) ;
-                        }
-                    }
-                } else {
-                    if( top ) {
-                        if( node->top_right() ) {
-                            find_node( node->top_right(), item ) ;
-                        }
-                    } else {
-                        if( node->bottom_right() ) {
-                            find_node( node->bottom_right(), item ) ;
+                        if( top ) {
+                            if( node->top_right() ) {
+                                result = find_node( node->top_right(), item ) ;
+                            }
+                        } else {
+                            if( node->bottom_right() ) {
+                                result = find_node( node->bottom_right(), item ) ;
+                            }
                         }
                     }
                 }
-                return node ;
+                return result ;
             }
         
         private:
