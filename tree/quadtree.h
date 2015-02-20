@@ -259,11 +259,19 @@ namespace tree {
                 tmp->add(item) ;
             }
             
+            template<class Box, class List>
+            void query( const Box b, List* l ) {
+                construct_list( __root, b, l ) ;
+            }
+            
             /**
              * Test funciton -- Not permanent
              */
             void print() {
-                std::cout << "ROOT:" << std::endl ;
+                std::cout << "ROOT"
+                          << " x[" << __root->__x << " " << __root->__x+__root->__width << "]"
+                          << " y[" << __root->__y << " " << __root->__y+__root->__height << "]"
+                          << std::endl ;
                 print( __root ) ;
             }
         
@@ -274,7 +282,12 @@ namespace tree {
              */
             void print( node_ptr n ) {
                 size_type size( n->size() ) ;
-                if( n != __root ) std::cout << "\tNEXT LEVEL" << std::endl ;
+                if( n != __root ) {
+                    std::cout << "\tNEXT LEVEL"
+                    << " x[" << n->__x << " " << n->__x+n->__width << "]"
+                    << " y[" << n->__y << " " << n->__y+n->__height << "]"
+                    << std::endl ;
+                }
                 for(size_type i=0; i<size; ++i) {
                     std::cout << "(" << n->data(i).x << ", " << n->data(i).y << ")" << std::endl ;
                 }
@@ -295,7 +308,69 @@ namespace tree {
                     print( n->bottom_right() ) ;
                 }
             }
-        
+            
+            /**
+             * Constructs the list for a queried region
+             */
+            template<class Box, class List>
+            void construct_list( node_ptr n, const Box b, List* l ) {
+                if( (b.x <= n->__x) && (b.y <= n->__y) &&
+                    ((n->__x+n->__width) <= (b.x+b.width)) &&
+                    ((n->__y+n->__height) <= (b.y+b.height)) )
+                {
+                    add_sector( n, l ) ;
+                } else {
+                    if( intersect( n, b ) ) {
+                        size_type size( n->size() ) ;
+                        for(size_type i=0; i<size; ++i) {
+                            l->push_back( n->data(i) ) ;
+                        }
+                        if( n->top_left() && intersect( n->top_left(), b ) )
+                            construct_list( n->top_left(), b, l ) ;
+                        if( n->bottom_left() && intersect( n->bottom_left(), b ) )
+                            construct_list( n->bottom_left(), b, l ) ;
+                        if( n->top_right() && intersect( n->top_right(), b ) )
+                            construct_list( n->top_right(), b, l ) ;
+                        if( n->bottom_right() && intersect( n->bottom_right(), b ) )
+                            construct_list( n->bottom_right(), b, l ) ;
+                    }
+                }
+            }
+            
+            /**
+             * Checks for intersection of the node and the query box.
+             *
+             */
+            template<class Box>
+            bool intersect( node_ptr n, const Box b ) {
+                bool SW = ( b.x <= n->__x ) && ( n->__x < (b.x+b.width) ) &&
+                          ( b.y <= n->__y ) && ( n->__y < (b.y+b.height) ) ;
+                bool NE = ( b.x < (n->__x+n->__width) ) && ( (n->__x+n->__width) < (b.x+b.width) ) &&
+                          ( b.y < (n->__y+n->__height) ) && ( (n->__y+n->__height) < (b.y+b.height) ) ;
+                bool NW = ( b.x <= n->__x ) && ( n->__x <= (b.x+b.width) ) &&
+                          ( b.y < (n->__y+n->__height) ) && ( (n->__y+n->__height) < (b.y+b.height) ) ;
+                bool SE = ( b.x < (n->__x+n->__width) ) && ( (n->__x+n->__width) < (b.x+b.width) ) &&
+                          ( b.y <= n->__y ) && ( n->__y <= (b.y+b.height) ) ;
+                return ( SW || NE || NW || SE ) ;
+            }
+
+            /**
+             * Adds an entire sector of elements to the list because
+             * this region of the quadtree is wholely contained within
+             * the query box and so every element must be added.
+             */
+            template<class List>
+            void add_sector( node_ptr n, List* l ) {
+                size_type size( n->size() ) ;
+                for(size_type i=0; i<size; ++i) {
+                    l->push_back( n->data(i) ) ;
+                }
+                if( n->top_left() ) add_sector( n->top_left(), l ) ;
+                if( n->bottom_left() ) add_sector( n->bottom_left(), l ) ;
+                if( n->top_right() ) add_sector( n->top_right(), l ) ;
+                if( n->bottom_right() ) add_sector( n->bottom_right(), l ) ;
+            }
+
             /**
              * Recursively searchs the quadtree for the smallest
              * quad that fully contains this item.
