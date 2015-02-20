@@ -320,7 +320,7 @@ namespace tree {
                 {
                     add_sector( n, l ) ;
                 } else {
-                    if( intersect(Box(n), b) || intersect(b, Box(n)) ) {
+                    if( contained(Box(n), b) ) {
                         size_type size( n->size() ) ;
                         for(size_type i=0; i<size; ++i) {
                             // Only add the data if it is actually in the box
@@ -330,20 +330,24 @@ namespace tree {
                                 }
                             }
                         }
-                        if( n->top_left() && intersect( Box(n->top_left()), b ) ) {
+                        if( n->top_left() && contained( Box(n->top_left()), b ) )
                             construct_list( n->top_left(), b, l ) ;
-                        }
-                        if( n->bottom_left() && intersect( Box(n->bottom_left()), b ) ) {
+                        if( n->bottom_left() && contained( Box(n->bottom_left()), b ) )
                             construct_list( n->bottom_left(), b, l ) ;
-                        }
-                        if( n->top_right() && intersect( Box(n->top_right()), b ) ) {
+                        if( n->top_right() && contained( Box(n->top_right()), b ) )
                             construct_list( n->top_right(), b, l ) ;
-                        }
-                        if( n->bottom_right() && intersect( Box(n->bottom_right()), b ) ) {
+                        if( n->bottom_right() && contained( Box(n->bottom_right()), b ) )
                             construct_list( n->bottom_right(), b, l ) ;
-                        }
                     }
                 }
+            }
+            
+            /**
+             * Checks that either box is contained within the other
+             */
+            template<class Box>
+            bool contained( const Box& b1, const Box& b2 ) {
+                return ( intersect(b1,b2) || intersect(b2,b1) ) ;
             }
             
             /**
