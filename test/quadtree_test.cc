@@ -14,13 +14,23 @@ struct point {
     {}
     coord_type x ;
     coord_type y ;
+    friend std::ostream& operator<< (std::ostream& os, point& p) ;
 };
 
+std::ostream& operator<< (std::ostream& os, point& p) {
+    os << "(" << p.x << ", " << p.y << ")" ;
+    return os ;
+}
+    
 struct box {
     typedef double  coord_type ;
     box( coord_type _x, coord_type _y,
          coord_type _w, coord_type _h )
         : x(_x), y(_y), width(_w), height(_h)
+    {}
+    template<class N>
+    box( N* n )
+        : x(n->__x), y(n->__y), width(n->__width), height(n->__height)
     {}
     coord_type x ;
     coord_type y ;
@@ -51,9 +61,15 @@ template<class L>
 void print_list( const L& out ) {
     typename L::const_iterator i = out.begin() ;
     while( i != out.end() ) {
-        cout << "(" << i->x << ", " << i->y << ")" << endl ;
+        point p = *i ;
+        cout << p << endl ;
         i++ ;
     }
+}
+
+template<class P>
+bool sort_by_x( const P& p1, const P& p2 ) {
+    return p1.x < p2.x ;
 }
 
 int main() {
@@ -63,35 +79,35 @@ int main() {
     cout << "Done." << endl ;
     
     point p ;
+    box b( 0, 50, 50, 50 ) ;
+    list<point> truth ;
     srand(1) ;
     size_t N = 50 ;
     for(size_t i=0; i<N; ++i) {
         p.x = rand() % 100 ;
         p.y = rand() % 100 ;
+        if( b.x <= p.x && p.x <= (b.x+b.width) ) {
+            if( b.y <= p.y && p.y <= (b.y+b.height) ) {
+                truth.push_back( p ) ;
+            }
+        }
         point_tree.insert(p) ;
     }
-    
+    truth.sort( sort_by_x<point> ) ;    
 //    point_tree.print() ;
     
     // query test
-    box b( 0, 0, 50, 50 ) ;
-    list<point> result, truth ;
-    truth.push_back( point(11,42) ) ;
-    truth.push_back( point(13,26) ) ;
-    truth.push_back( point(40,26) ) ;
-    truth.push_back( point(46,29) ) ;
-    truth.push_back( point(43,50) ) ;
-    truth.push_back( point(21,19) ) ;
-    truth.push_back( point(5,25) ) ;
-    truth.push_back( point(49,21) ) ;
-    truth.push_back( point(29,2) ) ;
-    truth.push_back( point(36,5) ) ;
-    truth.push_back( point(39,12) ) ;
+    list<point> result ;
     point_tree.query( b, &result ) ;
+    result.sort( sort_by_x<point> ) ;
     cout << "Query done, size of list is: " << result.size() << endl ;
-    cout << "Result list: " << endl ;
-    print_list( result ) ;
-    cout << "Truth list: " << endl ;
-    print_list( truth ) ;
-    cout << "Query was " << ( (compare_list(truth,result)) ? "successful" : "unsuccessful" ) << endl ;
+
+    bool good = compare_list(truth,result) ;
+    cout << "Query was " << ( good ? "successful" : "unsuccessful" ) << endl ;
+    if( !good ) {
+        cout << "Result list: " << endl ;
+        print_list( result ) ;
+        cout << "Truth list: " << endl ;
+        print_list( truth ) ;
+    }
 }

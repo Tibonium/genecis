@@ -289,7 +289,7 @@ namespace tree {
                     << std::endl ;
                 }
                 for(size_type i=0; i<size; ++i) {
-                    std::cout << "(" << n->data(i).x << ", " << n->data(i).y << ")" << std::endl ;
+                    std::cout << n->data(i) << std::endl ;
                 }
                 if( n->top_left() ) {
                     std::cout << "TOP_LEFT:" << std::endl ;
@@ -320,19 +320,28 @@ namespace tree {
                 {
                     add_sector( n, l ) ;
                 } else {
-                    if( intersect( n, b ) ) {
+                    if( intersect(Box(n), b) || intersect(b, Box(n)) ) {
                         size_type size( n->size() ) ;
                         for(size_type i=0; i<size; ++i) {
-                            l->push_back( n->data(i) ) ;
+                            // Only add the data if it is actually in the box
+                            if( b.x <= n->data(i).x && n->data(i).x <= (b.x+b.width) ) {
+                                if( b.y <= n->data(i).y && n->data(i).y <= (b.y+b.height) ) {
+                                    l->push_back( n->data(i) ) ;
+                                }
+                            }
                         }
-                        if( n->top_left() && intersect( n->top_left(), b ) )
+                        if( n->top_left() && intersect( Box(n->top_left()), b ) ) {
                             construct_list( n->top_left(), b, l ) ;
-                        if( n->bottom_left() && intersect( n->bottom_left(), b ) )
+                        }
+                        if( n->bottom_left() && intersect( Box(n->bottom_left()), b ) ) {
                             construct_list( n->bottom_left(), b, l ) ;
-                        if( n->top_right() && intersect( n->top_right(), b ) )
+                        }
+                        if( n->top_right() && intersect( Box(n->top_right()), b ) ) {
                             construct_list( n->top_right(), b, l ) ;
-                        if( n->bottom_right() && intersect( n->bottom_right(), b ) )
+                        }
+                        if( n->bottom_right() && intersect( Box(n->bottom_right()), b ) ) {
                             construct_list( n->bottom_right(), b, l ) ;
+                        }
                     }
                 }
             }
@@ -342,16 +351,21 @@ namespace tree {
              *
              */
             template<class Box>
-            bool intersect( node_ptr n, const Box b ) {
-                bool SW = ( b.x <= n->__x ) && ( n->__x < (b.x+b.width) ) &&
-                          ( b.y <= n->__y ) && ( n->__y < (b.y+b.height) ) ;
-                bool NE = ( b.x < (n->__x+n->__width) ) && ( (n->__x+n->__width) < (b.x+b.width) ) &&
-                          ( b.y < (n->__y+n->__height) ) && ( (n->__y+n->__height) < (b.y+b.height) ) ;
-                bool NW = ( b.x <= n->__x ) && ( n->__x <= (b.x+b.width) ) &&
-                          ( b.y < (n->__y+n->__height) ) && ( (n->__y+n->__height) < (b.y+b.height) ) ;
-                bool SE = ( b.x < (n->__x+n->__width) ) && ( (n->__x+n->__width) < (b.x+b.width) ) &&
-                          ( b.y <= n->__y ) && ( n->__y <= (b.y+b.height) ) ;
-                return ( SW || NE || NW || SE ) ;
+            bool intersect( const Box b1, const Box b2 ) {
+                bool lower_x = (b2.x <= b1.x) && (b1.x < (b2.x+b2.width)) ;
+                bool lower_y = (b2.y <= b1.y) && (b1.y < (b2.y+b2.height)) ;
+                // Is the SW corner of the node in the box?
+                if( lower_x && lower_y ) return true ;
+                bool upper_x = (b2.x < (b1.x+b1.width)) && ((b1.x+b1.width) < (b2.x+b2.width)) ;
+                // Is the SE corner of the node in the box?
+                if( upper_x && lower_y ) return true ;
+                bool upper_y = (b2.y < (b1.y+b1.height)) && ((b1.y+b1.height) < (b2.y+b2.height)) ;
+                // Is the NW corner of the node in the box?
+                if( lower_x && upper_y ) return true ;
+                // Is the NE corner of the node in the box?
+                if( upper_x && upper_y ) return true ;
+                // None of the node's corners are in the box, so this node doesn't intersect the box
+                return false ;
             }
 
             /**
@@ -377,10 +391,11 @@ namespace tree {
              */
             node_ptr find_node( node_ptr node, value_type item ) {
                 bool left = bound_functor::left( node, item ) ;
+                bool right = bound_functor::right( node, item ) ;
                 bool top = bound_functor::top( node, item ) ;
                 bool bottom = bound_functor::bottom( node, item ) ;
                 node_ptr result = node ;
-                if( left || top || bottom ) {
+                if( (left || right) && (top || bottom) ) {
                     if( left ) {
                         if( top ) {
                             if( node->top_left() ) {
