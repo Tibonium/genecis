@@ -320,7 +320,7 @@ namespace tree {
                 {
                     add_sector( n, l ) ;
                 } else {
-                    if( contained(Box(n), b) ) {
+                    if( intersect(Box(n), b) ) {
                         size_type size( n->size() ) ;
                         for(size_type i=0; i<size; ++i) {
                             // Only add the data if it is actually in the box
@@ -330,13 +330,13 @@ namespace tree {
                                 }
                             }
                         }
-                        if( n->top_left() && contained( Box(n->top_left()), b ) )
+                        if( n->top_left() && intersect( Box(n->top_left()), b ) )
                             construct_list( n->top_left(), b, l ) ;
-                        if( n->bottom_left() && contained( Box(n->bottom_left()), b ) )
+                        if( n->bottom_left() && intersect( Box(n->bottom_left()), b ) )
                             construct_list( n->bottom_left(), b, l ) ;
-                        if( n->top_right() && contained( Box(n->top_right()), b ) )
+                        if( n->top_right() && intersect( Box(n->top_right()), b ) )
                             construct_list( n->top_right(), b, l ) ;
-                        if( n->bottom_right() && contained( Box(n->bottom_right()), b ) )
+                        if( n->bottom_right() && intersect( Box(n->bottom_right()), b ) )
                             construct_list( n->bottom_right(), b, l ) ;
                     }
                 }
@@ -346,16 +346,17 @@ namespace tree {
              * Checks that either box is contained within the other
              */
             template<class Box>
-            bool contained( const Box& b1, const Box& b2 ) {
-                return ( intersect(b1,b2) || intersect(b2,b1) ) ;
+            bool intersect( const Box& b1, const Box& b2 ) {
+                return ( corners(b1,b2) || corners(b2,b1) ) ;
             }
             
             /**
-             * Checks for intersection of the node and the query box.
-             *
+             * Determines if any of the four corners from box 1
+             * are within box 2. This check implies that box 2
+             * intersects box 1.
              */
             template<class Box>
-            bool intersect( const Box b1, const Box b2 ) {
+            bool corners( const Box b1, const Box b2 ) {
                 bool lower_x = (b2.x <= b1.x) && (b1.x < (b2.x+b2.width)) ;
                 bool lower_y = (b2.y <= b1.y) && (b1.y < (b2.y+b2.height)) ;
                 // Is the SW corner of the node in the box?

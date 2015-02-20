@@ -15,6 +15,12 @@ struct point {
     coord_type x ;
     coord_type y ;
     friend std::ostream& operator<< (std::ostream& os, point& p) ;
+    bool operator== (const point& rhs) {
+        return ( x == rhs.x && y == rhs.y ) ;
+    }
+    bool operator!= ( const point& rhs) {
+        return !(*this == rhs) ;
+    }
 };
 
 std::ostream& operator<< (std::ostream& os, point& p) {
