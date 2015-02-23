@@ -85,7 +85,8 @@ int main() {
     cout << "Done." << endl ;
     
     point p ;
-    box b( 22, 71, 70, 10 ) ;
+//    box b( 22, 71, 70, 10 ) ;
+    box b( 0, 0, 74, 100 ) ;
     list<point> truth ;
     srand(1) ;
     size_t N = 50 ;

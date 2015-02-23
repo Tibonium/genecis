@@ -7,8 +7,8 @@
 namespace genecis {
 namespace tree {
 
-    /** Forward decleration of the quad class **/
-    template<class T> class quad ;
+    /** Forward declaration of the quad class **/
+    template<class T, class D> class quad ;
 
     template<class T, int N>
     struct max_count {
@@ -32,36 +32,37 @@ namespace tree {
         
         static 
         result_type apply( argument_type a ) {
-            coord_type x( a->__x ) ;
-            coord_type y( a->__y ) ;
-            coord_type w( a->__width ) ;
-            coord_type h( a->__height ) ;
+//            coord_type x( a->__x ) ;
+//            coord_type y( a->__y ) ;
+//            coord_type w( a->__width ) ;
+//            coord_type h( a->__height ) ;
             size_type size( a->size() ) ;
-            argument_type new_node = new node_type(x,y,w,h,size) ;
-            new_node->parent( a->parent() ) ;
+            argument_type new_node = new node_type( a ) ;
+            new_node->create_children( size ) ;
 
             // creates the new children
-            coord_type nx = 0, ny = 0, nw = 0, nh = 0 ;
-            nw = 0.5 * w ; nh = 0.5 * h ; nx = x ; ny = y + nh ;
-            new_node->top_left( new node_type(nx,ny,nw,nh,size) ) ;
-            new_node->top_left()->parent( new_node ) ;
-            nw = 0.5 * w ; nh = 0.5 * h ; nx = x ; ny = y ;
-            new_node->bottom_left( new node_type(nx,ny,nw,nh,size) ) ;
-            new_node->bottom_left()->parent( new_node ) ;
-            nw = 0.5 * w ; nh = 0.5 * h ; nx = x + nw ; ny = y + nh ;
-            new_node->top_right( new node_type(nx,ny,nw,nh,size) ) ;
-            new_node->top_right()->parent( new_node ) ;
-            nw = 0.5 * w ; nh = 0.5 * h ; nx = x + nw ; ny = y ;
-            new_node->bottom_right( new node_type(nx,ny,nw,nh,size) ) ;
-            new_node->bottom_right()->parent( new_node ) ;
+//            coord_type nx = 0, ny = 0, nw = 0, nh = 0 ;
+//            nw = 0.5 * w ; nh = 0.5 * h ; nx = x ; ny = y + nh ;
+//            new_node->top_left( new node_type(nx,ny,nw,nh,size) ) ;
+//            new_node->top_left()->parent( new_node ) ;
+//            nw = 0.5 * w ; nh = 0.5 * h ; nx = x ; ny = y ;
+//            new_node->bottom_left( new node_type(nx,ny,nw,nh,size) ) ;
+//            new_node->bottom_left()->parent( new_node ) ;
+//            nw = 0.5 * w ; nh = 0.5 * h ; nx = x + nw ; ny = y + nh ;
+//            new_node->top_right( new node_type(nx,ny,nw,nh,size) ) ;
+//            new_node->top_right()->parent( new_node ) ;
+//            nw = 0.5 * w ; nh = 0.5 * h ; nx = x + nw ; ny = y ;
+//            new_node->bottom_right( new node_type(nx,ny,nw,nh,size) ) ;
+//            new_node->bottom_right()->parent( new_node ) ;
             
             // split the elemnts into each node
             for(size_type i=0; i<size; ++i) {
                 item_type curr = a->data(i) ;
                 bool left = bound_functor::left( a, curr ) ;
+                bool right = bound_functor::right( a, curr ) ;
                 bool top = bound_functor::top( a, curr ) ;
                 bool bottom = bound_functor::bottom( a, curr ) ;
-                if( left || top || bottom ) {
+                if( (left || right) && (top || bottom) ) {
                     if( left ) {
                         if( top ) {
                             new_node->top_left()->add( curr ) ;

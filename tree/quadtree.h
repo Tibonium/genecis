@@ -53,31 +53,32 @@ namespace tree {
             typedef typename container_type::size_type     size_type ;
 
             /**
-             * Default constructor
-             *
-             * Initializes the quadrant container elements
-             * all to NULL.
-             */
-            quad()
-            : __x(0), __y(0), __width(100), __height(100), __index(0) 
-            {
-                __quadrant = container_type(4, NULL) ;
-                __data = data_container(0) ;
-            }
-
-            /**
              * Constructor
              *
              * Initializes the quadrant container elements
              * all to NULL.
              */
             quad( coord_type x, coord_type y,
-            coord_type width, coord_type height,
-            size_type num )
+                  coord_type width, coord_type height,
+                  size_type num )
             : __x(x), __y(y), __width(width), __height(height), __index(0)
             {
                 __quadrant = container_type(4, NULL) ;
                 __data = data_container(num) ;
+            }
+
+            /**
+             * Copy Constructor
+             */
+            quad( const node_type other ) {
+                __x = other->__x ;
+                __y = other->__y ;
+                __width = other->__width ;
+                __height = other->__height ;
+                __quadrant = container_type(4, NULL) ;
+                __data = data_container( other->size() ) ;
+                __parent = other->parent() ;
+                __index = 0 ;
             }
 
             /**
@@ -154,6 +155,28 @@ namespace tree {
             /** Sets the parent node **/
             void parent( self_type* p ) {
                 __parent = p ;
+            }
+            
+            /**
+             * Creates the children nodes from the parent node by
+             * evenly dividing the parent into four new quadrants.
+             *
+             * @param size      max size of the data container
+             */
+            void create_children( size_type size ) {
+                coord_type nw = 0.5*__width, nh = 0.5*__height ;
+                    // Top left quadrant
+                __quadrant(TOP_LEFT) = new self_type(__x,__y+nh,nw,nh,size) ;
+                __quadrant(TOP_LEFT)->__parent = this ;
+                    // Bottom left quadrant
+                __quadrant(BOTTOM_LEFT) = new self_type(__x,__y,nw,nh,size) ;
+                __quadrant(BOTTOM_LEFT)->__parent = this ;
+                    // Top right quadrant
+                __quadrant(TOP_RIGHT) = new self_type(__x+nw,__y+nh,nw,nh,size) ;
+                __quadrant(TOP_RIGHT)->__parent = this ;
+                    // Bottom right quadrant
+                __quadrant(BOTTOM_RIGHT) = new self_type(__x+nw,__y,nw,nh,size) ;
+                __quadrant(BOTTOM_RIGHT)->__parent = this ;
             }
 
             /**
@@ -375,7 +398,7 @@ namespace tree {
 
             /**
              * Adds an entire sector of elements to the list because
-             * this region of the quadtree is wholely contained within
+             * this region of the quadtree is entirely contained within
              * the query box and so every element must be added.
              */
             template<class List>
@@ -391,7 +414,7 @@ namespace tree {
             }
 
             /**
-             * Recursively searchs the quadtree for the smallest
+             * Recursively searches the quadtree for the smallest
              * quad that fully contains this item.
              */
             node_ptr find_node( node_ptr node, value_type item ) {
