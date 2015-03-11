@@ -9,39 +9,35 @@ int main() {
 	
 	cout << "server running..." << endl ;
 	
-//	try{
-		int port = 45000 ;
-//		int rec = 1 ;
-		genecis_server server( port ) ;
-		
-		while( true ) {
-			cout << "waiting for response from client..." << endl ;
-			genecis_server _sock1 ;
-			server.accept( _sock1 ) ;
-//			genecis_server _sock2 ;
-//			server.accept( _sock2 ) ;
-//			try{
-				while( true ) {
-//					cout << "Client intialized..." << endl ;
-					stringstream ss ;
-					string data ;
-					_sock1 >> data ;
-//					ss << "This is request #" << rec ;
-//					cout << data << endl ;
-					if( strcmp(data.c_str(),"break") == 0 ) break ;
-					cout << "client: " << data << endl ;
-					cout << "msg: " ;
-					string reply ;
-					getline(cin, reply) ;
-					data = reply ;
-//					data = "Yep, got the request." ;
-					_sock1 << data ;
-//					++rec ;
-//					ss.seekp(0) ;
-				}
-			break ;
+	int port = 45000 ;
+	genecis_server host( port ) ;
+    string data ;
+    data.clear() ;
+	while( true ) {
+		cout << "waiting for client connection..." << endl ;
+		genecis_server sock1 ;
+		host.accept( sock1 ) ;
+		while( strcmp(data.c_str(),"ready") != 0 )
+		{
+		    sock1 >> data ;
+		    usleep(1000) ;
+	    }
+        cout << "client connected" << endl ;
+        data.clear() ;
+        while( true ) {
+	        sock1 >> data ;
+			if( strcmp(data.c_str(),"break") == 0 ) break ;
+			cout << "client: " << data << endl ;
+			cout << "msg: " ;
+			string reply ;
+			getline(cin, reply) ;
+			data = reply ;
+			sock1 << data ;
+			if( strcmp(data.c_str(),"break") == 0 ) break ;
+            data.clear() ;
 		}
-//	} catch (int) {}
+		break ;
+	}
 	
 	cout << "server shutdown" << endl ;
 }

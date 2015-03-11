@@ -236,9 +236,9 @@ $(BUILD_PATH)/net/genecis_server.o: $(SRC_PATH)/net/genecis_server.cc
 	@echo "Creating server obj file net/genecis_server.o..."
 	$(CC) -c $(SRC_PATH)/net/genecis_server.cc -o $(BUILD_PATH)/net/genecis_server.o
 
-socket_test: $(SRC_PATH)/test/socket_test.cc $(SRVR_OBJ)
-	@echo "Building socket_test..."
-	$(CC) -o $(BUILD_PATH)/socket_test $(SRC_PATH)/test/socket_test.cc $(BUILD_PATH)/net/isocket.o
+socket_test: $(SRC_PATH)/test/client_test.cc $(SRVR_OBJ)
+	@echo "Building client_test..."
+	$(CC) -o $(BUILD_PATH)/client_test $(SRC_PATH)/test/client_test.cc $(SRVR_OBJ)
 
 server_test: $(SRC_PATH)/test/server_test.cc $(SRVR_OBJ)
 	@echo "Building server_test..."
