@@ -17,13 +17,13 @@ OPT_0 = -O3
 OPT_1 = -g -O0
 INSTALL_PATH = /usr/local/include/genecis
 GENECIS_FOLDERS = ai algorithm base container distribution tree \
-	physics net math signal
+	physics net math signal thread
 CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
 CC = $(VERB_$(V))g++ $(OPT_$(D)) -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	socket_test graph_test prime set_test vector_test mathfunc_test \
 	container_test graph_array_test pattern_test signal_test numerics_test \
-	quadtree_test#	gravity_test
+	quadtree_test thread_test	#gravity_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test \
 	extraction_test
 MATRIX = $(SRC_PATH)/math/matrix.h $(SRC_PATH)/math/matrix_expression.h \
@@ -43,6 +43,7 @@ TREE_HDR = ${wildcard $(SRC_PATH)/tree/*.h}
 PHYS_HDR = ${wildcard $(SRC_PATH)/physics/*.h}
 SRVR_HDR = ${wildcard $(SRC_PATH)/net/*.h}
 SIG_HDR = ${wildcard $(SRC_PATH)/signal/*.h}
+THRD_HDR = ${wildcard $(SRC_PATH)/thread/*.h}
 
 MATH_O = graph_array.o ode.o numerics.o
 MATH_OBJ = $(addprefix $(BUILD_PATH)/math/, $(MATH_O))
@@ -101,6 +102,9 @@ install:
 	done
 	@for file in $(SIG_HDR) ; do \
 		cp $$file $(INSTALL_PATH)/signal/ ; \
+	done
+	@for file in $(THRD_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/thread/ ; \
 	done
 	
 clean:
@@ -224,7 +228,7 @@ quadtree_test: $(SRC_PATH)/test/quadtree_test.cc $(TREE_HDR) $(CONTAINER)
 	$(CC) -o $(BUILD_PATH)/quadtree_test $(SRC_PATH)/test/quadtree_test.cc
 	
 # Server Tests
-server: socket_test server_test
+server: client_test server_test
 	@echo "Server build complete"
 	@date
 
@@ -236,7 +240,7 @@ $(BUILD_PATH)/net/genecis_server.o: $(SRC_PATH)/net/genecis_server.cc
 	@echo "Creating server obj file net/genecis_server.o..."
 	$(CC) -c $(SRC_PATH)/net/genecis_server.cc -o $(BUILD_PATH)/net/genecis_server.o
 
-socket_test: $(SRC_PATH)/test/client_test.cc $(SRVR_OBJ)
+client_test: $(SRC_PATH)/test/client_test.cc $(SRVR_OBJ)
 	@echo "Building client_test..."
 	$(CC) -o $(BUILD_PATH)/client_test $(SRC_PATH)/test/client_test.cc $(SRVR_OBJ)
 
@@ -262,3 +266,7 @@ signal_test: $(SRC_PATH)/test/signal_test.cc $(SIG_HDR)
 	@echo "Building signal_test..."
 	$(CC) -o $(BUILD_PATH)/signal_test $(SRC_PATH)/test/signal_test.cc
 
+# Thread tests
+thread_test: $(SRC_PATH)/test/thread_test.cc $(THRD_HDR)
+	@echo "Building thread_test..."
+	$(CC) -o $(BUILD_PATH)/thread_test $(SRC_PATH)/test/thread_test.cc -lpthread
