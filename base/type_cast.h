@@ -3,6 +3,10 @@
  * A class that defines many useful ways of casting
  * types and redefining type casts on per-use basis.
  */
+#pragma once
+
+namespace genecis {
+namespace base {
 
 /***** Remove type templates *****/
 template<class T>
@@ -90,3 +94,6 @@ template<class T>
 struct add_pointer {
     typedef typename remove_reference<T>::type *type;
 };
+
+}   // end of namespace base
+}   // end of namespace genecis
