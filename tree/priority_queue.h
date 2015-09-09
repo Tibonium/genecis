@@ -40,10 +40,10 @@ namespace tree {
 			 * variables, and allocates memory for the _rank and _data
 			 * array as well as initializing them all to a value of 0.
 			 */
-			priority_queue( const size_type size ) : _front(0), _back(0),
+			priority_queue( const size_type size ) : 
+			    _rank(size, 0), _front(0), _back(0),
 				_max_index(size-1)
 			{
-				_rank = rank_container( size ) ;
 				_data = new value_type[size] ;
 				if( typeid(value_type) == typeid(string) ) {
 					for(unsigned i=0; i<size; ++i) {

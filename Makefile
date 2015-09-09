@@ -21,9 +21,9 @@ GENECIS_FOLDERS = ai algorithm base container distribution tree \
 CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
 CC = $(VERB_$(V))g++ $(OPT_$(D)) -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
-	socket_test graph_test prime set_test vector_test mathfunc_test \
+	graph_test prime set_test vector_test mathfunc_test quadtree_test \
 	container_test graph_array_test pattern_test signal_test numerics_test \
-	quadtree_test thread_test	#gravity_test
+	thread_test	#gravity_test socket_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test \
 	extraction_test
 MATRIX = $(SRC_PATH)/math/matrix.h $(SRC_PATH)/math/matrix_expression.h \
