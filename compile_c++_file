@@ -23,7 +23,7 @@ if [ "$no_file" = "" ];
 then
   echo ***Error: $cc_file does not exist***
 else
-  if [ "$2" = "debug" ];
+  if [ "$1" = "debug" ];
   then
     shift
     cpp="g++ -g -I /usr/local/include -I $PROJECTS_DIR/ -L /usr/local/lib -L $(pwd)"
