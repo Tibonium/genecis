@@ -1,52 +1,46 @@
 #!/bin/bash
+
+# Remove the old exe if it exists
 if [ -e $1 ];
 then
   rm $1
 fi
+
+# Determine if the compiler is Fortran or C++
 if [ "$2" = "gfortran" ];
 then
   cc_file="$1.f"
 else
   cc_file="$1.cc"
 fi
+# Remove the name of the exectuable from the list and save it for later
+exe_name="$1"
+shift
+ 
+# Search for the file in the current directory
 no_file=$(find $cc_file)
-if [ "$2" = "debug" ];
-then
-  debug="true"
-  cpp="g++ -g -I /usr/local/include -I $PROJECTS_DIR/ -L /usr/local/lib -L $(pwd)"
-else
-  debug="false"
-  cpp="g++ -I/usr/local/include -I $PROJECTS_DIR/ -L /usr/local/lib -L $(pwd)"
-fi
 if [ "$no_file" = "" ];
 then
   echo ***Error: $cc_file does not exist***
 else
-  echo File $cc_file found, creating exe file
-  if [ "$2" = "" ];
+  if [ "$2" = "debug" ];
   then
-     $cpp $cc_file -o $1
+    shift
+    cpp="g++ -g -I /usr/local/include -I $PROJECTS_DIR/ -L /usr/local/lib -L $(pwd)"
   else
-     if [ $debug = "true" ];
-     then
-       if [ "$3" = "" ];
-       then
-         $cpp $cc_file -o $1
-       else
-         $cpp $cc_file -o $1 -l$3
-       fi
-     else
-       if [ "$3" = "" ];
-       then
-         $cpp $cc_file -o $1 -l$2
-       else
-         $cpp $cc_file -o $1 -l$2 -l$3
-       fi
-     fi
+    cpp="g++ -I/usr/local/include -I $PROJECTS_DIR/ -L /usr/local/lib -L $(pwd)"
   fi
-  if [ -e $1 ];
+  echo File $cc_file found, creating exe file
+  for lib in "$@"
+  do
+    libs="$libs -l$lib"
+  done  
+  $cpp -o $exe_name $cc_file $libs
+  
+  # Check if the exectuable was successfully made
+  if [ -e $exe_name ];
   then
-    echo Executable $1 was created!
+    echo Executable $exe_name was created!
     date
   fi
 fi
