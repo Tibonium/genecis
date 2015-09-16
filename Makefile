@@ -45,6 +45,8 @@ SRVR_HDR = ${wildcard $(SRC_PATH)/net/*.h}
 SIG_HDR = ${wildcard $(SRC_PATH)/signal/*.h}
 THRD_HDR = ${wildcard $(SRC_PATH)/thread/*.h}
 
+GRPHX_O = sphere.o
+GRPHX_OBJ = $(addprefix $(BUILD_PATH)/graphics, $(GRPHX_O))
 MATH_O = graph_array.o ode.o numerics.o
 MATH_OBJ = $(addprefix $(BUILD_PATH)/math/, $(MATH_O))
 AI_O = number_pattern.o
@@ -226,6 +228,10 @@ set_test: $(SRC_PATH)/test/set_test.cc $(SRC_PATH)/math/set.h $(SRC_PATH)/math/f
 quadtree_test: $(SRC_PATH)/test/quadtree_test.cc $(TREE_HDR) $(CONTAINER) 
 	@echo "Building quadtree_test..."
 	$(CC) -o $(BUILD_PATH)/quadtree_test $(SRC_PATH)/test/quadtree_test.cc
+
+$(BUILD_PATH)/graphics/sphere.o: $(SRC_PATH)/graphics/sphere.cc $(SRC_PATH)/graphics/sphere.h
+	@echo "Creating obj file sphere.o..."
+	$(CC) -c $(SRC_PATH)/graphics/sphere.cc -o $(BUILD_PATH)/graphics/sphere.o
 	
 # Server Tests
 server: client_test server_test
