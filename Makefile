@@ -15,9 +15,10 @@ VERB_0 = @
 VERB_1 = 
 OPT_0 = -O3
 OPT_1 = -g -O0
+OPENGL_LIBS = -lX11 -lGL -lGLU
 INSTALL_PATH = /usr/local/include/genecis
 GENECIS_FOLDERS = ai algorithm base container distribution tree \
-	physics net math signal thread
+	physics net math signal thread graphics
 CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
 CC = $(VERB_$(V))g++ $(OPT_$(D)) -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
@@ -44,9 +45,10 @@ PHYS_HDR = ${wildcard $(SRC_PATH)/physics/*.h}
 SRVR_HDR = ${wildcard $(SRC_PATH)/net/*.h}
 SIG_HDR = ${wildcard $(SRC_PATH)/signal/*.h}
 THRD_HDR = ${wildcard $(SRC_PATH)/thread/*.h}
+GRPHX_HDR = ${wildcard $(SRC_PATH)/graphics/*.h}
 
 GRPHX_O = sphere.o
-GRPHX_OBJ = $(addprefix $(BUILD_PATH)/graphics, $(GRPHX_O))
+GRPHX_OBJ = $(addprefix $(BUILD_PATH)/graphics/, $(GRPHX_O))
 MATH_O = graph_array.o ode.o numerics.o
 MATH_OBJ = $(addprefix $(BUILD_PATH)/math/, $(MATH_O))
 AI_O = number_pattern.o
@@ -98,6 +100,9 @@ install:
 	done
 	@for file in $(PHYS_HDR) ; do \
 		cp $$file $(INSTALL_PATH)/physics/ ; \
+	done
+	@for file in $(GRPHX_HDR) ; do \
+		cp $$file $(INSTALL_PATH)/graphics/ ; \
 	done
 	@for file in $(SRVR_HDR) ; do \
 		cp $$file $(INSTALL_PATH)/net/ ; \
@@ -229,9 +234,13 @@ quadtree_test: $(SRC_PATH)/test/quadtree_test.cc $(TREE_HDR) $(CONTAINER)
 	@echo "Building quadtree_test..."
 	$(CC) -o $(BUILD_PATH)/quadtree_test $(SRC_PATH)/test/quadtree_test.cc
 
-$(BUILD_PATH)/graphics/sphere.o: $(SRC_PATH)/graphics/sphere.cc $(SRC_PATH)/graphics/sphere.h
+$(BUILD_PATH)/graphics/sphere.o: $(SRC_PATH)/graphics/sphere.cc $(SRC_PATH)/graphics/sphere.h $(CONTAINER)
 	@echo "Creating obj file sphere.o..."
 	$(CC) -c $(SRC_PATH)/graphics/sphere.cc -o $(BUILD_PATH)/graphics/sphere.o
+
+graphics_test: $(SRC_PATH)/test/graphics_test.cc $(GRPHX_OBJ)
+	@echo "Building graphics_test..."
+	$(CC) -o $(BUILD_PATH)/graphics_test $(SRC_PATH)/test/graphics_test.cc $(BUILD_PATH)/graphics/sphere.o $(OPENGL_LIBS)
 	
 # Server Tests
 server: client_test server_test

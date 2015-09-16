@@ -43,6 +43,8 @@ public:
      * @param z     z-coordinate value for the center of the sphere
      */
     void draw(GLfloat x, GLfloat y, GLfloat z) ;
+    
+    void color(GLfloat r, GLfloat g, GLfloat b) ;
 
 private:
 
@@ -62,9 +64,18 @@ private:
     container_type texcoords ;
     
     /**
+     * Color of each surface that makes up the sphere
+     */
+    container_type colors ;
+    
+    /**
      * Indices
      */
     container::array<GLushort> indices ;
+    
+    GLfloat _red ;
+    GLfloat _green ;
+    GLfloat _blue ;
 
 };
 
