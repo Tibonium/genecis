@@ -30,6 +30,9 @@ XSetWindowAttributes swa ;
 XWindowAttributes wa ;
 XEvent xev ;
 
+genecis::container::array<double> pos(3, 0.0) ;
+genecis::container::array<double> scale(3, 1.0) ;
+
 /**
  * Creates the window to draw to
  */
@@ -101,12 +104,13 @@ void expose_graphics(Sphere *s)
 	glMatrixMode( GL_MODELVIEW ) ;
 	glLoadIdentity() ;
 	gluLookAt(10., 0., 0., 0., 0., 0., 0., 0., 1.) ;
+	glScalef(scale[0], scale[1], scale[2]) ;
 	
 	/**
 	 * Draw the sphere
 	 */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) ;
-	s->draw(0, 0, 0) ;
+	s->draw(pos) ;
 	
 	/**
 	 * Swap buffers
@@ -117,7 +121,7 @@ void expose_graphics(Sphere *s)
 /**
  * Checks the window event queue for specific interactions
  */
-void check_events()
+void check_events(Sphere *s)
 {
     if( XCheckWindowEvent(dpy, win, KeyPressMask, &xev) ) {
     	char *key_string = XKeysymToString(XkbKeycodeToKeysym(dpy, xev.xkey.keycode, 0, 0)) ;
@@ -132,6 +136,12 @@ void check_events()
     } else
     if( XCheckWindowEvent(dpy, win, ButtonPressMask, &xev) ) {
     	if( xev.xbutton.button == LEFT_CLICK ) {
+    		double range = 350.0 * scale[0] ;
+    		double half = range / 2.0 ;
+    		pos[0] = 0.0 ;
+    		pos[1] = xev.xbutton.x - range ;
+    		pos[2] = range - xev.xbutton.y ;
+    		pos /= half ;
     		printf("The left button was pressed on the mouse. The location in the window is: (%i, %i)\n", xev.xbutton.x, xev.xbutton.y) ;
     	} else
     	if( xev.xbutton.button == RIGHT_CLICK ) {
@@ -142,10 +152,18 @@ void check_events()
     	} else
     	if( xev.xbutton.button == WHEEL_UP ) {
     		printf("The scroll wheel on the mouse was scrolled up\n") ;
+			scale[0] += 0.1 ;
+			scale[1] += 0.1 ;
+			scale[2] += 0.1 ;
     	} else
     	if( xev.xbutton.button == WHEEL_DOWN ) {
-    		printf("The scroll wheel on the mouse was scrolled down\n") ;
+			scale[0] -= 0.1 ;
+			scale[1] -= 0.1 ;
+			scale[2] -= 0.1 ;
+			printf("The scroll wheel on the mouse was scrolled down\n") ;
+
     	}
+		expose_graphics(s) ;
     }
 }
 
@@ -154,13 +172,13 @@ void check_events()
  */
 int main(int argc, char *argv[])
 {
-	Sphere sun(0.5, 20, 48) ;
+	Sphere sun(0.5, 30, 128) ;
 	sun.color(0.7, 0.3, 0.0) ;
 	create_window(700, 700) ;
 	expose_graphics(&sun) ;
 	
 	while(true) {
-		check_events() ;
+		check_events(&sun) ;
 		glXSwapBuffers(dpy, win) ;
 	}
 	

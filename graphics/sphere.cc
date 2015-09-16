@@ -60,6 +60,11 @@ Sphere::~Sphere()
 
 }
 
+void Sphere::draw(container::array<double> center)
+{
+	draw(center(0), center(1), center(2)) ;
+}
+
 /**
  * Draws the sphere centered at (x,y,z)
  */
@@ -83,6 +88,9 @@ void Sphere::draw(GLfloat x, GLfloat y, GLfloat z)
     glPopMatrix() ;
 }
 
+/**
+ * Sets the color of the sphere
+ */
 void Sphere::color(GLfloat r, GLfloat g, GLfloat b)
 {
 	std::srand(0) ;
@@ -92,8 +100,8 @@ void Sphere::color(GLfloat r, GLfloat g, GLfloat b)
 	int N = colors.size() ;
 	
 	for(int i=0; i<N; i+=3) {
-		colors[i] = r ; //(double)i / N ;
-		colors[i+1] = g ; //(double)i / N ;
-		colors[i+2] = b ; //(double)i / N ;
+		colors[i] = std::fmod((r + i*0.01), 1.0) ; //(double)i / N ;
+		colors[i+1] = std::fmod((g + i*0.01), 1.0) ; //(double)i / N ;
+		colors[i+2] = std::fmod((b + i*0.01), 1.0) ; //(double)i / N ;
 	}
 }

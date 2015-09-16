@@ -35,6 +35,8 @@ public:
      */
     virtual ~Sphere() ;
     
+    void draw( container::array<double> center ) ;
+
     /**
      * Draws the sphere on the display at the coordinates (x,y,z)
      *
