@@ -8,19 +8,21 @@ using namespace genecis::graphics ;
  * Constructor
  */
 Sphere::Sphere(integral_type radius, size_type rings, size_type sectors)
-    : vertices(rings * sectors * 3, 0),
-      normals(rings * sectors * 3, 0),
-      texcoords(rings * sectors * 2, 0),
-      colors(rings * sectors * 3, 0),
-      indices(rings * sectors * 4, 0),
-      _red(0), _green(0), _blue(0)
+    : _vertices(rings * sectors * 3, 0),
+      _normals(rings * sectors * 3, 0),
+      _texcoords(rings * sectors * 2, 0),
+      _colors(rings * sectors * 3, 0),
+      _position(3, 0), _velocity(3, 0),
+      _acceleration(3,0),
+      _indices(rings * sectors * 4, 0),
+      _red(0), _green(0), _blue(0), _id(0)
 {
     integral_type const R = 1./(integral_type)(rings-1) ;
     integral_type const S = 1./(integral_type)(sectors-1) ;
     
-    container_type::iterator v = vertices.begin() ;
-    container_type::iterator n = normals.begin() ;
-    container_type::iterator t = texcoords.begin() ;
+    container_type::iterator v = _vertices.begin() ;
+    container_type::iterator n = _normals.begin() ;
+    container_type::iterator t = _texcoords.begin() ;
     
     for(size_type r=0; r<rings; ++r) {
         for(size_type s=0; s<sectors; ++s) {
@@ -41,7 +43,7 @@ Sphere::Sphere(integral_type radius, size_type rings, size_type sectors)
         }
     }
     
-    container::array<GLushort>::iterator i = indices.begin() ;
+    container::array<GLushort>::iterator i = _indices.begin() ;
     for(size_type r=0; r<(rings - 1); ++r) {
         for(size_type s=0; s<(sectors - 1); ++s) {
             *i++ = r * sectors + s ;
@@ -50,6 +52,9 @@ Sphere::Sphere(integral_type radius, size_type rings, size_type sectors)
             *i++ = (r + 1) * sectors + s ;
         }
     }
+
+    _rotation = new GLfloat[rings * sectors * 3] ;
+    std::fill_n( _rotation, rings*sectors*3, 0) ;
 }
 
 /**
@@ -57,21 +62,28 @@ Sphere::Sphere(integral_type radius, size_type rings, size_type sectors)
  */
 Sphere::~Sphere()
 {
-
+	if( _rotation ) {
+		delete _rotation ;
+		_rotation = NULL ;
+	}
 }
 
-void Sphere::draw(container::array<double> center)
+void Sphere::draw(container::array<double> center, double dt)
 {
-	draw(center(0), center(1), center(2)) ;
+	draw(center(0), center(1), center(2), dt) ;
 }
 
 /**
  * Draws the sphere centered at (x,y,z)
  */
-void Sphere::draw(GLfloat x, GLfloat y, GLfloat z)
+void Sphere::draw(GLfloat x, GLfloat y, GLfloat z, double dt)
 {
     glMatrixMode( GL_MODELVIEW ) ;
-    glPushMatrix() ;
+	glPushMatrix() ;
+	glRotatef( _velocity(1)*dt, 0.0, 1.0, 0.0 ) ;
+	glRotatef( _velocity(2)*dt, 0.0, 0.0, 1.0 ) ;
+	glMultMatrixf( _rotation ) ;
+	glGetFloatv( GL_MODELVIEW_MATRIX, _rotation ) ;
     glTranslatef( x, y, z ) ;
     
     glEnableClientState( GL_VERTEX_ARRAY ) ;
@@ -79,13 +91,34 @@ void Sphere::draw(GLfloat x, GLfloat y, GLfloat z)
     glEnableClientState( GL_TEXTURE_COORD_ARRAY ) ;
     glEnableClientState( GL_COLOR_ARRAY ) ;
     
-    glVertexPointer( 3, GL_FLOAT, 0, &vertices[0] ) ;
-    glNormalPointer( GL_FLOAT, 0, &normals[0] ) ;
-    glTexCoordPointer( 2, GL_FLOAT, 0, &texcoords[0] ) ;
-    glColorPointer( 3, GL_FLOAT, 0, &colors[0] ) ;
+    glVertexPointer( 3, GL_FLOAT, 0, _vertices.begin() ) ;
+    glNormalPointer( GL_FLOAT, 0, _normals.begin() ) ;
+    glTexCoordPointer( 2, GL_FLOAT, 0, _texcoords.begin() ) ;
+    glColorPointer( 3, GL_FLOAT, 0, _colors.begin() ) ;
     
-    glDrawElements( GL_QUADS, indices.size(), GL_UNSIGNED_SHORT, &indices[0] ) ;
-    glPopMatrix() ;
+    glDrawElements( GL_QUADS, _indices.size(), GL_UNSIGNED_SHORT, _indices.begin() ) ;
+	glPopMatrix() ;
+    
+//    glGenBuffers( 1, &_id ) ;
+//    glBindBuffer( GL_ARRAY_BUFFER, _id ) ;
+//    glBufferData( GL_ARRAY_BUFFER, sizeof(GL_FLOAT)*_vertices.size(), _vertices.begin(), GL_DYNAMIC_DRAW ) ;
+//    glEnableVertexAttribArray( 0 ) ;
+//    glVertexAttribPointer( _id, 4, GL_FLOAT, GL_FALSE, 0, 0 ) ;
+//    
+//    glGenBuffers( 1, &_id ) ;
+//    glBindBuffer( GL_ARRAY_BUFFER, _id ) ;
+//    glBufferData( GL_ARRAY_BUFFER, sizeof(GL_FLOAT)*_indices.size(), _indices.begin(), GL_DYNAMIC_DRAW ) ;
+//    glEnableVertexAttribArray( 0 ) ;
+//    glVertexAttribPointer( _id, 4, GL_FLOAT, GL_FALSE, 0, 0 ) ;
+//    glBufferData( GL_ARRAY_BUFFER, sizeof(_vertices) + sizeof(_indices), 0, GL_STATIC_DRAW ) ;
+//    glBufferSubData( GL_ARRAY_BUFFER, 0, _vertices.size(), _vertices.begin() ) ;
+//    glBufferSubData( GL_ARRAY_BUFFER, _vertices.size(), _indices.size(), _indices.begin() ) ;
+//    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, _indices.begin() ) ;
+//    glBufferSubData( GL_ELEMENT_ARRAY_BUFFER, 0, _indices.size(), _indicies.begin() ) ;
+
+//    glDrawArrays( GL_QUADS, 0, _vertices.size() ) ;
+//    glDisableVertexAttribArray( _id ) ;
+//	glDrawElements( GL_QUADS, _indices.size(), GL_UNSIGNED_SHORT, _indices.begin() ) ;
 }
 
 /**
@@ -97,11 +130,12 @@ void Sphere::color(GLfloat r, GLfloat g, GLfloat b)
 	//_red = r ;
 	//_green = g ;
 	//_blue = b ;
-	int N = colors.size() ;
+	int N = _colors.size() ;
+	double res = 1.0 / N ;
 	
 	for(int i=0; i<N; i+=3) {
-		colors[i] = std::fmod((r + i*0.01), 1.0) ; //(double)i / N ;
-		colors[i+1] = std::fmod((g + i*0.01), 1.0) ; //(double)i / N ;
-		colors[i+2] = std::fmod((b + i*0.01), 1.0) ; //(double)i / N ;
+		_colors[i] =  std::fmod((r + i*res), 1.0) ;
+		_colors[i+1] = std::fmod((g + i*res), 1.0) ;
+		_colors[i+2] = std::fmod((b + i*res), 1.0) ;
 	}
 }

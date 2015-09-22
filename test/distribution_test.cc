@@ -4,8 +4,9 @@
 #include <cstring>
 #include <ctime>
 #include <genecis/distribution/distribution.h>
+#include <genecis/probability/binomial.h>
 
-using namespace genecis::distribution ;
+USING_NAMESPACE(genecis::distribution) 
 
 int main( int argc, char* argv[] ) {
 
@@ -59,6 +60,5 @@ int main( int argc, char* argv[] ) {
 		<< d_dist.probability(p) << endl;
 	
 	delete dist ;
-	return 0;
 	
 }

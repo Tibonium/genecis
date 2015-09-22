@@ -3,6 +3,7 @@
  */
 
 #include <genecis/graphics/sphere.h>
+#include <genecis/base/gtime.h>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -11,7 +12,8 @@
 #include <X11/Xlib.h>
 #include <X11/XKBlib.h>
 
-using namespace genecis::graphics ;
+using namespace genecis ;
+using namespace graphics ;
 
 #define LEFT_CLICK Button1
 #define MIDDLE_CLICK Button2
@@ -30,8 +32,10 @@ XSetWindowAttributes swa ;
 XWindowAttributes wa ;
 XEvent xev ;
 
-genecis::container::array<double> pos(3, 0.0) ;
-genecis::container::array<double> scale(3, 1.0) ;
+container::array<double> pos(3, 0.0) ;
+container::array<double> scale(3, 1.0) ;
+Gtime run_time ;
+double dt ;
 
 /**
  * Creates the window to draw to
@@ -78,14 +82,15 @@ void create_window(double width, double height)
 	glXMakeCurrent(dpy, win, glc) ;
 	glEnable(GL_DEPTH_TEST) ;
 	glDepthFunc( GL_LESS ) ;
-	glClearColor(0.00, 0.00, 0.40, 1.00) ;
+	glClearColor(0.0, 0.0, 0.0, 1.00) ;
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) ;
 }
 
 /**
  * Exposes the window and draws the sphere to it
  */
-void expose_graphics(Sphere *s)
+void expose_graphics(container::array<Sphere*> *objects,
+	container::array<container::array<double>*> *positions, double dt)
 {
 	/**
 	 * Resize the viewport
@@ -103,14 +108,20 @@ void expose_graphics(Sphere *s)
 
 	glMatrixMode( GL_MODELVIEW ) ;
 	glLoadIdentity() ;
-	gluLookAt(10., 0., 0., 0., 0., 0., 0., 0., 1.) ;
+	gluLookAt(10.0, 10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0) ;
 	glScalef(scale[0], scale[1], scale[2]) ;
+	int N = objects->size()-1 ;
+	for(int i=0; i<N; ++i) {
+		glMultMatrixf( objects->operator[](i)->rotation_matrix() ) ;
+	}
 	
 	/**
 	 * Draw the sphere
 	 */
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) ;
-	s->draw(pos) ;
+	for(int i=0; i<N; ++i) {
+		objects->operator[](i)->draw( *(positions->operator[](i)), dt ) ;
+	}
 	
 	/**
 	 * Swap buffers
@@ -118,15 +129,45 @@ void expose_graphics(Sphere *s)
 	glXSwapBuffers(dpy, win) ;
 }
 
+void rotate_obj(Sphere *s, double dt)
+{
+	glMatrixMode( GL_MODELVIEW ) ;
+	glLoadIdentity() ;
+	glRotatef(s->velocity(1)*dt, 0.0, 1.0, 0.0) ;
+	glRotatef(s->velocity(2)*dt, 0.0, 0.0, 1.0) ;
+	glMultMatrixf( s->rotation_matrix() ) ;
+	glGetFloatv( GL_MODELVIEW_MATRIX, s->rotation_matrix() ) ;
+}
+
 /**
  * Checks the window event queue for specific interactions
  */
-void check_events(Sphere *s)
+void check_events(Sphere *s, double dt)
 {
     if( XCheckWindowEvent(dpy, win, KeyPressMask, &xev) ) {
     	char *key_string = XKeysymToString(XkbKeycodeToKeysym(dpy, xev.xkey.keycode, 0, 0)) ;
 
-		if(strncmp(key_string, "Escape", 5) == 0) {
+		if( strncmp(key_string, "Home", 4) == 0 ) {
+			pos *= 0.0 ;
+			s->velocity()->clear() ;
+		} else
+		if( strncmp(key_string, "Right", 5) == 0 ) {
+    		s->velocity( 2, (s->velocity(2) + 200.0*dt) ) ;
+    		printf("___ Right ___ Z-Velocity: %f\n", s->velocity(2)) ;
+		} else
+		if( strncmp(key_string, "Left", 4) == 0 ) {
+    		s->velocity( 2, (s->velocity(2) - 200.0*dt) ) ;
+    		printf("___ Left  ___ Z-Velocity: %f\n", s->velocity(2)) ;
+		} else
+		if( strncmp(key_string, "Up", 2) == 0 ) {
+			printf("___   Up  ___ Y-Velocity: %f\n", s->velocity(1)) ;
+    		s->velocity( 1, (s->velocity(1) + 200.0*dt) ) ;
+		} else
+		if( strncmp(key_string, "Down", 4) == 0 ) {
+			printf("___ Down  ___ Y-Velocity: %f\n", s->velocity(1)) ;
+    		s->velocity( 1, (s->velocity(1) - 200.0*dt) ) ;
+		} else
+		if( strncmp(key_string, "Escape", 5) == 0 ) {
 			glXMakeCurrent(dpy, None, NULL) ;
 			glXDestroyContext(dpy, glc) ;
 			XDestroyWindow(dpy, win) ;
@@ -160,10 +201,12 @@ void check_events(Sphere *s)
 			scale[0] -= 0.1 ;
 			scale[1] -= 0.1 ;
 			scale[2] -= 0.1 ;
+			if( scale[0] < 0.0 ) {
+				scale *= 0.0 ;
+			}
 			printf("The scroll wheel on the mouse was scrolled down\n") ;
 
     	}
-		expose_graphics(s) ;
     }
 }
 
@@ -172,14 +215,38 @@ void check_events(Sphere *s)
  */
 int main(int argc, char *argv[])
 {
-	Sphere sun(0.5, 30, 128) ;
+	Sphere sun(0.25, 100, 100) ;
+	sun.id( 1 ) ;
+//	sun.color(1.0, 1.0, 1.0) ;
 	sun.color(0.7, 0.3, 0.0) ;
+	sun.velocity(1, -100.0) ;
+	sun.velocity(2, 120.0) ;
+
+	Sphere planet(0.5, 30, 30) ;
+	planet.id( 2 ) ;
+	planet.color(0.0, 0.0, 0.4) ;
+	container::array<double> pos2(3, 2.0) ;
+	
 	create_window(700, 700) ;
-	expose_graphics(&sun) ;
+	run_time.start() ;
+	
+	container::array<Sphere*> objs(2) ;
+	objs[0] = &sun ;
+	objs[1] = &planet ;
+	container::array<container::array<double>*> obj_pos(2) ;
+	obj_pos[0] = &pos ;
+	obj_pos[1] = &pos2 ;
+	
+	glMatrixMode( GL_MODELVIEW ) ;
+	glLoadIdentity() ;
+	glGetFloatv( GL_MODELVIEW_MATRIX, sun.rotation_matrix() ) ;
+	double dt ;
 	
 	while(true) {
-		check_events(&sun) ;
-		glXSwapBuffers(dpy, win) ;
+		dt = run_time.delta_checkIn() ;
+		//rotate_obj( &sun, dt ) ;
+		check_events( &sun, dt ) ;
+		expose_graphics( &objs, &obj_pos, dt ) ;
 	}
 	
 	//return 0 ;

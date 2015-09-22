@@ -4,8 +4,7 @@
 #include <genecis/container/array.h>
 
 using namespace std ;
-using namespace genecis::container ;
-using namespace genecis::math ;
+USING_NAMESPACE(genecis::container)
 
 int main() {
 
@@ -19,8 +18,9 @@ int main() {
 	}
 	
 	cout << "v1" << v1 << endl ;
-	math_functions::convolve(v1,v2,r) ;
+	genecis::math::convolve(v1,v2,r) ;
 	cout << "result" << r << endl ;
 	
-	return 0 ;
+	cout << "34!: " << genecis::math::factorial(34) << endl ;
+	cout << "11 choose 3: " << genecis::math::choose(11, 3) << endl ;
 }

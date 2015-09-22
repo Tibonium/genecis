@@ -1,16 +1,14 @@
 /**
  * @file genecis_functions.h
  */
-
-#ifndef GENECIS_BASE_GENECIS_FUNCTIONS_H
-#define GENECIS_BASE_GENECIS_FUNCTIONS_H
+#pragma once
 
 #include <genecis/base/genecis_expression.h>
 #include <cmath>
 #include <complex>
 
-namespace genecis {
-namespace base {
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(base)
 
 	template<typename E> class genecis_expression ;
 
@@ -247,7 +245,5 @@ namespace base {
 		}
 	};
 
-}	// end of namespace container
-}	// end of namespace genecis
-
-#endif
+END_NAMESPACE
+END_NAMESPACE

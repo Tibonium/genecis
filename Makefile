@@ -18,13 +18,13 @@ OPT_1 = -g -O0
 OPENGL_LIBS = -lX11 -lGL -lGLU
 INSTALL_PATH = /usr/local/include/genecis
 GENECIS_FOLDERS = ai algorithm base container distribution tree \
-	physics net math signal thread graphics
+	physics net math signal thread graphics probability
 CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
 CC = $(VERB_$(V))g++ $(OPT_$(D)) -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	graph_test prime set_test vector_test mathfunc_test quadtree_test \
 	container_test graph_array_test pattern_test signal_test numerics_test \
-	thread_test	#gravity_test socket_test
+	thread_test	probability_test #gravity_test socket_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test \
 	extraction_test
 MATRIX = $(SRC_PATH)/math/matrix.h $(SRC_PATH)/math/matrix_expression.h \
@@ -42,6 +42,7 @@ CONT_HDR = ${wildcard $(SRC_PATH)/container/*.h}
 DIST_HDR = ${wildcard $(SRC_PATH)/distribution/*.h}
 TREE_HDR = ${wildcard $(SRC_PATH)/tree/*.h}
 PHYS_HDR = ${wildcard $(SRC_PATH)/physics/*.h}
+PROB_HDR = ${wildcard $(SRC_PATH)/probability/*.h}
 SRVR_HDR = ${wildcard $(SRC_PATH)/net/*.h}
 SIG_HDR = ${wildcard $(SRC_PATH)/signal/*.h}
 THRD_HDR = ${wildcard $(SRC_PATH)/thread/*.h}
@@ -238,9 +239,13 @@ $(BUILD_PATH)/graphics/sphere.o: $(SRC_PATH)/graphics/sphere.cc $(SRC_PATH)/grap
 	@echo "Creating obj file sphere.o..."
 	$(CC) -c $(SRC_PATH)/graphics/sphere.cc -o $(BUILD_PATH)/graphics/sphere.o
 
-graphics_test: $(SRC_PATH)/test/graphics_test.cc $(GRPHX_OBJ)
+graphics_test: $(SRC_PATH)/test/graphics_test.cc $(GRPHX_OBJ) $(SRC_PATH)/base/gtime.h
 	@echo "Building graphics_test..."
 	$(CC) -o $(BUILD_PATH)/graphics_test $(SRC_PATH)/test/graphics_test.cc $(BUILD_PATH)/graphics/sphere.o $(OPENGL_LIBS)
+	
+probability_test: $(SRC_PATH)/test/probability_test.cc $(PROB_HDR) $(MATH_HDR)
+	@echo "Building probability_test..."
+	$(CC) -o $(BUILD_PATH)/probability_test $(SRC_PATH)/test/probability_test.cc
 	
 # Server Tests
 server: client_test server_test
