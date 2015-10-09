@@ -21,9 +21,11 @@ public:
 	 *
 	 * @param p		probability threshold (percent chance)
 	 */	
-	bernoulli( double p ) :
+	bernoulli( double p, int s ) :
 		__p( p )
-	{}
+	{
+		number_generator::seed(s) ;
+	}
 	
 	/**
 	 * Destructor
@@ -35,7 +37,7 @@ public:
 	 */
 	bool trial()
 	{
-		return ( std::rand() < __p) ;
+		return ( number_generator::unit() < __p) ;
 	}
 	
 	/**

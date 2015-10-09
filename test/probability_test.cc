@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio>
 #include <genecis/probability/binomial.h>
 #include <genecis/probability/bernoulli.h>
 
@@ -24,5 +25,8 @@ int main(int argv, char* argc[])
 	for(int i=0; i<10; ++i) {
 		cout << number_generator::uniform(5, 10) << endl ;
 	}
+	
+	int N = 110 ;
+	printf("%i!: %e\n", N, factorial(N)) ;
 
 }
