@@ -18,13 +18,13 @@ OPT_1 = -g -O0
 OPENGL_LIBS = -lX11 -lGL -lGLU
 INSTALL_PATH = /usr/local/include/genecis
 GENECIS_FOLDERS = ai algorithm base container distribution tree \
-	physics net math signal thread graphics probability
+	physics net math signal thread graphics probability base
 CFLAGS = -I $(SRC_INCLUDE) -I $(BUILD_PATH)
 CC = $(VERB_$(V))g++ $(OPT_$(D)) -Wall -std=c++98 $(CFLAGS)
 TESTS = matrix_test distribution_test tree_test difq_test server_test \
 	graph_test prime set_test vector_test mathfunc_test quadtree_test \
 	container_test graph_array_test pattern_test signal_test numerics_test \
-	thread_test	probability_test #gravity_test socket_test
+	thread_test	probability_test string_test #gravity_test socket_test
 MISC_TESTS = hash_test reference_test boost_test buffer_test template_test \
 	extraction_test
 MATRIX = $(SRC_PATH)/math/matrix.h $(SRC_PATH)/math/matrix_expression.h \
@@ -246,6 +246,18 @@ graphics_test: $(SRC_PATH)/test/graphics_test.cc $(GRPHX_OBJ) $(SRC_PATH)/base/g
 probability_test: $(SRC_PATH)/test/probability_test.cc $(PROB_HDR) $(MATH_HDR)
 	@echo "Building probability_test..."
 	$(CC) -o $(BUILD_PATH)/probability_test $(SRC_PATH)/test/probability_test.cc
+	
+$(BUILD_PATH)/base/genecis_string.o: $(SRC_PATH)/base/genecis_string.cc $(SRC_PATH)/base/genecis_string.h
+	@echo "Creating obj file genecis_string.o...."
+	$(CC) -c $(SRC_PATH)/base/genecis_string.cc -o $(BUILD_PATH)/base/genecis_string.o
+	
+$(BUILD_PATH)/base/genecis_stringlist.o: $(SRC_PATH)/base/genecis_stringlist.cc $(SRC_PATH)/base/genecis_stringlist.h
+	@echo "Creating obj file genecis_stringlist.o...."
+	$(CC) -c $(SRC_PATH)/base/genecis_stringlist.cc -o $(BUILD_PATH)/base/genecis_stringlist.o
+	
+string_test: $(SRC_PATH)/test/string_test.cc $(BUILD_PATH)/base/genecis_string.o $(BUILD_PATH)/base/genecis_stringlist.o
+	@echo "Building string_test..."
+	$(CC) -o $(BUILD_PATH)/string_test $(SRC_PATH)/test/string_test.cc $(BUILD_PATH)/base/genecis_string.o $(BUILD_PATH)/base/genecis_stringlist.o
 	
 # Server Tests
 server: client_test server_test
