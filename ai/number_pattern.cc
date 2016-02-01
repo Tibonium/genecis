@@ -1,10 +1,9 @@
 /**
  * @file number_pattern.cc
  */
-
 #include <genecis/ai/number_pattern.h>
 
-using namespace genecis::ai ;
+USING_NAMESPACE(genecis::ai)
 
 /**
  * Attempts to find a elementry answer guess to the set that

@@ -1,46 +1,50 @@
 /**
  * @file memory.h
  */
+#pragma once
 
-#ifndef GENECIS_AI_MEMORY_H
-#define GENECIS_AI_MEMORY_H
+#include <genecis/container/array.h>
 
-#include <genecis/ai/action.h>
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(ai)
 
-namespace genecis {
-namespace ai {
+USING_NAMESPACE(container)
+
+/**
+ * TODO: This has yet to be created
+ */
+class action ;
 
 class memory {
+public:
 
-	public:
+	typedef memory		self_type ;
+	typedef array<action*>		list_type ;
+
+	/**
+	 * Constructor
+	 */
+	memory() {
+		_action_list = new list_type ;
+	}
 	
-		/**
-		 * Constructor - Takes a pointer to an action obj.
-		 * The memory is incharge of deleteing the action.
-		 *
-		 * @param a		The action obj for this memory.
-		 */
-		memory( action* a ) : __a {}
-		
-		/**
-		 * Destructor - deletes the action stored in this memory.
-		 */
-		virtual ~memory() {
-			if( __a ) {
-				delete __a ;
-			}
+	/**
+	 * Destructor - deletes the action stored in this memory.
+	 */
+	virtual ~memory() {
+		if( _action_list ) {
+			delete _action_list ;
 		}
+	}
 
-	private:
+private:
+
+	/**
+	 * The action that is associated with this memory.
+	 */
+	array<action*> _action_list ;
 	
-		/**
-		 * The action that is associated with this memory.
-		 */
-		action* __a ;
-	
-		
 };
 
-}	// end of namespace ai
-}	// end of namespace genecis
-#endif
+END_NAMESPACE
+END_NAMESPACE

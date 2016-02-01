@@ -3,14 +3,16 @@
  * Logger class to help with debugging. The user can specify
  * whether to save the debug output to console or file.
  */
+#pragma once
+
+#include <genecis/base/genecis_defines.h>
 #include <fstream>
 #include <iostream>
 
-namespace genecis {
-namespace base {
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(base)
 
 class log_base {
-
 public:
 
     /**
@@ -24,5 +26,5 @@ public:
     static char* __file__;
 };
 
-}
-}
+END_NAMESPACE
+END_NAMESPACE

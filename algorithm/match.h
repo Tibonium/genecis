@@ -1,14 +1,12 @@
 /**
  * @file match.h
  */
+#pragma once
 
-#ifndef GENECIS_ALGORITHM_MATCH_H
-#define GENECIS_ALGORITHM_MATCH_H
+#include <genecis/container/array.h>
 
-#include <vector>
-
-namespace genecis {
-namespace algorithm {
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(algorithm)
 
 template <typename T> class match {
 
@@ -23,20 +21,21 @@ template <typename T> class match {
 	
 		}
 		
-		// Constructor
+		/**
+		 * Constructor?
+		 */
 		match(value_type* s1, value_type* s2) {
 		
 		}
 		
-		// Desctrutor
-		~match() {}
+		/**
+		 * Destructor
+		 */
+		virtual ~match() {}
 		
 	private:
-	
-		
 
 };
 
-}	// end of namespace algorithm
-}	// end of namespace genecis
-#endif
+END_NAMESPACE
+END_NAMESPACE

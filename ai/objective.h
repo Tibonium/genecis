@@ -1,18 +1,16 @@
 /**
  * @file objective.h
  */
- 
-#ifndef GENECIS_AI_OBJECTIVE_H
-#define GENECIS_AI_OBJECTIVE_H
+#pragma once
 
-namespace genecis {
-namespace ai {
+#include <genecis/base/genecis_defines.h>
+
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(ai)
 
 class objective {
 
 };
 
-}	// end of namespace ai
-}	// end of namespace genecis
-
-#endif
+END_NAMESPACE
+END_NAMESPACE

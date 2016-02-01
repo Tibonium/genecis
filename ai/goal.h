@@ -1,26 +1,30 @@
 /**
  * @file goal.h
  */
+#pragma once
 
-#ifndef GENECIS_AI_GOAL_H
-#define GENECIS_AI_GOAL_H
+#include <genecis/base/genecis_stringlist.h>
 
-namespace genecis {
-namespace ai {
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(ai)
+
+USING_NAMESPACE(base)
 
 class goal {
+public:
 
-	private:
-	
-		string _goal_name ;
-	
-	public:
-	
-		// Constructor
-		goal(const string name) : _goal_name(name) {}
-	
-		friend std::ostream& operator<< (std::ostream& os, const goal& other) ;
+	typedef goal			self_type ;
+	typedef genecis_string	string_type ;
 
+	// Constructor
+	goal(const string_type name) : _goal_name(name) {}
+
+	friend std::ostream& operator<< (std::ostream& os, const self_type& other) ;
+
+private:
+	
+	string_type _goal_name ;
+	
 };
 
 inline std::ostream& operator<< (std::ostream& os, const goal& other) {
@@ -28,6 +32,5 @@ inline std::ostream& operator<< (std::ostream& os, const goal& other) {
 	return os ;
 }
 
-}	// end of namespace ai
-}	// end of namespace genecis
-#endif
+END_NAMESPACE
+END_NAMESPACE

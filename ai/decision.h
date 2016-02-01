@@ -1,20 +1,18 @@
 /**
  * @file decision.h
  */
+#pragma once
 
-#ifndef GENECIS_AI_DECISION_H
-#define GENECIS_AI_DECISION_H
+#include <genecis/base/genecis_defines.h>
 
-namespace genecis {
-namespace ai {
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(ai)
 
 class decision {
+private:
 
-	private:
-	
-		_favor ;
+	_favor ;
 };
 
-}	// end of namespace ai
-}	// end of namespace genecis
-#endif
+END_NAMESPACE
+END_NAMESPACE

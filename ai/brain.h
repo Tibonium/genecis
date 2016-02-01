@@ -1,9 +1,7 @@
 /**
  * @file brain.h
  */
- 
-#ifndef GENECIS_AI_BRAIN_H
-#define GENECIS_AI_BRAIN_H
+#pragma once
 
 #include <fstream>
 #include <sstream>
@@ -11,10 +9,8 @@
 #include <genecis/ai/decision.h>
 #include <genecis/ai/goal.h>
 
-namespace genecis {
-namespace ai {
-
-using namespace std ;
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(ai)
 
 /**
  * Artifical intelligence decision maker. This class is the heart of
@@ -48,33 +44,30 @@ using namespace std ;
  * 3. Attempt to create a "new" decision and use that decision.
  * 
  */
-
 class brain {
+public:
 
-	private:
+	// Constructor
+	brain(goal* end_game) : _goal(end_game) {
+		std::ostringstream filename ;
+		filename << _goal << ".mb" ;
+		std::string _name = filename.str() ;
+		const char* membank_name = (char*)_name.c_str() ;
+		_memory_bank.open(membank_name, std::fstream::in |
+					std::fstream::out | std::fstream::app) ;
+	}
 	
-		fstream _memoery_bank ;
-		goal* _goal ;
+	// Destructor
+	~brain() {
+		_memory_bank.close() ;
+	}
 	
-	public:
-	
-		// Constructor
-		brain(goal* end_game) : _goal(end_game) {
-			ostringstream filename ;
-			filename << _goal << ".mb" ;
-			string _name = filename.str() ;
-			const char* membank_name = (char*)_name.c_str() ;
-			_memory_bank.open(membank_name, fstream::in | 
-					 	fstream::out | fstream::app) ;
-		}
-		
-		// Destructor
-		~brain() {
-			_memory_bank.close() ;
-		}
+private:
+
+	std::fstream _memory_bank ;
+	goal* _goal ;
 
 };
 
-}	// end of namespace ai
-}	// end of namespace genecis
-#endif
+END_NAMESPACE
+END_NAMESPACE

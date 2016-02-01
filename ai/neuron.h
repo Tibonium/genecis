@@ -1,41 +1,38 @@
 /**
  * @file neuron.h
  */
-
-#ifndef GENECIS_AI_NEURON_H
-#define GENECIS_AI_NEURON_H
+#pragma once
 
 #include <genecis/ai/memory.h>
 
-namespace genecis {
-namespace ai {
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(ai)
 
-enum awareness { AWAKE = 1, ASLEEP = -1 }
+enum awareness { AWAKE = 1, ASLEEP = -1 };
 
 struct neuron {
 
 	/**
 	 * Pointer to the connecting neuron
 	 */
-	neuron* __n ;
+	neuron* _n ;
 	
 	/**
 	 * Memory that stored in this neuron.
 	 */
-	memory* __memory ;
+	memory* _memory ;
 	
 	/**
 	 * Connectiveness of this neuron with other neurons
 	 */
-	awareness __state ;
+	awareness _state ;
 	
 	/**
 	 * The 
 	 */
-	double __weight ;
+	double _weight ;
 
 };
 
-}	// end of namespace ai
-}	// end of namesapce genecis
-#endif
+END_NAMESPACE
+END_NAMESPACE

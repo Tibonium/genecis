@@ -1,12 +1,14 @@
 /**
- * @file casting.h
+ * @file type_cast.h
  * A class that defines many useful ways of casting
  * types and redefining type casts on per-use basis.
  */
 #pragma once
 
-namespace genecis {
-namespace base {
+#include <genecis/base/genecis_defines.h>
+
+BEGIN_NAMESPACE(genecis)
+BEGIN_NAMESPACE(base)
 
 /***** Remove type templates *****/
 template<class T>
@@ -95,5 +97,5 @@ struct add_pointer {
     typedef typename remove_reference<T>::type *type;
 };
 
-}   // end of namespace base
-}   // end of namespace genecis
+END_NAMESPACE
+END_NAMESPACE
