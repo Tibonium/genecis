@@ -1,6 +1,12 @@
 /**
  * XML Node Object
  */
+#ifndef __XMLNODE_H__
+#define __XMLNODE_H__
+
+#include <cstring>
+#include <map>
+
 class XMLNode
 {
 public:
@@ -50,12 +56,15 @@ public:
          _parent     = rhs._parent;
          _children   = rhs._children;
          _attributes = rhs._attributes;
+      }
       return *this;
    }
 
 protected:
-   string_type _tag;
-   self_type* _parent;
-   children_type _children ;
-   attribute_map_type _attributes;
-};
+   string_type          _tag;
+   self_type*           _parent;
+   children_type        _children ;
+   attribute_map_type   _attributes;
+};  // end class XMLNode
+
+#endif /* __XMLNODE_H__ */
